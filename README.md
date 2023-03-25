@@ -59,16 +59,6 @@ You can find the configuration file for the CircleCI pipeline in the \`.circleci
 ## Backend Project
 
 The frontend project interacts with a separate backend project built using Node.js (Express). You can find the backend project repository and its README file here: [Node.js (Express) backend](https://github.com/tcivie/project_management_backend)
-
-## Contributors
-
-Special thanks to the following contributors who have made this project possible:
-
-- [![User1](https://github.com/adir395.png?size=25)](https://github.com/adir395) [adir395](https://github.com/adir395)
-- [![User2](https://github.com/barmor12.png?size=25)](https://github.com/barmor12) [barmor12](https://github.com/barmor12)
-- [![User3](https://github.com/itayassor236.png?size=25)](https://github.com/itayassor236) [itayassor236](https://github.com/itayassor236)
-- [![User4](https://github.com/OmerAvis.png?size=25)](https://github.com/OmerAvis) [OmerAvis](https://github.com/OmerAvis)
-- [![User5](https://github.com/tcivie.png?size=25)](https://github.com/tcivie) [tcivie](https://github.com/tcivie)
 usernames of the project contributors.
 
 If you have any questions, please
