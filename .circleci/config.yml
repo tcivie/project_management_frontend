@@ -24,9 +24,9 @@ jobs:
       - run:
           name: Build project
           command: npm run build
-      # - run:
-      #     name: CI Deployment
-      #     command: curl "https://api.render.com/deploy/srv-cgfhclkeoogqfc5emsqg?key=oKdjsMSDupc"
+      - run:
+          name: CI Deployment
+          command: curl "https://api.render.com/deploy/srv-cgfhkcseoogqfc5ftba0?key=v45jnjPhQAE"
 
 workflows:
   example-workflow:
