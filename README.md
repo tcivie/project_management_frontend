@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Frontend Project - React Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a simple frontend application built using React. The primary goal of this project is to learn how to work in Sprints and manage Continuous Integration/Continuous Deployment (CI/CD) pipeline workflows. This project serves as the frontend for a separate [Node.js (Express) backend](https://github.com/tcivie/project_management_backend).
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+To get started with the project, you'll need to have [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/get-npm) installed on your local development environment.
 
-### `npm start`
+1. Clone the repository:
+```
+git clone https://github.com/tcivie/project_management_frontend.git
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Change to the project directory:
+```
+cd <frontend-project-name>
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+3. Install the dependencies:
+```
+npm install
+```
 
-### `npm test`
+4. Run the development server:
+```
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The React app should now be accessible at `http://localhost:3000`. To interact with the backend, ensure that the [backend project](https://github.com/tcivie/project_management_backend) is also set up and running.
 
-### `npm run build`
+## Sprint Management
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+We follow an Agile development process, utilizing Sprints to divide our work into manageable iterations. Each sprint will have a set of tasks that the team will work on. The tasks will be assigned to team members based on their expertise and availability.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Linter and Syntax
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project uses a linter with Airbnb's syntax configuration. This helps maintain a consistent coding style throughout the project. The linter will check for syntax errors and enforce best practices in the code.
 
-### `npm run eject`
+To run the linter manually, execute the following command:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+npm init @eslint/config
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## CI/CD Pipeline
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Our CI/CD pipeline is set up using CircleCI. The pipeline is triggered upon every push to the repository. It includes the following stages:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Install npm packages
+2. Run tests
+3. Run linter
+4. Build the project
+5. CI Deployment (To Render hosting)
 
-## Learn More
+The live version of the frontend project is hosted at: https://project-management-frontend.onrender.com
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+You can find the configuration file for the CircleCI pipeline in the \`.circleci\` folder at the root of the repository.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Backend Project
 
-### Code Splitting
+The frontend project interacts with a separate backend project built using Node.js (Express). You can find the backend project repository and its README file here: [Node.js (Express) backend](https://github.com/tcivie/project_management_backend)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contributors
 
-### Analyzing the Bundle Size
+Special thanks to the following contributors who have made this project possible:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- [![User1](https://github.com/adir395.png?size=50)](https://github.com/adir395) [User1](https://github.com/adir395)
+- [![User2](https://github.com/barmor12.png?size=50)](https://github.com/barmor12) [User2](https://github.com/barmor12)
+- [![User3](https://github.com/itayassor236.png?size=50)](https://github.com/itayassor236) [User3](https://github.com/itayassor236)
+- [![User4](https://github.com/OmerAvis.png?size=50)](https://github.com/OmerAvis) [User4](https://github.com/OmerAvis)
+- [![User5](https://github.com/tcivie.png?size=50)](https://github.com/tcivie) [User4](https://github.com/tcivie)
+usernames of the project contributors.
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+If you have any questions, please
