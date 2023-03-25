@@ -54,7 +54,7 @@ Our CI/CD pipeline is set up using CircleCI. The pipeline is triggered upon ever
 
 The live version of the frontend project is hosted at: https://project-management-frontend.onrender.com
 
-You can find the configuration file for the CircleCI pipeline in the \`.circleci\` folder at the root of the repository.
+You can find the configuration file for the CircleCI pipeline in the `.circleci` folder at the root of the repository.
 
 ## Backend Project
 
