@@ -18,9 +18,8 @@ function LoginPage() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ identifier, password }),
-            });
-
-            if (response.status === 200) {
+            }).then((res) => res.json());
+            if (response.login === true) {
                 setMessage('Successfully logged in!');
                 // Perform further actions like storing the token
                 // and redirecting to a protected page

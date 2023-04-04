@@ -27,9 +27,9 @@ function RegisterPage() {
                 body: JSON.stringify({
                     username, nickname, email, password,
                 }),
-            });
+            }).then((res) => res.json());
 
-            if (response.status === 200) {
+            if (response.register === true) {
                 setMessage('Successfully registered!');
                 // Perform further actions like redirecting to a protected page
             } else {
