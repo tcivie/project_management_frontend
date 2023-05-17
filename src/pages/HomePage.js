@@ -57,23 +57,18 @@ const HomePage = () => {
                         placeholder='Search...'
                         style={{ marginBottom: '1em' }}
                     />
-                    {location ? (
-                        <Map
-                            defaultCenter={[location.lat, location.lon]}
-                            center={[location.lat, location.lon]}
-                            zoom={15}
-                            provider={maptilerProvider}
-                            height={400}
-                            defaultZoom={11}
-                        ></Map>
-                    ) : (
+                    {
                         <Map
                             provider={maptilerProvider}
                             height={400}
                             defaultCenter={[50.879, 4.6997]}
+                            center={
+                                location ? [location.lat, location.lon] : null
+                            }
+                            zoom={location ? 15 : 11}
                             defaultZoom={11}
                         />
-                    )}
+                    }
                 </Card>
             </Content>
         </Layout>
