@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import AppRouter from './Router';
 import './App.css';
+import 'mapbox-gl/dist/mapbox-gl.css'; // Add this line to import Mapbox CSS
 
 function App() {
     return (
@@ -10,7 +11,7 @@ function App() {
             <div className="App">
                 <header className="App-header">
                     <NavBar />
-                    <h1>Welcome to My Landing Page</h1>
+                   
                 </header>
                 <main className="App-main">
                     <AppRouter />
@@ -21,6 +22,7 @@ function App() {
             </div>
         </Router>
     );
+    
 }
 
 export default App;
