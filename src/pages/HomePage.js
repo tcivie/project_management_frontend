@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Map } from 'pigeon-maps';
-import { Input, Layout, Row, Col, Card, Space } from 'antd';
+import { Layout, Card } from 'antd';
+import SearchBar from "../components/SearchBar";
 
 const { Content } = Layout;
 
@@ -30,7 +31,7 @@ const HomePage = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.4)'
             }}>
                 <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
-                    <Input.Search size="large" placeholder="Search..."  style={{ marginBottom: '1em' }} />
+                    <SearchBar />
                     <Map height={400} defaultCenter={[50.879, 4.6997]} defaultZoom={11} />
                 </Card>
             </Content>
