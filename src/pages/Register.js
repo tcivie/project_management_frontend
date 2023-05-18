@@ -3,6 +3,12 @@ import { Form, Input, Button, message } from 'antd';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
+import {
+    LoginOutlined,
+    UserOutlined,
+    FormOutlined,
+    LockOutlined,
+} from '@ant-design/icons';
 const RegisterPage = ({ onClose }) => {
     const [form] = Form.useForm();
     const [error, setError] = useState(null);
@@ -73,7 +79,7 @@ const RegisterPage = ({ onClose }) => {
         <GoogleOAuthProvider clientId='52742900129-knrfhr5i59undpt03jet637c2lrcp9oi.apps.googleusercontent.com'>
             <div style={{ maxWidth: 400, margin: '0 auto' }}>
                 <h2 style={{ textAlign: 'center' }}>Sign up</h2>
-                <Form form={form} onFinish={onFinish}>
+                <Form name='registerForm' form={form} onFinish={onFinish}>
                     <Form.Item
                         label='Email'
                         name='email'
@@ -89,7 +95,12 @@ const RegisterPage = ({ onClose }) => {
                             { validator: createValidator('email') },
                         ]}
                     >
-                        <Input placeholder='Enter your email here' />
+                        <Input
+                            placeholder='Enter Email'
+                            prefix={
+                                <FormOutlined className='site-form-item-icon' />
+                            }
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -98,12 +109,17 @@ const RegisterPage = ({ onClose }) => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter your username',
+                                message: 'Please enter Username!',
                             },
                             { validator: createValidator('username') },
                         ]}
                     >
-                        <Input placeholder='Enter your username here' />
+                        <Input
+                            placeholder='Enter Username'
+                            prefix={
+                                <UserOutlined className='site-form-item-icon' />
+                            }
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -112,11 +128,16 @@ const RegisterPage = ({ onClose }) => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please enter your password',
+                                message: 'Please enter Password',
                             },
                         ]}
                     >
-                        <Input.Password placeholder='Enter your password here' />
+                        <Input.Password
+                            placeholder='Enter Password'
+                            prefix={
+                                <LockOutlined className='site-form-item-icon' />
+                            }
+                        />
                     </Form.Item>
                     <Form.Item>
                         <div
