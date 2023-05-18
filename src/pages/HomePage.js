@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Map } from 'pigeon-maps';
+import { Map, Marker } from 'pigeon-maps';
 import { maptiler } from 'pigeon-maps/providers';
-import { Layout, Card } from 'antd';
+import { Input, Layout, Row, Col, Card, Space } from 'antd';
 import SearchBar from "../components/SearchBar";
-
-
-
-
 
 const { Content } = Layout;
 const MAPTILER_ACCESS_TOKEN = 'MN4W1CFwpKKc3Or0Js4o';
@@ -38,8 +34,6 @@ const HomePage = () => {
     }, []);
 
     return (
-
-        
         <Layout
             style={{
                 backgroundImage: `url(${backgroundImage})`,
@@ -47,29 +41,32 @@ const HomePage = () => {
                 backgroundPosition: 'center',
             }}
         >
-                <Content
-                    style={{
-                        padding: '0 50px',
-                        height: '100vh',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        backdropFilter: 'blur(50%)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                    }}
-                >
-                    <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
-                        <SearchBar />
-                        <Map
-                            provider={maptilerProvider}
-                            height={400}
-                            defaultCenter={[50.879, 4.6997]}
-                            center={location ? [location.lat, location.lon] : null}
-                            zoom={location ? 9 : 11}
-                            defaultZoom={11} />
-                    </Card>
-                </Content>
-            </Layout>
+            <Content
+                style={{
+                    padding: '0 50px',
+                    height: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    backdropFilter: 'blur(50%)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                }}
+            >
+                <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
+                    <SearchBar />
+                    <Map
+                        provider={maptilerProvider}
+                        height={400}
+                        defaultCenter={[50.879, 4.6997]}
+                        center={
+                            location ? [location.lat, location.lon] : null
+                        }
+                        zoom={location ? 9 : 11}
+                        defaultZoom={11}
+                    />
+                </Card>
+            </Content>
+        </Layout>
     );
 };
 
