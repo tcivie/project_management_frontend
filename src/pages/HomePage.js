@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Map, Marker } from 'pigeon-maps';
+import Map from 'pigeon-maps';
 import { maptiler } from 'pigeon-maps/providers';
 import {
-  Input, Layout, Row, Col, Card, Space,
+  Layout, Card,
 } from 'antd';
 import SearchBar from '../components/SearchBar';
 
@@ -22,6 +22,7 @@ function HomePage() {
         setLocation({ lat: latitude, lon: longitude });
       },
       (error) => {
+        // eslint-disable-next-line no-console
         console.error('Error retrieving geolocation:', error);
       },
     );
@@ -32,6 +33,7 @@ function HomePage() {
     )
       .then((response) => response.json())
       .then((data) => setBackgroundImage(data.urls.regular))
+    // eslint-disable-next-line no-console
       .catch((error) => console.error(error));
   }, []);
 

@@ -1,12 +1,9 @@
 export default function fetchSearchResults(searchTerm) {
+  // eslint-disable-next-line func-names
   return async function (dispatch) {
     dispatch({ type: 'SEARCH_STARTED' });
 
     try {
-      console.log(`${process.env.REACT_APP_API_SERVER}/api/search/query`);
-      console.log(searchTerm);
-      // add body to the request
-
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/search/query`, {
         method: 'POST',
         headers: {
@@ -16,7 +13,6 @@ export default function fetchSearchResults(searchTerm) {
       });
 
       const data = await response.json();
-      console.log(data);
 
       dispatch({ type: 'SEARCH_SUCCESS', payload: data });
     } catch (error) {

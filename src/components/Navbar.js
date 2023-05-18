@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Modal } from 'antd';
-import { LoginOutlined, UserOutlined, FormOutlined } from '@ant-design/icons';
+import { LoginOutlined, FormOutlined } from '@ant-design/icons';
 import RegisterPage from '../pages/Register';
 
 function Navbar() {

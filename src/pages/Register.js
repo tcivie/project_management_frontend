@@ -21,7 +21,6 @@ function RegisterPage({ onClose }) {
     const isVerified = values.email && values.username && values.password;
     if (!isVerified) {
       // Return or show an error message indicating verification failed
-      console.log('Verification failed');
       return;
     }
 
@@ -40,20 +39,18 @@ function RegisterPage({ onClose }) {
 
       if (response.ok) {
         // Registration successful
-        console.log('Registration successful');
         onClose(); // Close the modal
       } else {
         // Registration failed
-        console.log('Registration failed');
         const responseData = await response.json();
         const responseMessage = responseData?.message;
-        console.log(responseMessage);
         if (responseMessage) {
           setError(responseMessage);
         }
       }
     } catch (err) {
       // Handle any network or request error
+      // eslint-disable-next-line no-console
       console.log('Error occurred:', err);
     }
   };
@@ -145,15 +142,13 @@ function RegisterPage({ onClose }) {
                 </Button>
                 <span style={{ margin: '0 8px' }}>Or</span>
                 <GoogleLogin
-                  onSuccess={(credentialResponse) => {
-                    console.log(credentialResponse);
+                  onSuccess={() => {
                     onClose();
                   }}
                   onError={() => {
                     setError(
                       'Could not sign in with Google',
                     );
-                    console.log('Login Failed');
                   }}
                 />
               </div>
