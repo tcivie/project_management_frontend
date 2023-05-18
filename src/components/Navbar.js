@@ -3,7 +3,11 @@ import { Menu, Modal } from 'antd';
 import { LoginOutlined, UserOutlined, FormOutlined } from '@ant-design/icons';
 import RegisterPage from '../pages/Register';
 import LoginForm from './Login';
+import { useSelector } from 'react-redux';
+
 const Navbar = () => {
+    const userState = useSelector((state) => state.user);
+    console.log(userState);
     const [isRegisterVisible, setRegisterVisible] = useState(false);
     const [openKeys, setOpenKeys] = useState([]);
     const openRegisterModal = () => {
@@ -35,23 +39,36 @@ const Navbar = () => {
                 <Menu.Item key='home' style={{ marginRight: 'auto' }}>
                     InterTourist
                 </Menu.Item>
+
                 <Menu.Item
                     key='register'
-                    icon={<FormOutlined />}
+                    icon={
+                        userState.isAuthenticated ? (
+                            <UserOutlined />
+                        ) : (
+                            <FormOutlined />
+                        )
+                    }
                     onClick={openRegisterModal}
                 >
-                    Sign up
+                    {' '}
+                    {userState.isAuthenticated
+                        ? 'Hello ' + userState.userData
+                        : 'Sign Up'}{' '}
                 </Menu.Item>
-                <Menu.SubMenu
-                    key='login'
-                    icon={<LoginOutlined />}
-                    title='Login'
-                    onTitleClick={openLoginForm}
-                >
-                    <div style={{ margin: '10px' }}>
-                        <LoginForm onClose={closLoginForm} />
-                    </div>
-                </Menu.SubMenu>
+
+                {!userState.isAuthenticated && (
+                    <Menu.SubMenu
+                        key='login'
+                        icon={<LoginOutlined />}
+                        title='Login'
+                        onTitleClick={openLoginForm}
+                    >
+                        <div style={{ margin: '10px' }}>
+                            <LoginForm onClose={closLoginForm} />
+                        </div>
+                    </Menu.SubMenu>
+                )}
             </Menu>
 
             <Modal
