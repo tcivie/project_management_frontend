@@ -24,6 +24,10 @@ jobs:
       - run:
           name: Build project
           command: npm run build
+  cicd-deploy:
+    executor:
+      name: node/default
+    steps:
       - run:
           name: CI Deployment
           command: curl "https://api.render.com/deploy/srv-cgfhkcseoogqfc5ftba0?key=v45jnjPhQAE"
@@ -32,3 +36,6 @@ workflows:
   example-workflow:
     jobs:
       - cicd-tests-and-lint
+      - cicd-deploy:
+          requires:
+              - cicd-tests-and-lint
