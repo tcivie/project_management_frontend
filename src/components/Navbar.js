@@ -38,7 +38,7 @@ const Navbar = () => {
                 maskClosable={false}
                 destroyOnClose
                 width={500}
-                style={{ top: 20 }}
+                centered
             >
                 <RegisterPage onClose={closeRegisterModal} />
             </Modal>
