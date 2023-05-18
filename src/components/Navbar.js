@@ -32,7 +32,7 @@ const Navbar = () => {
                 </Menu.Item>
             </Menu>
             <Modal
-                visible={isRegisterVisible}
+                open={isRegisterVisible}
                 onCancel={closeRegisterModal}
                 footer={null}
                 maskClosable={false}
