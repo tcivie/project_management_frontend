@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AutoComplete, Input } from 'antd';
 import { fetchSearchResults, setSelectedSearch } from '../redux/actions/searchAction';
@@ -10,10 +10,20 @@ function SearchBar() {
   const searchResults = useSelector((state) => state.search.results);
   const isLoading = useSelector((state) => state.search.loading);
   const dispatch = useDispatch();
+  const debounceRef = useRef(null); // Create a ref to hold the debounce timeout id
 
   useEffect(() => {
     if (searchTerm.length > 3) {
-      dispatch(fetchSearchResults(searchTerm));
+      // Clear the existing timeout if there is one
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+
+      dispatch({ type: 'SEARCH_STARTED' });
+      // Set a new timeout to dispatch the fetchSearchResults action
+      debounceRef.current = setTimeout(() => {
+        dispatch(fetchSearchResults(searchTerm));
+      }, 500); // 500ms delay
     }
   }, [searchTerm, dispatch]);
 
