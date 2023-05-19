@@ -39,7 +39,8 @@
         "react/jsx-props-no-spreading": ["warn", { "custom": "ignore" }],
         "react/prop-types": ["warn", { "skipUndeclared": true }],
         "react/react-in-jsx-scope": ["off"],
-        "react/require-default-props": ["off"]
+        "react/require-default-props": ["off"],
+        "react/jsx-one-expression-per-line": ["off"]
     },
     // dont check build folder and node_modules
     "ignorePatterns": ["build/", "node_modules/"]

@@ -1,5 +1,6 @@
 const initialState = {
   results: [],
+  selection: null,
   loading: false,
   error: null,
 };
@@ -16,6 +17,12 @@ export default function searchReducer(state = initialState, action) {
         ...state,
         loading: false,
         results: action.payload,
+      };
+    case 'SEARCH_SELECTED':
+      return {
+        ...state,
+        loading: false,
+        selection: action.payload,
       };
     case 'SEARCH_FAILURE':
       return {
