@@ -1,21 +1,20 @@
 import Cookies from 'js-cookie';
 
 export function userLoginRequest() {
-    return { type: 'USER_LOGIN_REQUEST' };
+  return { type: 'USER_LOGIN_REQUEST' };
 }
 
 export function userLoginSuccess(token, userData) {
-    Cookies.set('token', token);
-    console.log(userData);
-    return { type: 'USER_LOGIN_SUCCESS', payload: { token, userData } };
+  Cookies.set('token', token);
+  return { type: 'USER_LOGIN_SUCCESS', payload: { token, userData } };
 }
 
 export function userLoginFailure(error) {
-    return { type: 'USER_LOGIN_FAILURE', error };
+  return { type: 'USER_LOGIN_FAILURE', error };
 }
 
 export function userLogout() {
-    localStorage.removeItem('user');
-    Cookies.remove('token');
-    return { type: 'USER_LOGOUT' };
+  localStorage.removeItem('user');
+  Cookies.remove('token');
+  return { type: 'USER_LOGOUT' };
 }
