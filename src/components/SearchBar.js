@@ -8,6 +8,7 @@ function SearchBar() {
   const [searchTerm, setSearchTerm] = useState('');
   const [options, setOptions] = useState([]);
   const searchResults = useSelector((state) => state.search.results);
+  const isLoading = useSelector((state) => state.search.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,17 +18,13 @@ function SearchBar() {
   }, [searchTerm, dispatch]);
 
   const extractLabelFromResult = (result) => {
-    console.log(result);
     const {
       name, stateName, country, emoji,
     } = result;
     let label = '';
-    console.log(result);
     if (country) { // city
-      console.log('city');
       label = `${name} (${stateName}) - ${country} ${unicodeToEmoji(emoji)}`;
     } else { // country
-      console.log('country');
       label = `${name} - ${unicodeToEmoji(emoji)}`;
     }
     return label;
@@ -96,8 +93,8 @@ function SearchBar() {
       <Input.Search
         size="large"
         placeholder="Search..."
+        loading={isLoading}
         enterButton
-        value={searchTerm}
       />
     </AutoComplete>
   );
