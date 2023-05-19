@@ -1,21 +1,26 @@
-import { Map, ZoomControl } from 'pigeon-maps';
+import { Map, Marker, ZoomControl } from 'pigeon-maps';
 import React, { useEffect, useState } from 'react';
 import { maptiler } from 'pigeon-maps/providers';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import MyMarker from './MyMarker';
+import { setGeolocation } from '../../redux/actions/userActions';
 
 const MAPTILER_ACCESS_TOKEN = 'MN4W1CFwpKKc3Or0Js4o';
 const maptilerProvider = maptiler(MAPTILER_ACCESS_TOKEN, 'streets');
 
 function MyMap() {
   const searchSelection = useSelector((state) => state.search.selection);
+  const userState = useSelector((state) => state.user);
   const [location, setLocation] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Get current position coordinates
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // const { latitude, longitude } = position.coords;
-        setLocation(position.coords);
+        const { latitude, longitude } = position.coords;
+        setLocation([latitude, longitude]);
+        dispatch(setGeolocation([latitude, longitude]));
       },
       (error) => {
         // eslint-disable-next-line no-console
@@ -41,6 +46,7 @@ function MyMap() {
       zoom={9}
       defaultZoom={11}
     >
+      <Marker anchor={userState.location} />
       <ZoomControl />
     </Map>
   );

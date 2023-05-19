@@ -9,6 +9,7 @@ const initialState = storedUser
     userData: null, // assuming you store user data as JSON in a cookie
     isAuthenticated: !!tokenFromCookie,
     loading: false,
+    location: null,
     error: null,
   };
 
@@ -48,6 +49,11 @@ export default function userReducer(state = initialState, action) {
         token: null,
         userData: null,
         isAuthenticated: false,
+      };
+    case 'SET_GEOLOCATION':
+      return {
+        ...state,
+        location: action.payload,
       };
     default:
       return state;

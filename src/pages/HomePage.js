@@ -4,7 +4,7 @@ import {
   Layout, Card,
 } from 'antd';
 import SearchBar from '../components/SearchBar';
-import MyMap from '../components/MyMap';
+import MyMap from '../components/GeoLocation/MyMap';
 
 const { Content } = Layout;
 
