@@ -43,30 +43,28 @@ const RegisterPage = ({ onClose }) => {
 
             if (response.ok) {
                 // Registration successful
-                console.log('Registration successful');
                 onClose(); // Close the modal
             } else {
                 // Registration failed
-                console.log('Registration failed');
                 const responseData = await response.json();
-                const message = responseData?.message;
-                console.log(message);
-                if (message) {
-                    setError(message);
+                const responseMessage = responseData?.message;
+                if (responseMessage) {
+                    setError(responseMessage);
                 }
             }
         } catch (err) {
             // Handle any network or request error
+            // eslint-disable-next-line no-console
             console.log('Error occurred:', err);
         }
     };
     const createValidator = (lookupStr) => {
-        let old_val = null;
+        let oldVal = null;
         function warpped(rule, value, promise) {
-            if (old_val && old_val !== value) {
+            if (oldVal && oldVal !== value) {
                 promise();
             } else if (error && error.includes(lookupStr)) {
-                old_val = value;
+                oldVal = value;
                 promise(error);
             } else {
                 promise(); // No error
