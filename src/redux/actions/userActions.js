@@ -6,6 +6,7 @@ export function userLoginRequest() {
 
 export function userLoginSuccess(token, userData) {
     Cookies.set('token', token);
+    console.log(userData);
     return { type: 'USER_LOGIN_SUCCESS', payload: { token, userData } };
 }
 
@@ -14,5 +15,7 @@ export function userLoginFailure(error) {
 }
 
 export function userLogout() {
+    localStorage.removeItem('user');
+    Cookies.remove('token');
     return { type: 'USER_LOGOUT' };
 }

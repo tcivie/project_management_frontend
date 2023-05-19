@@ -1,7 +1,6 @@
 import React from 'react';
 import HomePage from './pages/HomePage';
 import Navbar from './components/Navbar';
-import { useDispatch, useSelector } from 'react-redux';
 
 // async function fetchUserData() {
 //     const userState = useSelector((state) => state.user);
@@ -33,7 +32,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // fetchUserData();
 const App = () => {
-    const dispatch = useDispatch();
     return (
         <div>
             <Navbar />

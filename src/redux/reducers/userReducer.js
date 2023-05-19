@@ -1,15 +1,17 @@
 import Cookies from 'js-cookie';
-import { useDispatch } from 'react-redux';
 
 const tokenFromCookie = Cookies.get('token');
-
-const initialState = {
-    token: tokenFromCookie || null,
-    userData: null, // assuming you store user data as JSON in a cookie
-    isAuthenticated: !!tokenFromCookie,
-    loading: false,
-    error: null,
-};
+console.log(tokenFromCookie);
+const storedUser = localStorage.getItem('user');
+const initialState = storedUser
+    ? JSON.parse(storedUser)
+    : {
+          token: tokenFromCookie || null,
+          userData: null, // assuming you store user data as JSON in a cookie
+          isAuthenticated: !!tokenFromCookie,
+          loading: false,
+          error: null,
+      };
 
 export default function userReducer(state = initialState, action) {
     switch (action.type) {

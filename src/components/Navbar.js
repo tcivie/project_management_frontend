@@ -1,34 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, Modal } from 'antd';
-import { LoginOutlined, UserOutlined, FormOutlined } from '@ant-design/icons';
+import {
+    LoginOutlined,
+    UserOutlined,
+    FormOutlined,
+    LogoutOutlined,
+} from '@ant-design/icons';
 import RegisterPage from '../pages/Register';
 import LoginForm from './Login';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { userLogout } from '../redux/actions/userActions';
 
 const Navbar = () => {
     const userState = useSelector((state) => state.user);
-    console.log(userState);
+    const dispatch = useDispatch();
     const [isRegisterVisible, setRegisterVisible] = useState(false);
     const [openKeys, setOpenKeys] = useState([]);
     const openRegisterModal = () => {
         setOpenKeys(['register']);
         setRegisterVisible(true);
     };
-
+    useEffect(() => {
+        // Update localStorage whenever userState changes
+        localStorage.setItem('user', JSON.stringify(userState));
+    }, [userState]);
     const closeRegisterModal = () => {
         setRegisterVisible(false);
     };
 
     const closLoginForm = () => {
         setOpenKeys([]);
-        console.log(openKeys);
     };
     const openLoginForm = () => {
         if (openKeys.includes('login')) setOpenKeys([]);
         else setOpenKeys(['login']);
-        console.log(openKeys);
     };
-
+    const logOut = () => {
+        dispatch(userLogout());
+    };
     return (
         <div>
             <Menu
@@ -49,9 +59,12 @@ const Navbar = () => {
                             <FormOutlined />
                         )
                     }
-                    onClick={openRegisterModal}
+                    onClick={
+                        !userState.isAuthenticated
+                            ? openRegisterModal
+                            : closeRegisterModal
+                    }
                 >
-                    {' '}
                     {userState.isAuthenticated
                         ? 'Hello ' + userState.userData
                         : 'Sign Up'}{' '}
@@ -68,6 +81,15 @@ const Navbar = () => {
                             <LoginForm onClose={closLoginForm} />
                         </div>
                     </Menu.SubMenu>
+                )}
+                {userState.isAuthenticated && (
+                    <Menu.Item
+                        key='logout'
+                        icon={<LogoutOutlined />}
+                        onClick={logOut}
+                    >
+                        Log Out
+                    </Menu.Item>
                 )}
             </Menu>
 

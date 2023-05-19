@@ -1,24 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message, Checkbox } from 'antd';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GoogleLogin } from '@react-oauth/google';
-import { useState } from 'react';
 
 import {
     LoginOutlined,
     UserOutlined,
     FormOutlined,
     LockOutlined,
+    LoadingOutlined,
 } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     userLoginFailure,
     userLoginRequest,
     userLoginSuccess,
 } from '../redux/actions/userActions';
+import { ShakeOutlined } from '@ant-design/icons';
 
 const LoginForm = ({ onClose }) => {
     const dispatch = useDispatch();
+    const userState = useSelector((state) => state.user);
+    const [loginFailed, setLoginFailed] = useState(false);
     const onFinish = async (values) => {
         const isVerified = values.usermail && values.password;
         if (!isVerified) {
@@ -49,11 +52,12 @@ const LoginForm = ({ onClose }) => {
                 dispatch(
                     userLoginSuccess(data.accessToken, data.UserInfo.username),
                 );
+
                 onClose(); // Close the modal
             } else {
-                // Registration failed
-
+                // login failed failed
                 console.log('login failed');
+                setLoginFailed(true);
                 const responseData = await response.json();
                 const message = responseData?.message;
                 dispatch(userLoginFailure(message));
@@ -62,8 +66,9 @@ const LoginForm = ({ onClose }) => {
             // Handle any network or request error
             console.log('Error occurred:', err);
         }
-
-        onClose();
+    };
+    const inputChanged = () => {
+        setLoginFailed(false);
     };
     return (
         <GoogleOAuthProvider clientId='52742900129-knrfhr5i59undpt03jet637c2lrcp9oi.apps.googleusercontent.com'>
@@ -90,6 +95,8 @@ const LoginForm = ({ onClose }) => {
                                 <UserOutlined className='site-form-item-icon' />
                             }
                             placeholder='Username or Email'
+                            status={loginFailed ? 'error' : ''}
+                            onChange={inputChanged}
                         />
                     </Form.Item>
                     <Form.Item
@@ -107,6 +114,8 @@ const LoginForm = ({ onClose }) => {
                             }
                             type='password'
                             placeholder='Password'
+                            status={loginFailed ? 'error' : ''}
+                            onChange={inputChanged}
                         />
                     </Form.Item>
                     <Form.Item>
@@ -121,7 +130,6 @@ const LoginForm = ({ onClose }) => {
                             Forgot password
                         </a>
                     </Form.Item>
-
                     <Form.Item>
                         <div
                             style={{
@@ -140,6 +148,13 @@ const LoginForm = ({ onClose }) => {
                                 <Button
                                     type='primary'
                                     htmlType='submit'
+                                    icon={
+                                        !userState.loading ? (
+                                            <LoginOutlined />
+                                        ) : (
+                                            <LoadingOutlined />
+                                        )
+                                    }
                                     onClick={onFinish}
                                 >
                                     Login

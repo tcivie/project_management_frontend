@@ -8,32 +8,34 @@ const { Option } = Select;
 
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const searchResults = useSelector(state => state.search.results); // replace with your correct selector
+    const searchResults = useSelector((state) => state.search.results); // replace with your correct selector
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (searchTerm.length % 3 === 0 && searchTerm.length !== 0) {
+        if (searchTerm.length > 2 && searchTerm.length !== 0) {
             dispatch(fetchSearchResults(searchTerm));
         }
     }, [searchTerm, dispatch]);
 
-    const options = searchResults.map(result => {
+    const options = searchResults.map((result) => {
         var allOptions = [];
         if (result.code !== undefined) {
             if (result.cities !== undefined) {
-                result.cities.map(city => (
+                result.cities.map((city) =>
                     allOptions.push(
                         <Option key={city.id} value={city.name}>
-                            {city.name} ({city.stateName}) - {city.country} {unicodeToEmoji(result.emoji)}
-                        </Option>
-                    )
-                ));
+                            {city.name} ({city.stateName}) - {city.country}{' '}
+                            {unicodeToEmoji(result.emoji)}
+                        </Option>,
+                    ),
+                );
             } else {
                 allOptions.push(
                     <Option key={result.id} value={result.name}>
-                        {result.name} - {result.country} {unicodeToEmoji(result.emoji)}
-                    </Option>
-                )
+                        {result.name} - {result.country}{' '}
+                        {unicodeToEmoji(result.emoji)}
+                    </Option>,
+                );
             }
         }
         return allOptions;
@@ -42,14 +44,14 @@ const SearchBar = () => {
     return (
         <Select
             showSearch
-            size="large"
-            placeholder="Search..."
+            size='large'
+            placeholder='Search...'
             style={{ width: '100%', marginBottom: '1em' }}
             value={searchTerm}
             defaultActiveFirstOption={false}
             showArrow={false}
             filterOption={false}
-            onSearch={value => setSearchTerm(value)}
+            onSearch={(value) => setSearchTerm(value)}
             notFoundContent={null}
         >
             {options}
