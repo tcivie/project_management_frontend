@@ -21,19 +21,17 @@ function SearchBar() {
     const allOptions = [];
     if (result.code !== undefined) {
       if (result.cities !== undefined) {
-        result.cities.map((city) => (
-          allOptions.push(
-            <Option key={city.id} value={city.name}>
-              {city.name}
-              {' '}
-              (
-              {city.stateName}
-              ) -
-              {city.country}
-              {' '}
-              {unicodeToEmoji(result.emoji)}
-            </Option>,
-          )
+        result.cities.map((city) => allOptions.push(
+          <Option key={city.id} value={city.name}>
+            {city.name}
+            {' '}
+            (
+            {city.stateName}
+            ) -
+            {city.country}
+            {' '}
+            {unicodeToEmoji(result.emoji)}
+          </Option>,
         ));
       } else {
         allOptions.push(

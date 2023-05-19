@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Map } from 'pigeon-maps';
 import { maptiler } from 'pigeon-maps/providers';
-import {
-  Layout, Card,
-} from 'antd';
+import { Layout, Card } from 'antd';
 import SearchBar from '../components/SearchBar';
 
 const { Content } = Layout;
@@ -62,9 +60,7 @@ function HomePage() {
             provider={maptilerProvider}
             height={400}
             defaultCenter={[50.879, 4.6997]}
-            center={
-                            location ? [location.lat, location.lon] : null
-                        }
+            center={location ? [location.lat, location.lon] : null}
             zoom={location ? 9 : 11}
             defaultZoom={11}
           />

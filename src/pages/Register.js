@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Form, Input, Button, message,
-} from 'antd';
+import { Form, Input, Button } from 'antd';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+
+import { UserOutlined, FormOutlined, LockOutlined } from '@ant-design/icons';
 
 function RegisterPage({ onClose }) {
   const [form] = Form.useForm();
-  const [error, setError] = useState(null);
+  const [vError, setVerror] = useState(null);
   useEffect(() => {
     async function validate() {
       try {
         await form.validateFields();
-      } catch (e) {
-        message.error('Please fill in all required fields');
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err);
       }
     }
-    if (error) validate();
-  }, [error, form]);
+    if (vError) validate();
+  }, [vError, form]);
   const onFinish = async (values) => {
     const isVerified = values.email && values.username && values.password;
     if (!isVerified) {
@@ -45,7 +46,7 @@ function RegisterPage({ onClose }) {
         const responseData = await response.json();
         const responseMessage = responseData?.message;
         if (responseMessage) {
-          setError(responseMessage);
+          setVerror(responseMessage);
         }
       }
     } catch (err) {
@@ -59,9 +60,9 @@ function RegisterPage({ onClose }) {
     function warpped(rule, value, promise) {
       if (oldVal && oldVal !== value) {
         promise();
-      } else if (error && error.includes(lookupStr)) {
+      } else if (vError && vError.includes(lookupStr)) {
         oldVal = value;
-        promise(error);
+        promise(vError);
       } else {
         promise(); // No error
       }
@@ -73,7 +74,7 @@ function RegisterPage({ onClose }) {
     <GoogleOAuthProvider clientId="52742900129-knrfhr5i59undpt03jet637c2lrcp9oi.apps.googleusercontent.com">
       <div style={{ maxWidth: 400, margin: '0 auto' }}>
         <h2 style={{ textAlign: 'center' }}>Sign up</h2>
-        <Form form={form} onFinish={onFinish}>
+        <Form name="registerForm" form={form} onFinish={onFinish}>
           <Form.Item
             label="Email"
             name="email"
@@ -89,7 +90,12 @@ function RegisterPage({ onClose }) {
               { validator: createValidator('email') },
             ]}
           >
-            <Input placeholder="Enter your email here" />
+            <Input
+              placeholder="Enter Email"
+              prefix={
+                <FormOutlined className="site-form-item-icon" />
+                            }
+            />
           </Form.Item>
 
           <Form.Item
@@ -98,12 +104,17 @@ function RegisterPage({ onClose }) {
             rules={[
               {
                 required: true,
-                message: 'Please enter your username',
+                message: 'Please enter Username!',
               },
               { validator: createValidator('username') },
             ]}
           >
-            <Input placeholder="Enter your username here" />
+            <Input
+              placeholder="Enter Username"
+              prefix={
+                <UserOutlined className="site-form-item-icon" />
+                            }
+            />
           </Form.Item>
 
           <Form.Item
@@ -112,11 +123,16 @@ function RegisterPage({ onClose }) {
             rules={[
               {
                 required: true,
-                message: 'Please enter your password',
+                message: 'Please enter Password',
               },
             ]}
           >
-            <Input.Password placeholder="Enter your password here" />
+            <Input.Password
+              placeholder="Enter Password"
+              prefix={
+                <LockOutlined className="site-form-item-icon" />
+                            }
+            />
           </Form.Item>
           <Form.Item>
             <div
@@ -146,7 +162,7 @@ function RegisterPage({ onClose }) {
                     onClose();
                   }}
                   onError={() => {
-                    setError(
+                    setVerror(
                       'Could not sign in with Google',
                     );
                   }}
