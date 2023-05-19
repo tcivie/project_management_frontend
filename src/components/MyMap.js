@@ -1,4 +1,4 @@
-import { Map } from 'pigeon-maps';
+import { Map, ZoomControl } from 'pigeon-maps';
 import React, { useEffect, useState } from 'react';
 import { maptiler } from 'pigeon-maps/providers';
 import { useSelector } from 'react-redux';
@@ -38,9 +38,11 @@ function MyMap() {
       height={400}
       defaultCenter={[50.879, 4.6997]}
       center={location}
-      zoom={location ? 9 : 11}
+      zoom={9}
       defaultZoom={11}
-    />
+    >
+      <ZoomControl />
+    </Map>
   );
 }
 
