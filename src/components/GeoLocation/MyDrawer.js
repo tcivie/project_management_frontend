@@ -13,11 +13,12 @@ import {
 import { TeamOutlined } from '@ant-design/icons';
 
 function MyDrawer({
-  visible, onClose, locationInfo, chatRoomInfo, stats,
+  visible, onClose, chatRoomInfo, stats, cities,
 }) {
+  const locationInfo = cities ? cities[0] : null;
   return (
     <Drawer
-      title="Location Information"
+      title={cities && cities[0] ? cities[0].name : 'no city selected'}
       placement="right"
       closable
       onClose={onClose}
