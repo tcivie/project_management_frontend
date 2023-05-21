@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Menu, Modal } from 'antd';
 import { LoginOutlined, FormOutlined } from '@ant-design/icons';
 import RegisterPage from '../pages/Register';
+import PersonalPage from '../pages/PersonalPage';
 
 function Navbar() {
   const [isRegisterVisible, setRegisterVisible] = useState(false);
