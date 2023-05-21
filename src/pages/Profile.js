@@ -9,7 +9,7 @@ import Navbar from '../components/Navbar';
 
 const { Content } = Layout;
 
-function HomePage() {
+function Profile() {
   const [backgroundImage, setBackgroundImage] = useState(null);
 
   useEffect(() => {
@@ -42,13 +42,9 @@ function HomePage() {
         }}
       >
         <Navbar />
-        <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
-          <SearchBar />
-          <MyMap />
-        </Card>
       </Content>
     </Layout>
   );
 }
 
-export default HomePage;
+export default Profile;

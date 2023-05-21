@@ -148,15 +148,14 @@ function MyMap() {
       onBoundsChanged={({ zoom, center, bounds }) => timeOutZoomChange(zoom, center, bounds)}
     >
 
-      {markers}
-
       {userState.location && (
       <Marker
         width={60}
         anchor={userState.location}
-        color="rgb(80,200,80)"
+        color="rgb(80,100,200)"
       />
       )}
+      {markers}
 
       <MyDrawer
         cities={clickedMarker}
