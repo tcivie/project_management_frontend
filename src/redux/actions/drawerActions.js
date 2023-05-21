@@ -36,7 +36,5 @@ export default function markerClick(location, radius) {
 }
 
 export function drawerClose() {
-  return {
-    type: 'DRAWER_CLOSE',
-  };
+  return { type: 'DRAWER_CLOSE' };
 }

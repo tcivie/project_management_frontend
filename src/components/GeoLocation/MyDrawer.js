@@ -1,5 +1,8 @@
 // MyDrawer.js
 
+// linter ignore max-len for all file
+/* eslint-disable max-len */
+
 import React from 'react';
 import {
   Button,
@@ -44,12 +47,19 @@ function MyDrawer() {
     });
   }
 
+  // const onCloseHandler = () => {
+  //   console.log('drawer closed');
+  //   dispatch(drawerClose);
+  //   console.log(visible);
+  // };
+
   return (
     <Drawer
-      title={cities && cities[0] ? cities[0].name : 'no city selected'}
+      // title={cities && cities[0] ? cities[0].name : 'no city selected'}
+      title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
-      onClose={dispatch(drawerClose)}
+      onClose={() => dispatch(drawerClose())}
       visible={visible}
       size="large"
     >
@@ -97,7 +107,7 @@ function MyDrawer() {
               <Badge.Ribbon
                 color="volcano"
                 // text={<> <TeamOutlined /> {`${item.activeUsers} users`} </>}
-                text={<> <TeamOutlined /> ??? users </>}
+                text={<> <TeamOutlined /> ### </>}
                 status="processing"
                 style={{ right: '2px', top: '-10px' }}
                 hasMore={chatRoomInfoParsed.length < 10}
