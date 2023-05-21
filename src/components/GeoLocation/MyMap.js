@@ -6,8 +6,7 @@ import { setGeolocation } from '../../redux/actions/userActions';
 import MyDrawer from './MyDrawer';
 import markerClick from '../../redux/actions/drawerActions';
 
-const MAPTILER_ACCESS_TOKEN = 'MN4W1CFwpKKc3Or0Js4o';
-const maptilerProvider = maptiler(MAPTILER_ACCESS_TOKEN, 'streets');
+const maptilerProvider = maptiler(process.env.REACT_APP_MAPTILER_CODE, 'streets');
 
 function MyMap() {
   const searchSelection = useSelector((state) => state.search.selection);
@@ -45,8 +44,7 @@ function MyMap() {
       defaultCenter={[50.879, 4.6997]}
       defaultZoom={11}
       center={center}
-      /* eslint-disable-next-line no-shadow */
-      onBoundsChanged={({ center, zoom }) => {
+      onBoundsChanged={() => {
         setCenter(center);
         setZoom(zoom);
       }}
