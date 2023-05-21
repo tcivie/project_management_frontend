@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie';
 
 export function userLoginRequest() {
@@ -17,4 +18,8 @@ export function userLogout() {
   localStorage.removeItem('user');
   Cookies.remove('token');
   return { type: 'USER_LOGOUT' };
+}
+
+export function setGeolocation(location) {
+  return { type: 'SET_GEOLOCATION', payload: location };
 }

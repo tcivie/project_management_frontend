@@ -1,69 +1,112 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Select } from 'antd';
-import fetchSearchResults from '../redux/actions/searchAction';
+import { AutoComplete, Input } from 'antd';
+import { fetchSearchResults, setSelectedSearch } from '../redux/actions/searchAction';
 import unicodeToEmoji from '../utils/unicodeToEmoji';
-
-const { Option } = Select;
 
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [options, setOptions] = useState([]);
   const searchResults = useSelector((state) => state.search.results);
+  const isLoading = useSelector((state) => state.search.loading);
   const dispatch = useDispatch();
+  const debounceRef = useRef(null); // Create a ref to hold the debounce timeout id
 
   useEffect(() => {
-    if (searchTerm.length % 3 === 0 && searchTerm.length !== 0) {
-      dispatch(fetchSearchResults(searchTerm));
+    if (searchTerm.length > 3) {
+      // Clear the existing timeout if there is one
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+
+      dispatch({ type: 'SEARCH_STARTED' });
+      // Set a new timeout to dispatch the fetchSearchResults action
+      debounceRef.current = setTimeout(() => {
+        dispatch(fetchSearchResults(searchTerm));
+      }, 500); // 500ms delay
     }
   }, [searchTerm, dispatch]);
 
-  const options = searchResults.map((result) => {
-    const allOptions = [];
-    if (result.code !== undefined) {
-      if (result.cities !== undefined) {
-        result.cities.map((city) => allOptions.push(
-          <Option key={city.id} value={city.name}>
-            {city.name}
-            {' '}
-            (
-            {city.stateName}
-            ) -
-            {city.country}
-            {' '}
-            {unicodeToEmoji(result.emoji)}
-          </Option>,
-        ));
-      } else {
-        allOptions.push(
-          <Option key={result.id} value={result.name}>
-            {result.name}
-            {' '}
-            -
-            {result.country}
-            {' '}
-            {unicodeToEmoji(result.emoji)}
-          </Option>,
-        );
-      }
+  const extractLabelFromResult = (result) => {
+    const {
+      name, stateName, country, emoji,
+    } = result;
+    let label = '';
+    if (country) { // city
+      label = `${name} (${stateName}) - ${country} ${unicodeToEmoji(emoji)}`;
+    } else { // country
+      label = `${name} - ${unicodeToEmoji(emoji)}`;
     }
-    return allOptions;
-  });
+    return label;
+  };
+
+  const selectSearchResult = (result, obj) => {
+    // set selected city
+    setSearchTerm(extractLabelFromResult(obj.data));
+    const { data } = obj;
+    const selection = {
+      id: data.id,
+      name: data.name,
+      location: data.location,
+    };
+    dispatch(setSelectedSearch(selection));
+  };
+
+  useEffect(() => {
+    const parsedResults = searchResults.map((result) => {
+      const allOptions = [];
+      if (result.code !== undefined) {
+        if (result.cities !== undefined) {
+          result.cities.map((city) => {
+            // eslint-disable-next-line no-param-reassign
+            city.emoji = result.emoji;
+            allOptions.push(
+              {
+                value: city.id,
+                data: city,
+                label: (
+                  <div>
+                    {extractLabelFromResult(city)}
+                  </div>
+                ),
+              },
+            );
+            return allOptions;
+          });
+        } else {
+          allOptions.push(
+            {
+              value: result.id,
+              data: result,
+              label: (
+                <div>
+                  {extractLabelFromResult(result)}
+                </div>
+              ),
+            },
+          );
+        }
+      }
+      return allOptions;
+    }).flat();
+    setOptions(parsedResults);
+  }, [searchResults]);
 
   return (
-    <Select
-      showSearch
-      size="large"
-      placeholder="Search..."
+    <AutoComplete
       style={{ width: '100%', marginBottom: '1em' }}
+      options={options}
       value={searchTerm}
-      defaultActiveFirstOption={false}
-      showArrow={false}
-      filterOption={false}
+      onSelect={selectSearchResult}
       onSearch={(value) => setSearchTerm(value)}
-      notFoundContent={null}
     >
-      {options}
-    </Select>
+      <Input.Search
+        size="large"
+        placeholder="Search..."
+        loading={isLoading}
+        enterButton
+      />
+    </AutoComplete>
   );
 }
 

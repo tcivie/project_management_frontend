@@ -1,4 +1,4 @@
-export default function fetchSearchResults(searchTerm) {
+export function fetchSearchResults(searchTerm) {
   // eslint-disable-next-line func-names
   return async function (dispatch) {
     dispatch({ type: 'SEARCH_STARTED' });
@@ -18,5 +18,12 @@ export default function fetchSearchResults(searchTerm) {
     } catch (error) {
       dispatch({ type: 'SEARCH_FAILURE', error });
     }
+  };
+}
+
+export function setSelectedSearch(result) {
+  return {
+    type: 'SEARCH_SELECTED',
+    payload: result,
   };
 }
