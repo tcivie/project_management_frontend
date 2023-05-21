@@ -1,6 +1,18 @@
 import React from 'react';
-import { Space, Button, Avatar, Menu } from 'antd';
-import { UserOutlined, DeleteOutlined, SaveOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons';
+import {
+  Space,
+  Button,
+  Avatar,
+  Menu,
+} from 'antd';
+import {
+  UserOutlined,
+  DeleteOutlined,
+  SaveOutlined,
+  EditOutlined,
+  ProfileOutlined,
+  StockOutlined,
+} from '@ant-design/icons';
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -17,15 +29,18 @@ const items = [
   getItem('Delete post', 'sub2', <DeleteOutlined />, []),
   getItem('Saved content', 'sub4', <SaveOutlined />, []),
   getItem('Edit Profile', 'sub5', <ProfileOutlined />, []),
+  getItem('Statics', 'sub5', <StockOutlined />, []),
 ];
-
-const onClick = (e) => {
-  console.log('click', e);
-};
 
 function Profile() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+    }}
+    >
       <div>
         <Space direction="vertical" size={16}>
           <Space wrap size={64}>
@@ -35,7 +50,6 @@ function Profile() {
           <Button type="default">Following</Button>
           <Button type="default">Followers</Button>
           <Menu
-            onClick={onClick}
             style={{
               width: 256,
             }}
