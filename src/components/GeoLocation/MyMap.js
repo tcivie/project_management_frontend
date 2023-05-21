@@ -111,7 +111,7 @@ function MyMap() {
     }
     timeout.current = setTimeout(async () => {
       await handleZoomChange(zoom, center, bounds);
-    }, 500);
+    }, 250);
   };
   useEffect(() => {
     // Get current position coordinates
@@ -147,17 +147,14 @@ function MyMap() {
       // eslint-disable-next-line max-len
       onBoundsChanged={({ zoom, center, bounds }) => timeOutZoomChange(zoom, center, bounds)}
     >
-
-      {markers}
-
       {userState.location && (
       <Marker
-        width={40}
+        width={35}
         anchor={userState.location}
-        color="rgb(80,200,80)"
+        color="rgb(100,140,220)"
       />
       )}
-
+      {markers}
       <MyDrawer
         cities={clickedMarker}
         visible={visible}
