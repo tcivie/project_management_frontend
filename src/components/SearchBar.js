@@ -7,6 +7,8 @@ import unicodeToEmoji from '../utils/unicodeToEmoji';
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState('');
   const [options, setOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+
   const searchResults = useSelector((state) => state.search.results);
   const isLoading = useSelector((state) => state.search.loading);
   const dispatch = useDispatch();
@@ -43,6 +45,7 @@ function SearchBar() {
   const selectSearchResult = (result, obj) => {
     // set selected city
     setSearchTerm(extractLabelFromResult(obj.data));
+    setSelectedOption(obj);
     const { data } = obj;
     const selection = {
       id: data.id,
@@ -91,20 +94,25 @@ function SearchBar() {
     }).flat();
     setOptions(parsedResults);
   }, [searchResults]);
-
+  const handleSearch = (value) => {
+    // Perform the search action here
+    console.log(selectedOption);
+    selectSearchResult(value, selectedOption);
+  };
   return (
     <AutoComplete
       style={{ width: '100%', marginBottom: '1em' }}
       options={options}
       value={searchTerm}
       onSelect={selectSearchResult}
-      onSearch={(value) => setSearchTerm(value)}
+      onSearch={setSearchTerm}
     >
       <Input.Search
         size="large"
         placeholder="Search..."
         loading={isLoading}
         enterButton
+        onSearch={handleSearch}
       />
     </AutoComplete>
   );

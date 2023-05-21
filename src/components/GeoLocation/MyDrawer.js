@@ -1,6 +1,5 @@
 // MyDrawer.js
-// Disable linter for this file max-len because of the long JSX code
-/* eslint-disable max-len */
+
 import React from 'react';
 import {
   Button,
@@ -47,7 +46,7 @@ function MyDrawer() {
 
   return (
     <Drawer
-      title="Location Information"
+      title={cities && cities[0] ? cities[0].name : 'no city selected'}
       placement="right"
       closable
       onClose={dispatch(drawerClose)}
