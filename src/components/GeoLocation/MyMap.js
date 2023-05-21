@@ -85,7 +85,7 @@ function MyMap() {
           });
         });
         const onclick = (event) => {
-          dispatch(markerClick(event));
+          dispatch(markerClick(event, calculateRadius(mapZoom || 30)));
         };
         // eslint-disable-next-line max-len
         const clusters = getClusterMarkers(mapZoom, mapBounds, newGeoJsons, onclick);

@@ -1,11 +1,17 @@
-export default function markerClick(event, isUserMarker = false) {
+export default function markerClick(event, radius, isUserMarker = false) {
   // eslint-disable-next-line func-names
-  const { payload } = event;
-  const city = payload[0];
+  const {
+    country,
+    id,
+    location,
+    name,
+    stateName,
+    wikiDataId,
+  } = event.payload[0];
   return async function (dispatch) {
     // console.log('markerClick', marker, map);
-    dispatch({ type: 'DRAWER_OPEN', payload: true });
-    dispatch({ type: 'DRAWER_LOCATION_INFO', payload: isUserMarker });
+    dispatch({ type: 'DRAWER_OPEN', payload: isUserMarker });
+    dispatch({ type: 'DRAWER_LOCATION_INFO', payload: location });
 
     try {
       // Pull nearby cities
@@ -14,7 +20,7 @@ export default function markerClick(event, isUserMarker = false) {
           'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: JSON.stringify({ point: city.location, radius: city.radius }),
+        body: JSON.stringify({ point: location, radius }),
       });
       const nearbyPointsJson = await nearbyPoints.json();
       dispatch({ type: 'DRAWER_NEARBY_CITIES', payload: nearbyPointsJson });

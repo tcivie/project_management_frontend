@@ -19,9 +19,11 @@ import unicodeToEmoji from '../../utils/unicodeToEmoji';
 
 function MyDrawer() {
   const drawerReducer = useSelector((state) => state.drawer);
+  console.log(drawerReducer);
   const {
-    visible, locationInfo, chatRoomInfo, isUserMarker,
+    chatRoomInfo, isUserMarker, locationInfo, nearbyCities, stats, visible,
   } = drawerReducer;
+  console.log(nearbyCities);
   const dispatch = useDispatch();
 
   let chatRoomInfoParsed = [];
@@ -123,7 +125,29 @@ function MyDrawer() {
                 padding: '16px 16px',
                 border: '1px solid #e8e8e8',
               }}
-            />
+            >
+              <List
+                dataSource={nearbyCities}
+                grid={{ gutter: 16, column: 1 }}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Badge.Ribbon
+                      color="volcano"
+                      text={<> <TeamOutlined /> {`${item.activeUsers} ###`} </>}
+                      status="processing"
+                      style={{ right: '-6px', top: '-10px' }}
+                      hasMore={chatRoomInfo.length < 10}
+                    >
+                      <Button type="primary" block>
+                        <div style={{ float: 'left' }}>
+                          {item.name} {item.country}
+                        </div>
+                      </Button>
+                    </Badge.Ribbon>
+                  </List.Item>
+                )}
+              />
+            </div>
           </Col>
           <Col span={12}>
             <Divider> Trending Topics </Divider>
