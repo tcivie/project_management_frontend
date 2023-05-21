@@ -33,15 +33,7 @@ const createMarker = (supercluster, geoJson, onclick) => {
     />
   );
 };
-function convertBounds(sw, ne) {
-  const difference = ne[0] - sw[0];
-  const south = sw[0] + difference / 2;
-  const west = sw[1] + difference / 2;
-  const north = ne[0] - difference / 2;
-  const east = ne[1] - difference / 2;
 
-  return [west, south, east, north];
-}
 const getClusterMarkers = (zoomLevel, bounds, markers, onclick) => {
   const radius = 35 + 1.6 ** (15 - zoomLevel);
   const superCluster = new Supercluster({
@@ -50,19 +42,10 @@ const getClusterMarkers = (zoomLevel, bounds, markers, onclick) => {
     minZoom: 3,
   }).load(markers);
 
-  const west = bounds.sw[1];
-  let east = bounds.ne[1];
-
-  // Adjust the bounds if crossing the antimeridian
-  if (west > east) {
-    east += 360; // Add 360 degrees to the east value
-  }
-
   const clusteredMarkers = superCluster.getClusters(
-    [bounds.sw[0], west, bounds.ne[0], east],
+    [bounds.sw[0], bounds.sw[1], bounds.ne[0], bounds.ne[1]],
     zoomLevel,
   );
-  console.log(clusteredMarkers);
   const use = clusteredMarkers.length ? clusteredMarkers : markers;
   return (use).map((x) => createMarker(superCluster, x, onclick));
 };

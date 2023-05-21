@@ -2,17 +2,21 @@ import { Map, Marker, ZoomControl } from 'pigeon-maps';
 import React, { useEffect, useState } from 'react';
 import { maptiler } from 'pigeon-maps/providers';
 import { useDispatch, useSelector } from 'react-redux';
+import { timeout } from 'q';
 import { setGeolocation } from '../../redux/actions/userActions';
 import MyDrawer from './MyDrawer';
 import markerClick from '../../redux/actions/drawerActions';
+import getClusterMarkers from './MarkerClusters';
 
 const maptilerProvider = maptiler(process.env.REACT_APP_MAPTILER_CODE, 'streets');
 
 function MyMap() {
   const searchSelection = useSelector((state) => state.search.selection);
+  const [markers, setMarkers] = useState([]);
   const userState = useSelector((state) => state.user);
-  const [center, setCenter] = useState(null);
-  const [zoom, setZoom] = useState(null);
+  const [mapCenter, setCenter] = useState(null);
+  const [mapZoom, setZoom] = useState(null);
+  const [mapBounds, setBounds] = useState(null);
   const dispatch = useDispatch();
 
   function calculateRadius(zoomLevel) {
@@ -37,7 +41,7 @@ function MyMap() {
       17: 1.193,
       18: 0.596,
     };
-
+    console.log(zoomLevel);
     // Ensure zoom level is within valid range
     const clampedZoomLevel = Math.max(6, Math.min(18, Math.floor(zoomLevel)));
 
@@ -47,7 +51,7 @@ function MyMap() {
     return radius;
   }
 
-  const handleZoomChange = async (zoom, center, bounds) => {
+  const handleZoomChange = async () => {
     try {
       // sending register reuqest to server
       const response = await fetch(
@@ -59,8 +63,8 @@ function MyMap() {
           },
           body: JSON.stringify({
             limit: 10000,
-            point: center,
-            radius: calculateRadius(zoom),
+            point: mapCenter,
+            radius: calculateRadius(mapZoom || 30),
           }),
         },
       );
@@ -80,8 +84,11 @@ function MyMap() {
             },
           });
         });
-
-        const clusters = getClusterMarkers(zoom, bounds, newGeoJsons, showDrawer);
+        const onclick = (event) => {
+          dispatch(markerClick(event));
+        };
+        // eslint-disable-next-line max-len
+        const clusters = getClusterMarkers(mapZoom, mapBounds, newGeoJsons, onclick);
         setMarkers(clusters);
       }
     } catch (err) {
@@ -91,13 +98,13 @@ function MyMap() {
     }
   };
 
-  const timeOutZoomChange = async (zoom, center, bounds) => {
+  const timeOutZoomChange = async () => {
     if (timeout.current) {
       clearTimeout(timeout.current);
     }
     timeout.current = setTimeout(async () => {
-      await handleZoomChange(zoom, center, bounds);
-    }, 25);
+      await handleZoomChange();
+    }, 250);
   };
   useEffect(() => {
     // Get current position coordinates
@@ -115,6 +122,11 @@ function MyMap() {
   }, []);
 
   useEffect(() => {
+    console.log(mapZoom, mapBounds, mapCenter);
+    if (mapZoom && mapCenter && mapBounds) { timeOutZoomChange(); }
+  }, [mapZoom, mapCenter]);
+
+  useEffect(() => {
     if (searchSelection !== null) {
       const coordinates = searchSelection.location;
       setCenter(coordinates);
@@ -127,10 +139,13 @@ function MyMap() {
       height={500}
       defaultCenter={[50.879, 4.6997]}
       defaultZoom={11}
-      center={center}
-      onBoundsChanged={() => {
+      center={mapCenter}
+      onBoundsChanged={({ bounds, zoom, center }) => {
+        console.log(bounds, center, zoom);
+
         setCenter(center);
         setZoom(zoom);
+        setBounds(bounds);
       }}
     >
       {userState.location && (
@@ -138,10 +153,11 @@ function MyMap() {
         width={35}
         anchor={userState.location}
         onClick={() => {
-          dispatch(markerClick(userState.location, zoom));
+          dispatch(markerClick(userState.location, mapZoom));
         }}
       />
       )}
+      {markers}
       <MyDrawer />
       <ZoomControl />
     </Map>
