@@ -8,30 +8,52 @@ import {
   Divider,
   Descriptions,
   Statistic,
-  Skeleton, Row, Col, Badge, Avatar, Space,
+  Skeleton, Row, Col, Badge,
 } from 'antd';
 import {
-  LikeOutlined, StarOutlined, TeamOutlined, MessageOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { drawerClose } from '../../redux/actions/drawerActions';
+import unicodeToEmoji from '../../utils/unicodeToEmoji';
 
-function IconText({ icon, text }) {
-  return (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  );
-}
-function MyDrawer({
-  visible, onClose, chatRoomInfo, stats, cities,
-}) {
-  const locationInfo = cities ? cities[0] : null;
+function MyDrawer() {
+  const drawerReducer = useSelector((state) => state.drawer);
+  const {
+    visible, locationInfo, chatRoomInfo, isUserMarker,
+  } = drawerReducer;
+  const dispatch = useDispatch();
+
+  let chatRoomInfoParsed = [];
+
+  if (chatRoomInfo !== null) {
+    chatRoomInfoParsed = Object.keys(chatRoomInfo).map((key) => {
+      const item = chatRoomInfo[key];
+      return {
+        key,
+        ...item,
+      };
+    });
+  }
+  if (isUserMarker) {
+    return (
+      <Drawer
+        title="Your Location"
+        placement="right"
+        closable
+        onClose={() => dispatch(drawerClose())}
+        visible={visible}
+        size="small"
+      />
+    );
+  }
   return (
     <Drawer
-      title={cities && cities[0] ? cities[0].name : 'no city selected'}
+            // title={cities && cities[0] ? cities[0].name : 'no city selected'}
+      title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
-      onClose={onClose}
+      onClose={() => dispatch(drawerClose())}
       visible={visible}
       size="large"
     >
@@ -47,19 +69,16 @@ function MyDrawer({
           <Col span={8}>
             <Statistic
               title="Active Users"
-              value={chatRoomInfo?.reduce((total, room) => total + room.activeUsers, 0)}
             />
           </Col>
           <Col span={8}>
             <Statistic
               title="A.Response Time"
-              value={stats?.averageResponseTime}
             />
           </Col>
           <Col span={8}>
             <Statistic
               title="Posts Last 7 Days"
-              value={stats?.numberOfPosts}
             />
           </Col>
         </Row>
@@ -73,20 +92,20 @@ function MyDrawer({
           }}
         >
           <List
-            dataSource={chatRoomInfo}
+            dataSource={chatRoomInfoParsed}
             grid={{ gutter: 16, column: 3 }}
             renderItem={(item) => (
               <Badge.Ribbon
                 color="volcano"
-                text={<> <TeamOutlined /> {`${item.activeUsers} users`} </>}
+                text={<> <TeamOutlined /> ### </>}
                 status="processing"
                 style={{ right: '2px', top: '-10px' }}
-                hasMore={chatRoomInfo.length < 10}
+                hasMore={chatRoomInfoParsed.length < 10}
               >
                 <List.Item>
                   <Button type="primary" block>
                     <div style={{ float: 'left' }}>
-                      {item.emoji} {item.language}
+                      {item?.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
                     </div>
                   </Button>
                 </List.Item>
@@ -104,30 +123,7 @@ function MyDrawer({
                 padding: '16px 16px',
                 border: '1px solid #e8e8e8',
               }}
-            >
-
-              <List
-                dataSource={locationInfo?.nearbyCities}
-                grid={{ gutter: 16, column: 1 }}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Badge.Ribbon
-                      color="volcano"
-                      text={<> <TeamOutlined /> {`${item.activeUsers} users`} </>}
-                      status="processing"
-                      style={{ right: '-6px', top: '-10px' }}
-                      hasMore={chatRoomInfo.length < 10}
-                    >
-                      <Button type="primary" block>
-                        <div style={{ float: 'left' }}>
-                          {item.cityName} {item.countryName}
-                        </div>
-                      </Button>
-                    </Badge.Ribbon>
-                  </List.Item>
-                )}
-              />
-            </div>
+            />
           </Col>
           <Col span={12}>
             <Divider> Trending Topics </Divider>
@@ -138,36 +134,7 @@ function MyDrawer({
                 padding: '16px 16px',
                 border: '1px solid #e8e8e8',
               }}
-            >
-              <List
-                dataSource={stats?.trendingPosts}
-                grid={{ gutter: 16, column: 1 }}
-                renderItem={(item) => (
-                  <List.Item
-                    key={item.title}
-                    actions={[
-                      <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                      <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-                      <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-                    ]}
-                    extra={(
-                      <img
-                        width={272}
-                        alt="logo"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                      />
-                        )}
-                  >
-                    <List.Item.Meta
-                      avatar={<Avatar src={item.avatar} />}
-                      title={<a href={item.href}>{item.title}</a>}
-                      description={item.description}
-                    />
-                    {item.content}
-                  </List.Item>
-                )}
-              />
-            </div>
+            />
           </Col>
         </Row>
       </Skeleton>
