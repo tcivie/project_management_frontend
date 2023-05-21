@@ -139,7 +139,7 @@ function MyMap() {
   return (
     <Map
       provider={maptilerProvider}
-      height={400}
+      height={500}
       defaultCenter={[50.879, 4.6997]}
       center={location}
       zoom={mapZoom}
@@ -152,7 +152,7 @@ function MyMap() {
 
       {userState.location && (
       <Marker
-        width={60}
+        width={40}
         anchor={userState.location}
         color="rgb(80,200,80)"
       />

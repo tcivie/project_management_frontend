@@ -11,7 +11,7 @@ const createMarker = (supercluster, geoJson, onclick) => {
     return (
       <Marker
         key={clusterId}
-        width={50 + Math.min(clusterSize, 20)}
+        width={35 + Math.min(2 * clusterSize, 20)}
         anchor={geoJson.geometry.coordinates}
         color={`rgb(255,${Math.max(150 - clusterSize * 10, 0)},60)`}
         cities
@@ -24,7 +24,7 @@ const createMarker = (supercluster, geoJson, onclick) => {
   return (
     <Marker
       key={city.id}
-      width={50}
+      width={35}
       anchor={city.location}
       color="rgb(255,150,60)"
       cities={[city]}
