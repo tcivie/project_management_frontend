@@ -17,10 +17,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { drawerClose } from '../../redux/actions/drawerActions';
 import unicodeToEmoji from '../../utils/unicodeToEmoji';
 
-function MyDrawer(isUserLocation = false) {
+function MyDrawer() {
   const drawerReducer = useSelector((state) => state.drawer);
   const {
-    visible, locationInfo, chatRoomInfo,
+    visible, locationInfo, chatRoomInfo, isUserMarker,
   } = drawerReducer;
   const dispatch = useDispatch();
 
@@ -35,7 +35,7 @@ function MyDrawer(isUserLocation = false) {
       };
     });
   }
-  if (isUserLocation) {
+  if (isUserMarker) {
     return (
       <Drawer
         title="Your Location"
@@ -105,7 +105,7 @@ function MyDrawer(isUserLocation = false) {
                 <List.Item>
                   <Button type="primary" block>
                     <div style={{ float: 'left' }}>
-                      {item.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
+                      {item?.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
                     </div>
                   </Button>
                 </List.Item>

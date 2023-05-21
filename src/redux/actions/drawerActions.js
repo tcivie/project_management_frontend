@@ -1,9 +1,9 @@
-export default function markerClick(location, radius) {
+export default function markerClick(location, radius, isUserMarker = false) {
   // eslint-disable-next-line func-names
   return async function (dispatch) {
     // console.log('markerClick', marker, map);
-    dispatch({ type: 'DRAWER_OPEN' });
-    dispatch({ type: 'DRAWER_LOCATION_INFO', payload: location });
+    dispatch({ type: 'DRAWER_OPEN', payload: true });
+    dispatch({ type: 'DRAWER_LOCATION_INFO', payload: isUserMarker });
 
     try {
       // Pull nearby cities

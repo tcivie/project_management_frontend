@@ -4,6 +4,7 @@ const initialState = {
   locationInfo: null,
   chatRoomInfo: null,
   nearbyCities: null,
+  isUserMarker: false,
   stats: null,
 };
 
@@ -13,6 +14,7 @@ export default function drawerReducer(state = initialState, action) {
       return {
         ...state,
         visible: true,
+        isUserMarker: action.payload,
       };
     case 'DRAWER_CLOSE':
       return {
