@@ -11,7 +11,6 @@ const maptilerProvider = maptiler(MAPTILER_ACCESS_TOKEN, 'streets');
 
 function MyMap() {
   const searchSelection = useSelector((state) => state.search.selection);
-  const drawerReducer = useSelector((state) => state.drawer);
   const userState = useSelector((state) => state.user);
   const [center, setCenter] = useState(null);
   const [zoom, setZoom] = useState(null);
@@ -19,7 +18,6 @@ function MyMap() {
 
   useEffect(() => {
     // Get current position coordinates
-    console.log('Getting current position...');
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
