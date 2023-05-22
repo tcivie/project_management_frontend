@@ -1,12 +1,4 @@
 {
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".ts", ".tsx"],
-        "moduleDirectory": ["src", "node_modules"]
-      }
-    }
-  },
   "env": {
     "browser": true,
     "es2021": true
