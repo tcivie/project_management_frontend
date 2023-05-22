@@ -17,17 +17,17 @@ export default function OGCard({ wikiId }) {
     });
   }, [wikiId]);
 
-  console.log('ogImage', ogData?.ogImage[3]);
+  console.log('ogImage', ogData);
   return (
     <Card
       style={{ width: '100%' }}
       cover={
-                loading
+                (loading || !ogData.ogImage)
                   ? <Skeleton.Image />
                   : (
                     <img
                       alt="example"
-                      src={ogData.ogImage[0].url}
+                      src={ogData.ogImage ? ogData.ogImage[0].url : ''}
                       style={{
                         objectFit: 'cover',
                         height: '150px',
