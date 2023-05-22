@@ -34,6 +34,7 @@ function MyDrawer() {
       };
     });
   }
+  console.log(chatRoomInfoParsed);
 
   if (isUserMarker) {
     return (
@@ -105,7 +106,7 @@ function MyDrawer() {
                 <List.Item>
                   <Button type="primary" block>
                     <div style={{ float: 'left' }}>
-                      {item[0]} {unicodeToEmoji(item[2])} {item[1]}
+                      {item?.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
                     </div>
                   </Button>
                 </List.Item>
