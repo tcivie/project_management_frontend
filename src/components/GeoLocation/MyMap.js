@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { maptiler } from 'pigeon-maps/providers';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGeolocation } from '../../redux/actions/userActions';
-import getClusterMarkers from './MarkerClusters';
+// import getClusterMarkers from './MarkerClusters';
 import MyDrawer from './MyDrawer';
-import markerClick from '../../redux/actions/drawerActions';
+// import markerClick from '../../redux/actions/drawerActions';
 
 const maptilerProvider = maptiler(process.env.REACT_APP_MAPTILER_CODE, 'streets');
 

@@ -7,7 +7,7 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import RegisterPage from '../pages/Register';
 import LoginForm from './Login';
 import { userLogout } from '../redux/actions/userActions';
@@ -62,7 +62,8 @@ function Navbar() {
           onClick={!userState.isAuthenticated ? openRegisterModal : closeRegisterModal}
         >
           {userState.isAuthenticated ? (
-            <span onClick={profileButtonClick}>Hello {userState.userData}</span>
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+            <span role="presentation" onClick={profileButtonClick}>Hello {userState.userData}</span>
           ) : (
             'Sign Up'
           )}
