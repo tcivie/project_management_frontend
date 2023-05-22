@@ -7,9 +7,11 @@ import { setGeolocation } from '../../redux/actions/userActions';
 import MyDrawer from './MyDrawer';
 import markerClick from '../../redux/actions/drawerActions';
 import getClusterMarkers from './MarkerClusters';
+import { reversePoint } from '../../utils/unicodeToEmoji';
 
 const maptilerProvider = maptiler(process.env.REACT_APP_MAPTILER_CODE, 'streets');
-
+const drawer = <MyDrawer />;
+const zoomControl = <ZoomControl />;
 function MyMap() {
   const searchSelection = useSelector((state) => state.search.selection);
   const [markers, setMarkers] = useState([]);
@@ -19,38 +21,16 @@ function MyMap() {
   const [mapBounds, setBounds] = useState(null);
   const dispatch = useDispatch();
 
-  function calculateRadius(zoomLevel) {
-    const zoomScaleDict = {
-      0: 156412,
-      1: 78206,
-      2: 39096,
-      3: 19548,
-      4: 9774,
-      5: 4884,
-      6: 2442,
-      7: 1222,
-      8: 610.984,
-      9: 305.492,
-      10: 152.746,
-      11: 76.373,
-      12: 38.187,
-      13: 19.093,
-      14: 9.547,
-      15: 4.773,
-      16: 2.387,
-      17: 1.193,
-      18: 0.596,
-    };
-    console.log(zoomLevel);
-    // Ensure zoom level is within valid range
-    const clampedZoomLevel = Math.max(6, Math.min(18, Math.floor(zoomLevel)));
-
-    // Get radius based on the zoom level
-    const radius = zoomScaleDict[clampedZoomLevel];
-
-    return radius;
+  function calculateKmPerPixel(latitude, zoomLevel) {
+    const earthRadius = 6371; // Earth's radius in kilometers
+    const kmPerPixel = (256 * 2 ** (18 - zoomLevel)) / (2 * Math.PI * earthRadius);
+    console.log(kmPerPixel * 30);
+    return kmPerPixel;
   }
 
+  const onclick = (event) => {
+    dispatch(markerClick(event));
+  };
   const handleZoomChange = async () => {
     try {
       // sending register reuqest to server
@@ -63,8 +43,8 @@ function MyMap() {
           },
           body: JSON.stringify({
             limit: 10000,
-            point: mapCenter,
-            radius: calculateRadius(mapZoom || 30),
+            point: reversePoint(mapCenter),
+            radius: Math.min(500, calculateKmPerPixel(mapCenter[0], mapZoom || 16) * 30),
           }),
         },
       );
@@ -84,11 +64,10 @@ function MyMap() {
             },
           });
         });
-        const onclick = (event) => {
-          dispatch(markerClick(event, calculateRadius(mapZoom || 30)));
-        };
+
         // eslint-disable-next-line max-len
         const clusters = getClusterMarkers(mapZoom, mapBounds, newGeoJsons, onclick);
+        console.log(clusters);
         setMarkers(clusters);
       }
     } catch (err) {
@@ -122,27 +101,29 @@ function MyMap() {
   }, []);
 
   useEffect(() => {
-    console.log(mapZoom, mapBounds, mapCenter);
     if (mapZoom && mapCenter && mapBounds) { timeOutZoomChange(); }
   }, [mapZoom, mapCenter]);
 
   useEffect(() => {
     if (searchSelection !== null) {
       const coordinates = searchSelection.location;
-      setCenter(coordinates);
+      setZoom(12);
+      setCenter(reversePoint(coordinates));
     }
   }, [searchSelection]);
 
   return (
     <Map
+      dprs={[1, 2]}
       provider={maptilerProvider}
       height={500}
       defaultCenter={[50.879, 4.6997]}
       defaultZoom={11}
       center={mapCenter}
+      onClick={(event) => {
+        console.log(event);
+      }}
       onBoundsChanged={({ bounds, zoom, center }) => {
-        console.log(bounds, center, zoom);
-
         setCenter(center);
         setZoom(zoom);
         setBounds(bounds);
@@ -152,14 +133,14 @@ function MyMap() {
       <Marker
         width={35}
         anchor={userState.location}
-        onClick={() => {
-          dispatch(markerClick(userState.location, mapZoom));
+        onClick={(event) => {
+          dispatch(markerClick(event, userState.location, true));
         }}
       />
       )}
       {markers}
-      <MyDrawer />
-      <ZoomControl />
+      {drawer}
+      {zoomControl}
     </Map>
   );
 }

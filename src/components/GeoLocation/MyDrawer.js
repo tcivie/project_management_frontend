@@ -19,15 +19,12 @@ import unicodeToEmoji from '../../utils/unicodeToEmoji';
 
 function MyDrawer() {
   const drawerReducer = useSelector((state) => state.drawer);
-  console.log(drawerReducer);
   const {
     chatRoomInfo, isUserMarker, locationInfo, nearbyCities, stats, visible,
   } = drawerReducer;
-  console.log(nearbyCities);
   const dispatch = useDispatch();
 
   let chatRoomInfoParsed = [];
-
   if (chatRoomInfo !== null) {
     chatRoomInfoParsed = Object.keys(chatRoomInfo).map((key) => {
       const item = chatRoomInfo[key];
@@ -37,6 +34,7 @@ function MyDrawer() {
       };
     });
   }
+
   if (isUserMarker) {
     return (
       <Drawer
@@ -44,19 +42,19 @@ function MyDrawer() {
         placement="right"
         closable
         onClose={() => dispatch(drawerClose())}
-        visible={visible}
+        open={visible}
         size="small"
       />
     );
   }
   return (
     <Drawer
-            // title={cities && cities[0] ? cities[0].name : 'no city selected'}
-      title={locationInfo?.location || 'no city selected'}
+      title={locationInfo?.name || 'Mulitple Cities'}
+      // title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
       onClose={() => dispatch(drawerClose())}
-      visible={visible}
+      open={visible}
       size="large"
     >
       <Skeleton loading={locationInfo === null || chatRoomInfo === null}>
@@ -107,7 +105,7 @@ function MyDrawer() {
                 <List.Item>
                   <Button type="primary" block>
                     <div style={{ float: 'left' }}>
-                      {item?.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
+                      {item[0]} {unicodeToEmoji(item[2])} {item[1]}
                     </div>
                   </Button>
                 </List.Item>
@@ -127,7 +125,7 @@ function MyDrawer() {
               }}
             >
               <List
-                dataSource={nearbyCities}
+                dataSource={nearbyCities || []}
                 grid={{ gutter: 16, column: 1 }}
                 renderItem={(item) => (
                   <List.Item>
@@ -158,7 +156,8 @@ function MyDrawer() {
                 padding: '16px 16px',
                 border: '1px solid #e8e8e8',
               }}
-            />
+            ><Skeleton />
+            </div>
           </Col>
         </Row>
       </Skeleton>

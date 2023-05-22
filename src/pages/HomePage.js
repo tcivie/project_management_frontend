@@ -7,7 +7,8 @@ import SearchBar from '../components/SearchBar';
 import MyMap from '../components/GeoLocation/MyMap';
 
 const { Content } = Layout;
-
+const map = <MyMap />;
+const searchBar = <SearchBar />;
 function HomePage() {
   const [backgroundImage, setBackgroundImage] = useState(null);
 
@@ -41,8 +42,8 @@ function HomePage() {
         }}
       >
         <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
-          <SearchBar />
-          <MyMap />
+          {searchBar}
+          {map}
         </Card>
       </Content>
     </Layout>

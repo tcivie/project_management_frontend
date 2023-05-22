@@ -1,5 +1,6 @@
 import { Marker } from 'pigeon-maps';
 import Supercluster from 'supercluster';
+import { reversePoint } from '../../utils/unicodeToEmoji';
 
 const createMarker = (supercluster, geoJson, onclick) => {
   if (geoJson.properties.cluster) {
@@ -12,7 +13,7 @@ const createMarker = (supercluster, geoJson, onclick) => {
       <Marker
         key={clusterId}
         width={35 + Math.min(3 * clusterSize, 20)}
-        anchor={geoJson.geometry.coordinates}
+        anchor={reversePoint(geoJson.geometry.coordinates)}
         color={`rgb(${Math.min((180 + clusterSize * 15), 255)},${Math.max((210 - clusterSize * 5), 0)},80)`}
         cities
         onClick={onclick}
@@ -25,7 +26,7 @@ const createMarker = (supercluster, geoJson, onclick) => {
     <Marker
       key={city.id}
       width={35}
-      anchor={city.location}
+      anchor={reversePoint(city.location)}
       color="rgb(80,230,110)"
       cities={[city]}
       onClick={onclick}
@@ -37,16 +38,17 @@ const createMarker = (supercluster, geoJson, onclick) => {
 const getClusterMarkers = (zoomLevel, bounds, markers, onclick) => {
   const radius = 35 + 1.6 ** (15 - zoomLevel);
   const superCluster = new Supercluster({
-    radius, // Cluster radius in pixels
+    radius: 50, // Cluster radius in pixels
     maxZoom: 16, // Maximum zoom level for clustering
     minZoom: 3,
   }).load(markers);
 
   const clusteredMarkers = superCluster.getClusters(
-    [bounds.sw[0], bounds.sw[1], bounds.ne[0], bounds.ne[1]],
+    [bounds.sw[1], bounds.sw[0], bounds.ne[1], bounds.ne[0]],
     zoomLevel,
   );
   const use = clusteredMarkers.length ? clusteredMarkers : markers;
+  console.log(use);
   return (use).map((x) => createMarker(superCluster, x, onclick));
 };
 export default getClusterMarkers;
