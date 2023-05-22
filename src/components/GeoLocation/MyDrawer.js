@@ -1,6 +1,6 @@
 // MyDrawer.js
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Drawer,
@@ -16,14 +16,16 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { drawerClose } from '../../redux/actions/drawerActions';
 import unicodeToEmoji from '../../utils/unicodeToEmoji';
+import OGCard from '../OGCard';
 
 function MyDrawer() {
+  const [wikiInformation, setWikiInformation] = useState(null);
   const drawerReducer = useSelector((state) => state.drawer);
   const {
-    chatRoomInfo, isUserMarker, locationInfo, nearbyCities, stats, visible,
+    chatRoomInfo, isUserMarker, locationInfo, nearbyCities, stats, visible, wikiInfo,
   } = drawerReducer;
+  console.log('drawerReducer', drawerReducer);
   const dispatch = useDispatch();
-
   let chatRoomInfoParsed = [];
   if (chatRoomInfo !== null) {
     chatRoomInfoParsed = Object.keys(chatRoomInfo).map((key) => {
@@ -47,6 +49,7 @@ function MyDrawer() {
       />
     );
   }
+  console.log('locationInfo?.wikiDataId', locationInfo?.wikiDataId);
   return (
     <Drawer
       title={locationInfo?.name || 'Mulitple Cities'}
@@ -58,29 +61,12 @@ function MyDrawer() {
       size="large"
     >
       <Skeleton loading={locationInfo === null || chatRoomInfo === null}>
-        <Row gutter={16}>
-          <Descriptions>
-            <Descriptions.Item label="Location">{locationInfo?.location}</Descriptions.Item>
-            <Descriptions.Item label="Local Time">{locationInfo?.localTime}</Descriptions.Item>
-            <Descriptions.Item label="Other Info">{locationInfo?.otherInfo}</Descriptions.Item>
-          </Descriptions>
-        </Row>
         <Row>
-          <Col span={8}>
-            <Statistic
-              title="Active Users"
-            />
-          </Col>
-          <Col span={8}>
-            <Statistic
-              title="A.Response Time"
-            />
-          </Col>
-          <Col span={8}>
-            <Statistic
-              title="Posts Last 7 Days"
-            />
-          </Col>
+          {locationInfo?.wikiDataId ? (
+            <OGCard wikiId={locationInfo?.wikiDataId} />
+          ) : (
+            'No Wiki Data'
+          )}
         </Row>
         <Divider> Chat Rooms </Divider>
         <div
