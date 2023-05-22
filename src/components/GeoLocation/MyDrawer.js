@@ -44,7 +44,7 @@ function MyDrawer() {
         placement="right"
         closable
         onClose={() => dispatch(drawerClose())}
-        open={visible}
+        visible={visible}
         size="small"
       />
     );
@@ -57,7 +57,7 @@ function MyDrawer() {
       placement="right"
       closable
       onClose={() => dispatch(drawerClose())}
-      open={visible}
+      visible={visible}
       size="large"
     >
       <Skeleton loading={locationInfo === null || chatRoomInfo === null}>
@@ -117,7 +117,7 @@ function MyDrawer() {
                   <List.Item>
                     <Badge.Ribbon
                       color="volcano"
-                      text={<> <TeamOutlined /> {`${item.activeUsers} ###`} </>}
+                      text={<> <TeamOutlined /> {`${item.activeUsers || '###'}`} </>}
                       status="processing"
                       style={{ right: '-6px', top: '-10px' }}
                       hasMore={chatRoomInfo.length < 10}

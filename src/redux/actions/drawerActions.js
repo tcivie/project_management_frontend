@@ -38,7 +38,6 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
         body: JSON.stringify({ point: location, radius: 30 }),
       }).then((res) => res.json())
         .then((data) => dispatch({ type: 'DRAWER_NEARBY_CITIES', payload: data }));
-
       // Pull chat rooms
       const chatRooms = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/languages`, {
         method: 'GET',
