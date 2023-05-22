@@ -28,13 +28,13 @@ function MyMap() {
     return kmPerPixel;
   }
 
-  const onclick = async (event) => {
-    dispatch(await markerClick(event));
+  const onclick = (event) => {
+    dispatch(markerClick(event));
   };
   const handleZoomChange = async () => {
     try {
       // sending register reuqest to server
-      const response = await fetch(
+      fetch(
         `${process.env.REACT_APP_API_SERVER}/api/search/nearPoint`,
         {
           method: 'POST',
@@ -47,9 +47,7 @@ function MyMap() {
             radius: Math.min(500, calculateKmPerPixel(mapZoom || 16) * 30),
           }),
         },
-      );
-      if (response.ok) {
-        const data = await response.json();
+      ).then((response) => response.json()).then((data) => {
         const newGeoJsons = [];
         data.forEach((city) => {
           newGeoJsons.push({
@@ -67,7 +65,7 @@ function MyMap() {
         // eslint-disable-next-line max-len
         const clusters = getClusterMarkers(mapZoom, 100, mapBounds, newGeoJsons, onclick);
         setMarkers(clusters);
-      }
+      });
     } catch (err) {
       // Handle any network or request error
       // eslint-disable-next-line no-console
@@ -75,12 +73,12 @@ function MyMap() {
     }
   };
 
-  const timeOutZoomChange = async () => {
+  const timeOutZoomChange = () => {
     if (timeout.current) {
       clearTimeout(timeout.current);
     }
-    timeout.current = setTimeout(async () => {
-      await handleZoomChange();
+    timeout.current = setTimeout(() => {
+      handleZoomChange();
     }, 250);
   };
   useEffect(() => {

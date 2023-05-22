@@ -30,7 +30,7 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
     });
     try {
       // Pull nearby cities
-      const nearbyPoints = fetch(`${process.env.REACT_APP_API_SERVER}/api/search/nearPoint`, {
+      fetch(`${process.env.REACT_APP_API_SERVER}/api/search/nearPoint`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -39,7 +39,7 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
       }).then((res) => res.json())
         .then((data) => dispatch({ type: 'DRAWER_NEARBY_CITIES', payload: data }));
       // Pull chat rooms
-      const chatRooms = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/languages`, {
+      fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/languages`, {
         method: 'GET',
       }).then((res) => res.json())
         .then((data) => dispatch({ type: 'DRAWER_CHATROOM_INFO', payload: data }));

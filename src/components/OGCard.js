@@ -1,6 +1,8 @@
 // OGCard.js
 import React, { useState, useEffect } from 'react';
-import { Card, Skeleton } from 'antd';
+import {
+  Card, Skeleton, Spin, Image,
+} from 'antd';
 import { fetchOpenGraphData } from '../utils/fetchWikiData'; // import our fetch function
 
 export default function OGCard({ wikiId }) {
@@ -8,6 +10,7 @@ export default function OGCard({ wikiId }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     if (!wikiId) {
       return;
     }
@@ -16,36 +19,37 @@ export default function OGCard({ wikiId }) {
       setLoading(false);
     });
   }, [wikiId]);
-
-  console.log('ogImage', ogData);
   return (
     <Card
-      style={{ width: '100%' }}
       cover={
-                (loading || !ogData.ogImage)
-                  ? <Skeleton.Image />
-                  : (
-                    <img
-                      alt="example"
-                      src={ogData.ogImage ? ogData.ogImage[0].url : ''}
-                      style={{
-                        objectFit: 'cover',
-                        height: '150px',
-                        width: '100%',
-                      }}
-                    />
-                  )
+               wikiId && ((loading)
+                 ? (
+                   <Spin style={{ paddingTop: '65px' }} tip="Loading" size="large">
+                     <div className="content" />
+                   </Spin>
+                 )
+                 : (
+                   <Image
+                     src={ogData.ogImage ? ogData.ogImage[0].url : 'error'}
+                     style={{
+                       objectFit: 'fill',
+                       height: '200px',
+                       width: '100%',
+                     }}
+                     fallback="https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg"
+                   />
+                 ))
             }
     >
-      {loading ? (
+      {loading && wikiId ? (
         <Skeleton active />
       ) : (
         <div style={{
           display: 'flex', flexWrap: 'nowrap',
         }}
         >
-          <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{ogData.ogTitle} - </div>
-          <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{ogData.ogDescription}</div>
+          <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{wikiId ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
+          <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{wikiId ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
         </div>
       )}
     </Card>

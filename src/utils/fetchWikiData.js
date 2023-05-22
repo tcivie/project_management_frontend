@@ -9,7 +9,6 @@ export async function fetchOpenGraphData(wikiId) {
   return fetch(url)
     .then((response) => {
       if (response.ok) {
-        console.log('response', response);
         return response.json();
       }
       throw new Error('Network response was not ok.');

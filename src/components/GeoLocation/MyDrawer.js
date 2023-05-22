@@ -14,18 +14,15 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { drawerClose } from '../../redux/actions/drawerActions';
+import markerClick, { drawerClose } from '../../redux/actions/drawerActions';
 import unicodeToEmoji from '../../utils/unicodeToEmoji';
 import OGCard from '../OGCard';
 
 function MyDrawer() {
-  const [wikiInformation, setWikiInformation] = useState(null);
   const drawerReducer = useSelector((state) => state.drawer);
   const {
     chatRoomInfo, isUserMarker, locationInfo, nearbyCities, stats, visible, wikiInfo,
-  } = drawerReducer;
-  console.log('drawerReducer', drawerReducer);
-  const dispatch = useDispatch();
+  } = drawerReducer; const dispatch = useDispatch();
   let chatRoomInfoParsed = [];
   if (chatRoomInfo !== null) {
     chatRoomInfoParsed = Object.keys(chatRoomInfo).map((key) => {
@@ -49,10 +46,14 @@ function MyDrawer() {
       />
     );
   }
-  console.log('locationInfo?.wikiDataId', locationInfo?.wikiDataId);
+
   return (
     <Drawer
-      title={locationInfo?.name || 'Mulitple Cities'}
+      headerStyle={{
+        display: 'block', justifyContent: 'stretch', padding: '10px 10px 0px 10px',
+      }}
+      bodyStyle={{ padding: '0px 10px 0px 10px' }}
+      extra={<div style={{ paddingLeft: '35%', marginBottom: '10px' }}><OGCard wikiId={locationInfo?.wikiDataId} /></div>}
       // title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
@@ -61,19 +62,14 @@ function MyDrawer() {
       size="large"
     >
       <Skeleton loading={locationInfo === null || chatRoomInfo === null}>
-        <Row>
-          {locationInfo?.wikiDataId ? (
-            <OGCard wikiId={locationInfo?.wikiDataId} />
-          ) : (
-            'No Wiki Data'
-          )}
-        </Row>
-        <Divider> Chat Rooms </Divider>
+
+        <Divider style={{ margin: '6px' }}> Chat Rooms
+        </Divider>
         <div
           style={{
             height: '120px',
             overflow: 'auto',
-            padding: '16px 16px',
+            padding: '8px 8px',
             border: '1px solid #e8e8e8',
           }}
         >
@@ -106,7 +102,7 @@ function MyDrawer() {
               style={{
                 height: '45vh',
                 overflow: 'auto',
-                padding: '16px 16px',
+                padding: '8px 8px',
                 border: '1px solid #e8e8e8',
               }}
             >
@@ -114,6 +110,7 @@ function MyDrawer() {
                 dataSource={nearbyCities || []}
                 grid={{ gutter: 16, column: 1 }}
                 renderItem={(item) => (
+                  locationInfo?.name !== item.name && (
                   <List.Item>
                     <Badge.Ribbon
                       color="volcano"
@@ -122,13 +119,14 @@ function MyDrawer() {
                       style={{ right: '-6px', top: '-10px' }}
                       hasMore={chatRoomInfo.length < 10}
                     >
-                      <Button type="primary" block>
+                      <Button type="primary" block onClick={() => dispatch(markerClick({ payload: [item] }))}>
                         <div style={{ float: 'left' }}>
                           {item.name} {item.country}
                         </div>
                       </Button>
                     </Badge.Ribbon>
                   </List.Item>
+                  )
                 )}
               />
             </div>
@@ -139,7 +137,7 @@ function MyDrawer() {
               style={{
                 height: '45vh',
                 overflow: 'auto',
-                padding: '16px 16px',
+                padding: '8px 8px',
                 border: '1px solid #e8e8e8',
               }}
             ><Skeleton />
