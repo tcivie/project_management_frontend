@@ -30,22 +30,20 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
     });
     try {
       // Pull nearby cities
-      const nearbyPoints = await fetch(`${process.env.REACT_APP_API_SERVER}/api/search/nearPoint`, {
+      const nearbyPoints = fetch(`${process.env.REACT_APP_API_SERVER}/api/search/nearPoint`, {
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'POST',
         body: JSON.stringify({ point: location, radius: 30 }),
-      });
-      const nearbyPointsJson = await nearbyPoints.json();
-      dispatch({ type: 'DRAWER_NEARBY_CITIES', payload: nearbyPointsJson });
+      }).then((res) => res.json())
+        .then((data) => dispatch({ type: 'DRAWER_NEARBY_CITIES', payload: data }));
+
       // Pull chat rooms
       const chatRooms = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/languages`, {
         method: 'GET',
-      });
-      const chatRoomsJson = await chatRooms.json();
-      dispatch({ type: 'DRAWER_CHATROOM_INFO', payload: chatRoomsJson });
-      // TODO: Pull stats
+      }).then((res) => res.json())
+        .then((data) => dispatch({ type: 'DRAWER_CHATROOM_INFO', payload: data }));
     } catch (error) {
       dispatch({ type: 'DRAWER_STATS', payload: null });
     }
