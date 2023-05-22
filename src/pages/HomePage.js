@@ -5,6 +5,7 @@ import {
 } from 'antd';
 import SearchBar from '../components/SearchBar';
 import MyMap from '../components/GeoLocation/MyMap';
+import Navbar from '../components/Navbar';
 
 const { Content } = Layout;
 
@@ -40,6 +41,7 @@ function HomePage() {
           backgroundColor: 'rgba(255, 255, 255, 0.4)',
         }}
       >
+        <Navbar />
         <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
           <SearchBar />
           <MyMap />

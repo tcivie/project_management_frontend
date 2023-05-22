@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { maptiler } from 'pigeon-maps/providers';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGeolocation } from '../../redux/actions/userActions';
+// import getClusterMarkers from './MarkerClusters';
 import MyDrawer from './MyDrawer';
-import markerClick from '../../redux/actions/drawerActions';
+// import markerClick from '../../redux/actions/drawerActions';
 
 const maptilerProvider = maptiler(process.env.REACT_APP_MAPTILER_CODE, 'streets');
 
@@ -49,13 +50,14 @@ function MyMap() {
         setZoom(zoom);
       }}
     >
+
+      {userState.location && (
       <Marker
         width={50}
         anchor={userState.location}
-        onClick={() => {
-          dispatch(markerClick(userState.location, zoom));
-        }}
+        color="rgb(80,100,200)"
       />
+      )}
       <MyDrawer />
       <ZoomControl />
     </Map>
