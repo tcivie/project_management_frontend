@@ -35,7 +35,7 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
           'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: JSON.stringify({ point: location, radius: 30 }),
+        body: JSON.stringify({ point: location, radius: 50 }),
       });
       const nearbyPointsJson = await nearbyPoints.json();
       dispatch({ type: 'DRAWER_NEARBY_CITIES', payload: nearbyPointsJson });
