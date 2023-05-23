@@ -7,19 +7,20 @@ import { fetchOpenGraphData } from '../utils/fetchWikiData'; // import our fetch
 
 export default function OGCard({ wikiId }) {
   const [ogData, setOgData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  const [contentLoading, setContentLoading] = useState(true);
   useEffect(() => {
-    setLoading(true);
+    setContentLoading(true);
     if (!wikiId) {
       return;
     }
     fetchOpenGraphData(wikiId).then((data) => {
+      console.log(data);
       setOgData(data.result);
-      setLoading(false);
+      setContentLoading(false);
     });
   }, [wikiId]);
 
+  console.log('loading', contentLoading);
   return (
     <Card
       bodyStyle={{
@@ -33,39 +34,41 @@ export default function OGCard({ wikiId }) {
         borderRadius: '5px 5px 0px 0px',
         border: '1px solid white',
       }}
-      cover={
-               wikiId && ((loading)
-                 ? (
-                   <Spin style={{ paddingTop: '65px' }} tip="Loading" size="large">
-                     <div className="content" />
-                   </Spin>
-                 )
-                 : (
-                   <Image
-                     src={ogData.ogImage ? ogData.ogImage[0].url : 'error'}
-                     style={{
-                       objectFit: 'cover',
-                       height: '250px',
-                       width: '100%',
-                     }}
-                     fallback="https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg"
-                   />
-                 ))
-            }
+      cover={(
+          // eslint-disable-next-line no-nested-ternary
+          wikiId ? ((contentLoading) ? (
+            <Skeleton.Image
+              active
+              className="og-image-topBar"
+            />
+          ) : (
+            <Image
+              src={ogData?.ogImage ? ogData.ogImage[0].url : 'error'}
+              style={{
+                objectFit: 'cover',
+                height: '250px',
+                width: '100%',
+              }}
+              fallback="https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg"
+            />
+          )
+          ) : (
+            <Skeleton.Image
+              className="og-image-topBar"
+            />
+          )
+        )}
     >
 
-      {loading && wikiId ? (
-        <Skeleton active />
-      ) : (
-        <div style={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-        }}
-        >
-          <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{wikiId ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
-          <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{wikiId ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
-        </div>
-      )}
+      <div style={{
+        display: 'flex',
+        flexWrap: 'nowrap',
+      }}
+      >
+        <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{wikiId ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
+        <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{wikiId ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
+      </div>
+
     </Card>
   );
 }

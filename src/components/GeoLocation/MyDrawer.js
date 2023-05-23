@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import markerClick, { drawerClose } from '../../redux/actions/drawerActions';
 import unicodeToEmoji from '../../utils/unicodeToEmoji';
 import OGCard from '../OGCard';
+import { RandomNumberBadgeChatRooms, RandomNumberBadgeNearbyCities } from '../randomBadgeNumber';
 
 function MyDrawer() {
   const drawerReducer = useSelector((state) => state.drawer);
@@ -56,97 +57,68 @@ function MyDrawer() {
       visible={visible}
       size="large"
     >
-      <Skeleton loading={locationInfo === null || chatRoomInfo === null}>
-        <OGCard wikiId={locationInfo?.wikiDataId} />
-        <Divider style={{ margin: '6px' }}> Chat Rooms
-        </Divider>
-        <div
-          style={{
-            height: '120px',
-            overflow: 'auto',
-            padding: '20px 20px',
-            border: '1px solid #e8e8e8',
-          }}
-        >
-          <List
-            dataSource={chatRoomInfoParsed}
-            grid={{ gutter: 16, column: 3 }}
-            renderItem={(item) => (
-              <Badge.Ribbon
-                color="volcano"
-                text={<> <TeamOutlined /> ### </>}
-                status="processing"
-                style={{ right: '0px', top: '-10px' }}
-                hasMore={chatRoomInfoParsed.length < 10}
-              >
-                <List.Item>
-                  <Button type="primary" block>
-                    <div style={{ float: 'left' }}>
-                      {item?.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
-                    </div>
-                  </Button>
-                </List.Item>
-              </Badge.Ribbon>
-            )}
-          />
-        </div>
-        <Row gutter={32}>
-          <Col span={12}>
-            <Divider> Nearby Cities </Divider>
-            <div
-              style={{
-                height: '45vh',
-                overflow: 'auto',
-                padding: '20px 20px',
-                border: '1px solid #e8e8e8',
-              }}
-            >
-              <List
-                dataSource={nearbyCities || []}
-                grid={{ gutter: 16, column: 1 }}
-                renderItem={(item) => (
-                  locationInfo?.name !== item.name && (
-                  <List.Item>
-                    <Badge.Ribbon
-                      color="volcano"
-                      text={<> <TeamOutlined /> {`${item.activeUsers || '###'}`} </>}
-                      status="processing"
-                      style={{ right: '-6px', top: '-10px' }}
-                      hasMore={chatRoomInfo.length < 10}
-                    >
-                      <Button type="primary" block onClick={() => dispatch(markerClick({ payload: [item] }))}>
-                        <div style={{ float: 'left' }}>
-                          {item.name} {item.country}
-                        </div>
-                      </Button>
-                    </Badge.Ribbon>
-                  </List.Item>
-                  )
-                )}
-              />
-            </div>
-          </Col>
-          <Col span={12}>
-            <Divider> Trending Topics </Divider>
-            <div
-              style={{
-                height: '45vh',
-                overflow: 'auto',
-                padding: '8px 8px',
-                border: '1px solid #e8e8e8',
-              }}
-            >
-              <Skeleton loading active avatar />
-              <Skeleton loading active avatar />
-              <Skeleton loading active avatar />
-              <Skeleton loading active avatar />
-              <Skeleton loading active avatar />
-              <Skeleton loading active avatar />
+      <OGCard wikiId={locationInfo?.wikiDataId} />
+      <Divider style={{ margin: '6px' }}> Chat Rooms
+      </Divider>
+      <div
+        style={{
+          height: '120px',
+          overflow: 'auto',
+          padding: '20px 20px',
+          border: '1px solid #e8e8e8',
+        }}
+      >
+        <List
+          dataSource={chatRoomInfoParsed}
+          grid={{ gutter: 16, column: 3 }}
+          renderItem={(item) => <RandomNumberBadgeChatRooms item={item} />}
+        />
+      </div>
+      <Row gutter={32}>
+        <Col span={12}>
+          <Divider> Nearby Cities </Divider>
+          <div
+            style={{
+              height: '45vh',
+              overflow: 'auto',
+              padding: '20px 20px',
+              border: '1px solid #e8e8e8',
+            }}
+          >
+            <List
+              dataSource={nearbyCities || []}
+              grid={{ gutter: 16, column: 1 }}
+              renderItem={(item) => (
+                locationInfo?.name !== item.name && (
+                  <RandomNumberBadgeNearbyCities
+                    item={item}
+                    onClick={() => dispatch(markerClick({ payload: [item] }))}
+                  />
+                )
+              )}
+            />
+          </div>
+        </Col>
+        <Col span={12}>
+          <Divider> Trending Topics </Divider>
+          <div
+            style={{
+              height: '45vh',
+              overflow: 'auto',
+              padding: '8px 8px',
+              border: '1px solid #e8e8e8',
+            }}
+          >
+            <Skeleton loading active avatar />
+            <Skeleton loading active avatar />
+            <Skeleton loading active avatar />
+            <Skeleton loading active avatar />
+            <Skeleton loading active avatar />
+            <Skeleton loading active avatar />
 
-            </div>
-          </Col>
-        </Row>
-      </Skeleton>
+          </div>
+        </Col>
+      </Row>
     </Drawer>
   );
 }

@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.og-image-topBar {
+  width: 100% !important;
+    height: 250px !important;
+}
