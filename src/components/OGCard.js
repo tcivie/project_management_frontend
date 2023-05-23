@@ -19,9 +19,20 @@ export default function OGCard({ wikiId }) {
       setLoading(false);
     });
   }, [wikiId]);
+
   return (
     <Card
-      bodyStyle={{ padding: '10px' }}
+      bodyStyle={{
+        padding: '5px',
+        position: 'absolute',
+        top: '-1px',
+        width: '100%',
+        display: 'float',
+        backdropFilter: 'blur(5px)',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        borderRadius: '5px 5px 0px 0px',
+        border: '1px solid white',
+      }}
       cover={
                wikiId && ((loading)
                  ? (
@@ -33,8 +44,8 @@ export default function OGCard({ wikiId }) {
                    <Image
                      src={ogData.ogImage ? ogData.ogImage[0].url : 'error'}
                      style={{
-                       objectFit: 'fill',
-                       height: '160px',
+                       objectFit: 'cover',
+                       height: '250px',
                        width: '100%',
                      }}
                      fallback="https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg"
