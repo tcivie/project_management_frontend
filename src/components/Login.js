@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Form, Input, Button, Checkbox, message,
 } from 'antd';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 import {
   LoginOutlined,
@@ -146,19 +145,17 @@ function LoginForm({ onClose }) {
               <Button
                 type="primary"
                 htmlType="submit"
-                icon={
-                                        !userState.loading ? (
-                                          <LoginOutlined />
-                                        ) : (
-                                          <LoadingOutlined />
-                                        )
-                                    }
+                icon={!userState.loading ? (
+                  <LoginOutlined />
+                ) : (
+                  <LoadingOutlined />
+                )}
                 onClick={onFinish}
               >
                 Login
               </Button>
               <span style={{ margin: '0 8px' }}>Or</span>
-              <MyGoogleLogin />
+              <MyGoogleLogin funcOnSuccess={onClose} />
             </div>
           </div>
         </Form.Item>
