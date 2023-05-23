@@ -39,7 +39,10 @@ function Navbar() {
     dispatch(userLogout());
   };
   return (
-    <div>
+    <div style={{
+      position: 'fixed', zIndex: 1, width: '100%', top: 0,
+    }}
+    >
       <Menu
         mode="horizontal"
         triggerSubMenuAction="click"
