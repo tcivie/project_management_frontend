@@ -65,8 +65,8 @@ export default function OGCard({ wikiId }) {
         flexWrap: 'nowrap',
       }}
       >
-        <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{wikiId ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
-        <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{wikiId ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
+        <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{ogData?.ogTitle ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
+        <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{ogData?.ogDescription ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
       </div>
 
     </Card>
