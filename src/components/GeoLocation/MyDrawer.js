@@ -49,11 +49,7 @@ function MyDrawer() {
 
   return (
     <Drawer
-      headerStyle={{
-        display: 'block', justifyContent: 'stretch', padding: '10px 10px 0px 10px',
-      }}
-      bodyStyle={{ padding: '0px 10px 0px 10px' }}
-      extra={<div style={{ paddingLeft: '35%', marginBottom: '10px' }}><OGCard wikiId={locationInfo?.wikiDataId} /></div>}
+      title={<div style={{ paddingLeft: '40%', alignContent: 'flex-start' }}><OGCard wikiId={locationInfo?.wikiDataId} /></div>}
       // title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable

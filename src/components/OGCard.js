@@ -21,6 +21,7 @@ export default function OGCard({ wikiId }) {
   }, [wikiId]);
   return (
     <Card
+      bodyStyle={{ padding: '10px' }}
       cover={
                wikiId && ((loading)
                  ? (
@@ -33,7 +34,7 @@ export default function OGCard({ wikiId }) {
                      src={ogData.ogImage ? ogData.ogImage[0].url : 'error'}
                      style={{
                        objectFit: 'fill',
-                       height: '200px',
+                       height: '160px',
                        width: '100%',
                      }}
                      fallback="https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg"
@@ -41,11 +42,13 @@ export default function OGCard({ wikiId }) {
                  ))
             }
     >
+
       {loading && wikiId ? (
         <Skeleton active />
       ) : (
         <div style={{
-          display: 'flex', flexWrap: 'nowrap',
+          display: 'flex',
+          flexWrap: 'nowrap',
         }}
         >
           <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{wikiId ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
