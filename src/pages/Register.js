@@ -162,7 +162,19 @@ function RegisterPage({ onClose }) {
                 </Button>
                 <span style={{ margin: '0 8px' }}>Or</span>
                 <GoogleLogin
-                  onSuccess={() => {
+                  onSuccess={(res) => {
+                    console.log(res);
+                    fetch(`${process.env.REACT_APP_API_SERVER}/api/sso/google`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ token: res.credential }),
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+                        console.log(data);
+                      });
                     onClose();
                   }}
                   onError={() => {
