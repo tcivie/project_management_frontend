@@ -24,6 +24,12 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         selection: action.payload,
       };
+    case 'SEARCH_DONE':
+      return {
+        ...state,
+        loading: false,
+        selection: null,
+      };
     case 'SEARCH_FAILURE':
       return {
         ...state,

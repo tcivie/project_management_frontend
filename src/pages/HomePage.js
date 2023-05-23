@@ -8,7 +8,8 @@ import MyMap from '../components/GeoLocation/MyMap';
 import Navbar from '../components/Navbar';
 
 const { Content } = Layout;
-
+const map = <MyMap />;
+const searchBar = <SearchBar />;
 function HomePage() {
   const [backgroundImage, setBackgroundImage] = useState(null);
 
@@ -30,6 +31,7 @@ function HomePage() {
         backgroundPosition: 'center',
       }}
     >
+      <Navbar />
       <Content
         style={{
           padding: '0 50px',
@@ -41,10 +43,9 @@ function HomePage() {
           backgroundColor: 'rgba(255, 255, 255, 0.4)',
         }}
       >
-        <Navbar />
         <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
-          <SearchBar />
-          <MyMap />
+          {searchBar}
+          {map}
         </Card>
       </Content>
     </Layout>

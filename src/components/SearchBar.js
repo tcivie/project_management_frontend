@@ -43,11 +43,14 @@ function SearchBar() {
   const selectSearchResult = (result, obj) => {
     // set selected city
     setSearchTerm(extractLabelFromResult(obj.data));
+
     const { data } = obj;
+    setSearchTerm(data.name);
     const selection = {
       id: data.id,
       name: data.name,
       location: data.location,
+      isCity: 'wikiDataId' in data,
     };
     dispatch(setSelectedSearch(selection));
   };
@@ -98,7 +101,10 @@ function SearchBar() {
       options={options}
       value={searchTerm}
       onSelect={selectSearchResult}
-      onSearch={(value) => setSearchTerm(value)}
+      notFoundContent="No results."
+      onSearch={(value) => {
+        setSearchTerm(value);
+      }}
     >
       <Input.Search
         size="large"

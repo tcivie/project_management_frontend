@@ -50,7 +50,10 @@ function Navbar() {
   };
 
   return (
-    <div>
+    <div style={{
+      position: 'fixed', zIndex: 1, width: '100%', top: 0,
+    }}
+    >
       <Menu mode="horizontal" triggerSubMenuAction="click" openKeys={openKeys}>
         <Menu.Item key="home" style={{ marginRight: 'auto' }}>
           InterTourist

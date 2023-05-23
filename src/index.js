@@ -7,10 +7,11 @@ import reportWebVitals from './reportWebVitals';
 import store from './redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const app = <App />;
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      {app}
     </React.StrictMode>
   </Provider>,
 );

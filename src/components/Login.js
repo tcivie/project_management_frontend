@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Form, Input, Button, Checkbox,
+  Form, Input, Button, Checkbox, message,
 } from 'antd';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
@@ -54,6 +54,7 @@ function LoginForm({ onClose }) {
       } else {
         // login failed failed
         setLoginFailed(true);
+        message.warning('Could not login, check the input.');
         const responseData = await response.json();
         const msg = responseData?.message;
         dispatch(userLoginFailure(msg));
