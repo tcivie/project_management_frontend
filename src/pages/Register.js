@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {
   Form, Input, Button, message,
 } from 'antd';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 import { UserOutlined, FormOutlined, LockOutlined } from '@ant-design/icons';
+import MyGoogleLogin from '../utils/gooleSSOlogin';
 
 function RegisterPage({ onClose }) {
   const [form] = Form.useForm();
   const [vError, setVerror] = useState(null);
-
   useEffect(() => {
     async function validate() {
       try {
@@ -75,120 +74,98 @@ function RegisterPage({ onClose }) {
   };
 
   return (
-    <GoogleOAuthProvider clientId="52742900129-knrfhr5i59undpt03jet637c2lrcp9oi.apps.googleusercontent.com">
-      <div style={{ maxWidth: 400, margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center' }}>Sign up</h2>
-        <Form name="registerForm" form={form} onFinish={onFinish}>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter your email',
-              },
-              {
-                type: 'email',
-                message: 'Please enter a valid email',
-              },
-              { validator: createValidator('email') },
-            ]}
-          >
-            <Input
-              placeholder="Enter Email"
-              prefix={
-                <FormOutlined className="site-form-item-icon" />
+    <div style={{ maxWidth: 400, margin: '0 auto' }}>
+      <h2 style={{ textAlign: 'center' }}>Sign up</h2>
+      <Form name="registerForm" form={form} onFinish={onFinish}>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email',
+            },
+            {
+              type: 'email',
+              message: 'Please enter a valid email',
+            },
+            { validator: createValidator('email') },
+          ]}
+        >
+          <Input
+            placeholder="Enter Email"
+            prefix={
+              <FormOutlined className="site-form-item-icon" />
                             }
-            />
-          </Form.Item>
+          />
+        </Form.Item>
 
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter Username!',
-              },
-              { validator: createValidator('username') },
-            ]}
-          >
-            <Input
-              placeholder="Enter Username"
-              prefix={
-                <UserOutlined className="site-form-item-icon" />
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter Username!',
+            },
+            { validator: createValidator('username') },
+          ]}
+        >
+          <Input
+            placeholder="Enter Username"
+            prefix={
+              <UserOutlined className="site-form-item-icon" />
                             }
-            />
-          </Form.Item>
+          />
+        </Form.Item>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter Password',
-              },
-            ]}
-          >
-            <Input.Password
-              placeholder="Enter Password"
-              prefix={
-                <LockOutlined className="site-form-item-icon" />
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter Password',
+            },
+          ]}
+        >
+          <Input.Password
+            placeholder="Enter Password"
+            prefix={
+              <LockOutlined className="site-form-item-icon" />
                             }
-            />
-          </Form.Item>
-          <Form.Item>
+          />
+        </Form.Item>
+        <Form.Item>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}
+          >
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                flexDirection: 'column',
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
+              <Button
+                type="primary"
+                htmlType="submit"
+                onClick={onFinish}
               >
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  onClick={onFinish}
-                >
-                  Sign up
-                </Button>
-                <span style={{ margin: '0 8px' }}>Or</span>
-                <GoogleLogin
-                  onSuccess={(res) => {
-                    console.log(res);
-                    fetch(`${process.env.REACT_APP_API_SERVER}/api/sso/google`, {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ token: res.credential }),
-                    })
-                      .then((response) => response.json())
-                      .then((data) => {
-                        console.log(data);
-                      });
-                    onClose();
-                  }}
-                  onError={() => {
-                    setVerror(
-                      'Could not sign in with Google',
-                    );
-                  }}
-                />
-              </div>
+                Sign up
+              </Button>
+              <span style={{ margin: '0 8px' }}>Or</span>
+
+              <MyGoogleLogin funcOnSuccess={onClose} />
             </div>
-          </Form.Item>
-        </Form>
-      </div>
-    </GoogleOAuthProvider>
+          </div>
+        </Form.Item>
+      </Form>
+    </div>
   );
 }
 
