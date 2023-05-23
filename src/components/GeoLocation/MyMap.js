@@ -43,7 +43,7 @@ function MyMap() {
           body: JSON.stringify({
             limit: 10000,
             point: reversePoint(mapCenter),
-            radius: Math.min(500, calculateKmPerPixel(mapZoom || 16) * 30),
+            radius: calculateKmPerPixel(mapZoom || 16) * 30,
           }),
         },
       ).then((response) => response.json()).then((data) => {
@@ -147,8 +147,10 @@ function MyMap() {
         {markers}
         <ZoomControl />
         <Button
+          style={{ position: 'absolute', right: 10, top: 9 }}
           type="primary"
           icon={<AimOutlined />}
+          onClick={() => userState?.location && setCenter(userState?.location)}
         />
       </Map>
       <MyDrawer />

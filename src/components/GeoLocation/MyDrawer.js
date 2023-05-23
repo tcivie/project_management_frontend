@@ -49,7 +49,8 @@ function MyDrawer() {
 
   return (
     <Drawer
-      title={<div style={{ paddingLeft: '40%', alignContent: 'flex-start' }}><OGCard wikiId={locationInfo?.wikiDataId} /></div>}
+      headerStyle={{ alignItems: 'flex-start' }}
+      title={<div><OGCard wikiId={locationInfo?.wikiDataId} /></div>}
       // title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
