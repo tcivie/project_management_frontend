@@ -49,8 +49,6 @@ function MyDrawer() {
 
   return (
     <Drawer
-      headerStyle={{ alignItems: 'flex-start' }}
-      title={<div><OGCard wikiId={locationInfo?.wikiDataId} /></div>}
       // title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
@@ -59,14 +57,14 @@ function MyDrawer() {
       size="large"
     >
       <Skeleton loading={locationInfo === null || chatRoomInfo === null}>
-
+        <OGCard wikiId={locationInfo?.wikiDataId} />
         <Divider style={{ margin: '6px' }}> Chat Rooms
         </Divider>
         <div
           style={{
             height: '120px',
             overflow: 'auto',
-            padding: '8px 8px',
+            padding: '20px 20px',
             border: '1px solid #e8e8e8',
           }}
         >
@@ -78,7 +76,7 @@ function MyDrawer() {
                 color="volcano"
                 text={<> <TeamOutlined /> ### </>}
                 status="processing"
-                style={{ right: '2px', top: '-10px' }}
+                style={{ right: '0px', top: '-10px' }}
                 hasMore={chatRoomInfoParsed.length < 10}
               >
                 <List.Item>
@@ -99,7 +97,7 @@ function MyDrawer() {
               style={{
                 height: '45vh',
                 overflow: 'auto',
-                padding: '8px 8px',
+                padding: '20px 20px',
                 border: '1px solid #e8e8e8',
               }}
             >
@@ -137,7 +135,14 @@ function MyDrawer() {
                 padding: '8px 8px',
                 border: '1px solid #e8e8e8',
               }}
-            ><Skeleton />
+            >
+              <Skeleton loading active avatar />
+              <Skeleton loading active avatar />
+              <Skeleton loading active avatar />
+              <Skeleton loading active avatar />
+              <Skeleton loading active avatar />
+              <Skeleton loading active avatar />
+
             </div>
           </Col>
         </Row>
