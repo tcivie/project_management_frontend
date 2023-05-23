@@ -1,28 +1,20 @@
 // MyDrawer.js
-
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Button,
   Drawer,
   List,
   Divider,
-  Descriptions,
-  Statistic,
-  Skeleton, Row, Col, Badge,
+  Skeleton, Row, Col,
 } from 'antd';
-import {
-  TeamOutlined,
-} from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import markerClick, { drawerClose } from '../../redux/actions/drawerActions';
-import unicodeToEmoji from '../../utils/unicodeToEmoji';
 import OGCard from '../OGCard';
 import { RandomNumberBadgeChatRooms, RandomNumberBadgeNearbyCities } from '../randomBadgeNumber';
 
 function MyDrawer() {
   const drawerReducer = useSelector((state) => state.drawer);
   const {
-    chatRoomInfo, isUserMarker, locationInfo, nearbyCities, stats, visible, wikiInfo,
+    chatRoomInfo, isUserMarker, locationInfo, nearbyCities, visible,
   } = drawerReducer; const dispatch = useDispatch();
   let chatRoomInfoParsed = [];
   if (chatRoomInfo !== null) {
@@ -50,7 +42,6 @@ function MyDrawer() {
 
   return (
     <Drawer
-      // title={locationInfo?.location || 'no city selected'}
       placement="right"
       closable
       onClose={() => dispatch(drawerClose())}

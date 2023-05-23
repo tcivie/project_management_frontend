@@ -1,18 +1,15 @@
 export default function markerClick(event, userlocation, isUserMarker = false) {
+  // eslint-disable-next-line func-names
   return async function (dispatch) {
-    // console.log('markerClick', marker, map);
     dispatch({ type: 'DRAWER_OPEN', payload: isUserMarker });
     if (isUserMarker) return;
-    // eslint-disable-next-line func-names
     // Get a random index within the array length
     const randomIndex = event.payload.length ? Math.floor(Math.random() * event.payload.length) : 0;
     // Get the random element from the array
     const {
       country = null,
-      id = null,
       location = event.anchor,
       name = null,
-      stateName = null,
       wikiDataId = null,
     } = event.payload[randomIndex] || {
       country: null,

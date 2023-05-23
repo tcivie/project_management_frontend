@@ -3,21 +3,6 @@ import Supercluster from 'supercluster';
 import { Tooltip } from 'antd';
 import { reversePoint } from '../../utils/unicodeToEmoji';
 
-function DivMarker({
-  left, top, style, children,
-}) {
-  return (
-    <div style={{
-      position: 'absolute',
-      left,
-      top,
-      ...(style || {}),
-    }}
-    >{children}
-    </div>
-  );
-}
-
 const createMarker = (supercluster, geoJson, onclick) => {
   if (geoJson.properties.cluster) {
     const clusterId = geoJson.properties.cluster_id;

@@ -1,7 +1,7 @@
 // OGCard.js
 import React, { useState, useEffect } from 'react';
 import {
-  Card, Skeleton, Spin, Image,
+  Card, Skeleton, Image,
 } from 'antd';
 import { fetchOpenGraphData } from '../utils/fetchWikiData'; // import our fetch function
 
@@ -14,13 +14,11 @@ export default function OGCard({ wikiId }) {
       return;
     }
     fetchOpenGraphData(wikiId).then((data) => {
-      console.log(data);
       setOgData(data.result);
       setContentLoading(false);
     });
   }, [wikiId]);
 
-  console.log('loading', contentLoading);
   return (
     <Card
       bodyStyle={{
@@ -65,8 +63,8 @@ export default function OGCard({ wikiId }) {
         flexWrap: 'nowrap',
       }}
       >
-        <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{ogData?.ogTitle ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
-        <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{ogData?.ogDescription ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
+        <div style={{ fontWeight: 'bold', marginRight: '10px' }}>{wikiId && ogData?.ogTitle ? ogData.ogTitle : 'Multiple Cities Selected'} -</div>
+        <div style={{ flexShrink: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>{wikiId && ogData?.ogDescription ? ogData.ogDescription : 'You have selected a cities cluster.'}</div>
       </div>
 
     </Card>
