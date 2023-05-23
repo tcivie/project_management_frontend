@@ -9,7 +9,7 @@ import { UserOutlined, FormOutlined, LockOutlined } from '@ant-design/icons';
 function RegisterPage({ onClose }) {
   const [form] = Form.useForm();
   const [vError, setVerror] = useState(null);
-  const [messageApi, contextHolder] = message.useMessage();
+
   useEffect(() => {
     async function validate() {
       try {
