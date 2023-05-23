@@ -31,6 +31,7 @@ function HomePage() {
         backgroundPosition: 'center',
       }}
     >
+      <Navbar />
       <Content
         style={{
           padding: '0 50px',
@@ -42,7 +43,6 @@ function HomePage() {
           backgroundColor: 'rgba(255, 255, 255, 0.4)',
         }}
       >
-        <Navbar />
         <Card style={{ width: '80vw', margin: 'auto', padding: 0 }}>
           {searchBar}
           {map}
