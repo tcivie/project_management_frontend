@@ -1,15 +1,19 @@
 import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import Navbar from './components/Navbar';
+import Profile from './pages/Profile';
 
-const navBar = <Navbar />;
-const home = <HomePage />;
 function App() {
   return (
-    <div>
-      {navBar}
-      {home}
-    </div>
+      <>
+        <Navbar />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </BrowserRouter>
+      </>
   );
 }
 
