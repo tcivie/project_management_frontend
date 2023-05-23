@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { maptiler } from 'pigeon-maps/providers';
 import { useDispatch, useSelector } from 'react-redux';
 import { timeout } from 'q';
-import { Tooltip } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { AimOutlined } from '@ant-design/icons';
 import { setGeolocation } from '../../redux/actions/userActions';
 import MyDrawer from './MyDrawer';
 import markerClick from '../../redux/actions/drawerActions';
@@ -11,8 +12,6 @@ import getClusterMarkers from './MarkerClusters';
 import { reversePoint } from '../../utils/unicodeToEmoji';
 
 const maptilerProvider = maptiler(process.env.REACT_APP_MAPTILER_CODE, 'streets');
-const drawer = <MyDrawer />;
-const zoomControl = <ZoomControl />;
 function MyMap() {
   const searchSelection = useSelector((state) => state.search.selection);
   const [markers, setMarkers] = useState([]);
@@ -110,44 +109,50 @@ function MyMap() {
   }, [searchSelection]);
 
   return (
-    <Map
-      dprs={[1, 2]}
-      provider={maptilerProvider}
-      height={500}
-      defaultCenter={[50.879, 4.6997]}
-      defaultZoom={11}
-      zoom={mapZoom}
-      center={mapCenter}
-      onBoundsChanged={({ bounds, zoom, center }) => {
-        setCenter(center);
-        setZoom(zoom);
-        setBounds(bounds);
-      }}
-    >
-      {userState.location && (
-      <Marker
-        width={40}
-        anchor={userState.location}
-        color="royalblue"
-        onClick={(event) => {
-          dispatch(markerClick(event, userState.location, true));
+    <>
+      <Map
+        dprs={[1, 2]}
+        provider={maptilerProvider}
+        height={500}
+        defaultCenter={[50.879, 4.6997]}
+        defaultZoom={11}
+        zoom={mapZoom}
+        center={mapCenter}
+        onBoundsChanged={({ bounds, zoom, center }) => {
+          setCenter(center);
+          setZoom(zoom);
+          setBounds(bounds);
         }}
       >
-        <Tooltip title="My Location">
-          <span style={{ marginLeft: '20px' }}>
-            <Marker
-              width={40}
-              anchor={userState.location}
-              color="royalblue"
-            />
-          </span>
-        </Tooltip>
-      </Marker>
-      )}
-      {markers}
-      {drawer}
-      {zoomControl}
-    </Map>
+        {userState.location && (
+        <Marker
+          width={40}
+          anchor={userState.location}
+          color="royalblue"
+          onClick={(event) => {
+            dispatch(markerClick(event, userState.location, true));
+          }}
+        >
+          <Tooltip title="My Location">
+            <span style={{ marginLeft: '20px' }}>
+              <Marker
+                width={40}
+                anchor={userState.location}
+                color="royalblue"
+              />
+            </span>
+          </Tooltip>
+        </Marker>
+        )}
+        {markers}
+        <ZoomControl />
+        <Button
+          type="primary"
+          icon={<AimOutlined />}
+        />
+      </Map>
+      <MyDrawer />
+    </>
   );
 }
 
