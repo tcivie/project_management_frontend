@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import {
+  Form, Input, Button, message,
+} from 'antd';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 import { UserOutlined, FormOutlined, LockOutlined } from '@ant-design/icons';
@@ -7,6 +9,7 @@ import { UserOutlined, FormOutlined, LockOutlined } from '@ant-design/icons';
 function RegisterPage({ onClose }) {
   const [form] = Form.useForm();
   const [vError, setVerror] = useState(null);
+  const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
     async function validate() {
       try {
@@ -40,6 +43,7 @@ function RegisterPage({ onClose }) {
 
       if (response.ok) {
         // Registration successful
+        message.success('Signed up successfully!');
         onClose(); // Close the modal
       } else {
         // Registration failed
@@ -60,7 +64,7 @@ function RegisterPage({ onClose }) {
     function warpped(rule, value, promise) {
       if (oldVal && oldVal !== value) {
         promise();
-      } else if (vError && vError.includes(lookupStr)) {
+      } else if (vError && vError.toLowerCase().includes(lookupStr.toLowerCase())) {
         oldVal = value;
         promise(vError);
       } else {

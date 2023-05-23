@@ -89,6 +89,7 @@ function MyMap() {
         dispatch(setGeolocation([latitude, longitude]));
       },
       (error) => {
+        dispatch(setGeolocation(null));
         // eslint-disable-next-line no-console
         console.error('Error retrieving geolocation:', error);
       },
