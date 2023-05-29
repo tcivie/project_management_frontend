@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 
 import VirtualList from 'rc-virtual-list';
 import Post from '../components/Chat/Post';
+import Poster from '../components/Chat/Poster';
 
 const {
   Content, Sider,
@@ -55,7 +56,9 @@ function App() {
                 </VirtualList>
               </List>
             )}
+          <Poster />
         </div>
+
       </Content>
     </Layout>
   );

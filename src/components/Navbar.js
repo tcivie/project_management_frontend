@@ -55,7 +55,7 @@ function Navbar() {
     }}
     >
       <Menu mode="horizontal" triggerSubMenuAction="click" openKeys={openKeys}>
-        <Menu.Item key="home" style={{ marginRight: 'auto' }}>
+        <Menu.Item key="home" onClick={() => { navigate('/'); }} style={{ marginRight: 'auto' }}>
           InterTourist
         </Menu.Item>
 
