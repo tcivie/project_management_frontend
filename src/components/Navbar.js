@@ -51,7 +51,7 @@ function Navbar() {
 
   return (
     <div style={{
-      position: 'fixed', zIndex: 1, width: '100%', top: 0,
+      position: 'sticky', zIndex: 1, width: '100%', top: 0,
     }}
     >
       <Menu mode="horizontal" triggerSubMenuAction="click" openKeys={openKeys}>
@@ -79,7 +79,7 @@ function Navbar() {
             title="Login"
             onTitleClick={openLoginForm}
           >
-            <div style={{ margin: '10px' }}>
+            <div>
               <LoginForm onClose={closLoginForm} />
             </div>
           </Menu.SubMenu>
