@@ -5,7 +5,6 @@ import {
 } from 'antd';
 import SearchBar from '../components/SearchBar';
 import MyMap from '../components/GeoLocation/MyMap';
-import Navbar from '../components/Navbar';
 
 const { Content } = Layout;
 const map = <MyMap />;
@@ -31,7 +30,6 @@ function HomePage() {
         backgroundPosition: 'center',
       }}
     >
-      <Navbar />
       <Content
         style={{
           padding: '0 50px',
