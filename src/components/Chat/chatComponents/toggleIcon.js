@@ -1,8 +1,8 @@
 import { Button } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function ToggleIcon({
-  baseIcon, toggledIcon, text, iconClicked,
+  baseIcon, toggledIcon, text, iconClicked, buttonStyle,
 }) {
   const [toggled, SetToggled] = useState(false);
   const handleClick = () => {
@@ -11,7 +11,9 @@ function ToggleIcon({
   };
 
   return (
-    <Button onClick={handleClick}> {toggled ? toggledIcon : baseIcon} {text}</Button>
+    <Button style={{ ...buttonStyle, color: toggled ? '#1677ff' : 'black' }} onClick={handleClick}>
+      {toggled ? toggledIcon : baseIcon} {text}
+    </Button>
   );
 }
 

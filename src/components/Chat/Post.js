@@ -5,15 +5,31 @@ import {
   Button, Tooltip, Card, Avatar,
 } from 'antd';
 import {
-  AimOutlined, LikeOutlined, SettingFilled, UserOutlined,
+  AimOutlined, LikeFilled, LikeOutlined, SettingFilled, UserOutlined,
 } from '@ant-design/icons';
 import { setGeolocation } from '../../redux/actions/userActions';
 import { reversePoint } from '../../utils/unicodeToEmoji';
+import ToggleIcon from './chatComponents/toggleIcon';
 
 function Post({
   msgID, content, userImageUrl, comments, location, isUsefull,
 }) {
   const [usefull, setUsefull] = useState(isUsefull || false);
+  const usefullButton = (
+    <ToggleIcon
+      baseIcon={<LikeOutlined style={{ fontSize: '20px', marginRight: 2 }} />}
+      toggledIcon={<LikeFilled style={{ color: '#1677ff', fontSize: '20px', marginRight: 2 }} />}
+      text="Usefull"
+      buttonStyle={{
+        fontWeight: 'bold',
+        //   color: ('rgb(52,119,255)'),
+        display: 'block',
+        width: '100%',
+        border: 'none',
+        fontSize: '13px',
+      }}
+    />
+  );
   const handleUsefullClick = () => {
     setUsefull((oldValue) => !oldValue);
   };
@@ -46,21 +62,7 @@ function Post({
         actions={[
           <SettingFilled key="setting" />,
           <SettingFilled key="edit" />,
-          <Button
-            onClick={handleUsefullClick}
-            style={{
-              fontWeight: 'bold',
-              //   color: ('rgb(52,119,255)'),
-              display: 'block',
-              width: '100%',
-              border: 'none',
-              fontSize: '13px',
-            }}
-          >
-            <LikeOutlined key="ellipsis" style={{ fontSize: '20px', marginRight: 2 }} />
-            Usefull
-          </Button>,
-
+          usefullButton,
         ]}
       />
     </div>
