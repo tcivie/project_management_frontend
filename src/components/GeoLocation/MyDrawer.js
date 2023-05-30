@@ -7,6 +7,7 @@ import {
   Skeleton, Row, Col,
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import markerClick, { drawerClose } from '../../redux/actions/drawerActions';
 import OGCard from '../OGCard';
 import { RandomNumberBadgeChatRooms, RandomNumberBadgeNearbyCities } from '../randomBadgeNumber';
@@ -23,6 +24,7 @@ function MyDrawer() {
       return {
         key,
         ...item,
+        ...locationInfo,
       };
     });
   }

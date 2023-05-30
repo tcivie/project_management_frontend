@@ -3,7 +3,7 @@ import { Button, Form, Input } from 'antd';
 
 function Poster() {
   return (
-    <div style={{ padding: 10 }}>
+    <div>
       <Form layout="inline" style={{ justifyContent: 'space-evenly' }}>
         <Form.Item>
           <Input.TextArea
