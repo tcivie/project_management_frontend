@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 import { Button, Badge, List } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import unicodeToEmoji from '../utils/unicodeToEmoji';
 
 export function RandomNumberBadgeChatRooms({ item }) {
   const [randomNumber, setRandomNumber] = useState(Math.floor(Math.random() * (501)));
-
+  const navigate = useNavigate();
   useEffect(() => {
     const interval = setInterval(() => {
       const newNumber = randomNumber + Math.floor(Math.random() * 101) - 50;
@@ -22,7 +23,8 @@ export function RandomNumberBadgeChatRooms({ item }) {
       style={{ right: '0px', top: '-10px' }}
     >
       <List.Item>
-        <Button type="primary" block>
+
+        <Button type="primary" block onClick={() => { navigate(`/chat?cid=${item.id}&lang=${item.key}`); }}>
           <div style={{ float: 'left' }}>
             {item?.nameInEnglish} {unicodeToEmoji(item?.emoji)} {item?.nameInNative}
           </div>

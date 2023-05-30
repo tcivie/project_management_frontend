@@ -7,6 +7,7 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
     const randomIndex = event.payload.length ? Math.floor(Math.random() * event.payload.length) : 0;
     // Get the random element from the array
     const {
+      id = null,
       country = null,
       location = event.anchor,
       name = null,
@@ -22,7 +23,7 @@ export default function markerClick(event, userlocation, isUserMarker = false) {
     dispatch({
       type: 'DRAWER_LOCATION_INFO',
       payload: {
-        location, name, wikiDataId, country,
+        location, name, wikiDataId, country, id,
       } || userlocation,
     });
     try {

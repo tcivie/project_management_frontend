@@ -5,52 +5,83 @@ import {
   Button, Tooltip, Card, Avatar, List,
 } from 'antd';
 import {
-  AimOutlined, LikeFilled, LikeOutlined, SettingFilled, UserOutlined,
+  DislikeFilled, DislikeOutlined,
+  LikeFilled, LikeOutlined, SettingFilled, UserOutlined,
 } from '@ant-design/icons';
 import { setGeolocation } from '../../redux/actions/userActions';
 import { reversePoint } from '../../utils/unicodeToEmoji';
 import ToggleIcon from './chatComponents/toggleIcon';
+import stringToRGB from '../../utils/colors';
 
 function Post({
-  msgID, content, userImageUrl, comments, location, isUsefull,
+  msgID, username, content, userImageUrl, comments, location, isUsefull,
 }) {
   const usefullButton = (
-    <ToggleIcon
-      baseIcon={<LikeOutlined style={{ fontSize: '20px', marginRight: 2 }} />}
-      toggledIcon={<LikeFilled style={{ color: '#1677ff', fontSize: '20px', marginRight: 2 }} />}
-      text="Usefull"
-      buttonStyle={{
-        fontWeight: 'bold',
-        //   color: ('rgb(52,119,255)'),
-        display: 'block',
-        width: '100%',
-        border: 'none',
-        fontSize: '13px',
+    <Tooltip
+      align={{
+        offset: [0, -1],
       }}
-    />
+      placement="bottom"
+      title="I found this usefull"
+    >
+      <ToggleIcon
+        baseIcon={<LikeOutlined style={{ fontSize: '20px', marginRight: 2 }} />}
+        toggledIcon={<LikeFilled style={{ color: '#1677ff', fontSize: '20px', marginRight: 2 }} />}
+        text="30"
+        buttonStyle={{
+          fontWeight: 'bold',
+          //   color: ('rgb(52,119,255)'),
+          width: '100%',
+          fontSize: '13px',
+          border: 'none',
+        }}
+      />
+    </Tooltip>
+
+  );
+  const unusefullButton = (
+    <Tooltip
+      align={{
+        offset: [0, -1],
+      }}
+      placement="bottom"
+      title="I didn't find this usefull"
+    >
+      <ToggleIcon
+        baseIcon={<DislikeOutlined style={{ fontSize: '20px', marginRight: 2 }} />}
+        toggledIcon={<DislikeFilled style={{ color: '#1677ff', fontSize: '20px', marginRight: 2 }} />}
+        text="30"
+        buttonStyle={{
+          fontWeight: 'bold',
+          //   color: ('rgb(52,119,255)'),
+          width: '100%',
+          fontSize: '13px',
+          border: 'none',
+        }}
+      />
+    </Tooltip>
+
   );
   return (
     <List.Item
       key={msgID}
-      style={{ marginTop: 10, justifyContent: 'center' }}
-      actions={[
-        <SettingFilled key="setting" />,
-        <SettingFilled key="edit" />,
-        usefullButton,
-      ]}
+
     >
-      <div style={{ marginTop: 10, width: '40vw' }}>
+      <div style={{ marginTop: 10, width: '50vw' }}>
         <Card
-          bodyStyle={{ display: 'none' }}
-          style={{ backgroundColor: 'rgb(200,255,200)' }}
+          bodyStyle={{ display: comments ? 'flex' : 'none' }}
           title={(
             <div style={{ display: 'grid' }}>
               <div style={{ gridColumn: 1 }}>
+                {username}
+              </div>
+              <div style={{ gridColumn: 1 }}>
                 <Avatar
+                  alt={username ? username[0] : ''}
                   size="large"
                   src={userImageUrl}
                   icon={userImageUrl ? null : <UserOutlined />}
-                  style={{ marginRight: 10, marginTop: 10 }}
+                  style={{ backgroundColor: stringToRGB(username), marginRight: 10, marginTop: 10 }}
                 />
               </div>
               <div style={{
@@ -61,7 +92,10 @@ function Post({
               </div>
             </div>
 )}
-
+          actions={[
+            <SettingFilled key="setting" />,
+            <SettingFilled key="edit" />,
+            usefullButton, unusefullButton]}
         />
       </div>
     </List.Item>
