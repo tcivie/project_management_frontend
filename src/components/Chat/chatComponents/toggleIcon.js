@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function ToggleIcon({
   baseIcon, toggledIcon, text, buttonStyle,

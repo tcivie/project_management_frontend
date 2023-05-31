@@ -1,14 +1,8 @@
 import {
-  Button, Col, Form, Image, Modal, Row, Upload,
+  Button, Form, Modal,
 } from 'antd';
 import {
-  SendOutlined,
-  PictureOutlined,
-  PlusCircleOutlined,
-  PlusCircleFilled,
-  PlusCircleTwoTone,
-  CloseCircleTwoTone,
-  UpCircleTwoTone, UpOutlined, CloseOutlined, UploadOutlined,
+  PlusCircleTwoTone, UpOutlined, CloseOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import TextEditor from './chatComponents/TextEditor';
@@ -24,7 +18,7 @@ function Poster() {
     setVisible(true);
   };
 
-  const handleSubmit = ({ body }) => {
+  const handleSubmit = () => {
     // logic to submit form to server
     form.resetFields();
     setVisible(false);

@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { timeout } from 'q';
 import {
-  Button, Tooltip, Card, Avatar, List,
+  Tooltip, Card, Avatar, List,
 } from 'antd';
 import {
   DislikeFilled, DislikeOutlined,
   LikeFilled, LikeOutlined, SettingFilled, UserOutlined,
 } from '@ant-design/icons';
-import { setGeolocation } from '../../redux/actions/userActions';
-import { reversePoint } from '../../utils/unicodeToEmoji';
 import ToggleIcon from './chatComponents/toggleIcon';
 import stringToRGB from '../../utils/colors';
 
 function Post({
-  msgID, username, content, userImageUrl, comments, location, isUsefull,
+  msgID, username, content, userImageUrl, comments,
 }) {
   const usefullButton = (
     <Tooltip
@@ -30,7 +25,6 @@ function Post({
         text="30"
         buttonStyle={{
           fontWeight: 'bold',
-          //   color: ('rgb(52,119,255)'),
           width: '100%',
           fontSize: '13px',
           border: 'none',
@@ -53,7 +47,6 @@ function Post({
         text="30"
         buttonStyle={{
           fontWeight: 'bold',
-          //   color: ('rgb(52,119,255)'),
           width: '100%',
           fontSize: '13px',
           border: 'none',

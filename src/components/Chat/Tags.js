@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import {
-  Input, Space, Tag, Tooltip, theme,
+  Input, Space, Tag, theme,
 } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
@@ -35,7 +35,6 @@ function Tags(trigger) {
   }, [inputValue]);
   const handleClose = (removedTag) => {
     const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
     setTags(newTags);
   };
   const showInput = () => {
@@ -94,7 +93,7 @@ function Tags(trigger) {
               />
             );
           }
-          const tagElem = (
+          return (
             <Tag
               key={tag}
               closable
@@ -116,7 +115,6 @@ function Tags(trigger) {
               </span>
             </Tag>
           );
-          return tagElem;
         })}
       </Space>
       {/* eslint-disable-next-line no-nested-ternary */}
