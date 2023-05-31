@@ -18,7 +18,7 @@ function App() {
   const {
     chatRoomInfo, isUserMarker, locationInfo, nearbyCities, visible,
   } = drawerReducer;
-  console.log(locationInfo.name);
+  console.log(locationInfo?.name);
   const [messages, SetMessage] = useState([Post({
     comments: 'dsa', username: 'omer', isUsefull: true, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit semper facilisis. Etiam in erat et libero ornare ultrices ut vitae ante. Vestibulum ac viverra risus. Nunc ultrices lorem finibus ante pretium, et faucibus ante lacinia. Nullam ut ipsum lectus. Quisque eu eros magna. Donec hendrerit ultricies dictum. Ut gravida sagittis nunc a vestibulum. Donec luctus malesuada mi. Nunc aliquet sed tellus sed consectetur. Suspendisse pellentesque pellentesque tellus a posuere. Nullam lobortis eu libero ut auctor. Nulla facilisi. Morbi sed nisl vitae eros faucibus posuere non vitae odio.',
   }),
