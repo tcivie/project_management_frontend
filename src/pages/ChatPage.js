@@ -31,53 +31,40 @@ function App() {
   };
   return (
     <Layout>
-      <Header style={{
-        backgroundColor: 'MediumSeaGreen', color: 'white', textAlign: 'center', fontSize: 30,
-      }}
-      >
-        {locationInfo?.name}
-      </Header>
-      <Layout>
-        <Sider style={{ padding: 20 }}>
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['4']}
-            items={[UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
-              (icon, index) => ({
-                key: String(index + 1),
-                icon: React.createElement(icon),
-                label: `nav ${index + 1}`,
-                style: { backgroundColor: 'darkorange' },
-              }),
-            )}
-          />
-        </Sider>
-        <Layout>
-          <Content style={{ backgroundColor: 'lightgrey' }}>
-            <div>
-              {!messages
-                ? <Empty style={{ position: 'relative', top: '40%' }} />
-                : (
-                  <List itemLayout="vertical" style={{ }}>
-                    <VirtualList
-                      style={{ paddingLeft: '10%' }}
-                      height="78.7vh"
-                      data={messages}
-                      onScroll={onScroll}
-                    >
-                      { (item) => (
-                        item
-                      )}
-                    </VirtualList>
-                  </List>
+      <Sider style={{ padding: 20, marginTop: 50 }}>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['4']}
+          items={[UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
+            (icon, index) => ({
+              key: String(index + 1),
+              icon: React.createElement(icon),
+              label: `nav ${index + 1}`,
+              style: { backgroundColor: 'darkorange' },
+            }),
+          )}
+        />
+      </Sider>
+      <div style={{ height: window.innerHeight, overflowY: 'hidden' }}>
+        {!messages
+          ? <Empty style={{ position: 'relative' }} />
+          : (
+            <List itemLayout="vertical">
+              <VirtualList
+                height={window.innerHeight}
+                data={messages}
+                onScroll={onScroll}
+                style={{ padding: '50px' }}
+              >
+                { (item) => (
+                  item
                 )}
-              <Poster />
-            </div>
-
-          </Content>
-        </Layout>
-      </Layout>
+              </VirtualList>
+            </List>
+          )}
+        <Poster />
+      </div>
     </Layout>
   );
 }

@@ -25,7 +25,7 @@ function HomePage() {
   return (
     <Layout
       style={{
-        height: '100%',
+        height: window.innerHeight,
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -34,7 +34,6 @@ function HomePage() {
       <Content
         style={{
           padding: '0 50px',
-
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
