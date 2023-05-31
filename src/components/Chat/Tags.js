@@ -14,6 +14,17 @@ function Tags(trigger) {
   const inputRef = useRef(null);
   const editInputRef = useRef(null);
   const maxTags = 3;
+  const [isDisabled, setIsDisabled] = useState(false);
+  useEffect(() => {
+    if (isDisabled) {
+      // eslint-disable-next-line react/destructuring-assignment
+      trigger.trigger(true);
+    } else {
+      // eslint-disable-next-line react/destructuring-assignment
+      trigger.trigger(false);
+    }
+  }, [isDisabled]);
+
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -31,18 +42,15 @@ function Tags(trigger) {
     setInputVisible(true);
   };
   const handleInputChange = (e) => {
-    if (e.target.value.length > 11) {
-      // eslint-disable-next-line react/destructuring-assignment
-      trigger.trigger(true);
-      return;
+    if (e.target.value.length >= 11) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
     }
-    // eslint-disable-next-line react/destructuring-assignment
-    trigger.trigger(false);
-
     setInputValue(e.target.value);
   };
   const handleInputConfirm = () => {
-    if (inputValue.length < 11) {
+    if (!isDisabled) {
       if (inputValue && tags.indexOf(inputValue) === -1 && tags.length < maxTags) {
         setTags([...tags, inputValue]);
       }
@@ -86,7 +94,6 @@ function Tags(trigger) {
               />
             );
           }
-          const isLongTag = tag.length > 20;
           const tagElem = (
             <Tag
               key={tag}
@@ -105,17 +112,11 @@ function Tags(trigger) {
                   // }
                 }}
               >
-                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                {tag}
               </span>
             </Tag>
           );
-          return isLongTag ? (
-            <Tooltip title={tag} key={tag}>
-              {tagElem}
-            </Tooltip>
-          ) : (
-            tagElem
-          );
+          return tagElem;
         })}
       </Space>
       {/* eslint-disable-next-line no-nested-ternary */}
