@@ -1,5 +1,5 @@
 import {
-  Button, Form, Modal, Upload,
+  Button, Col, Form, Image, Modal, Row, Upload,
 } from 'antd';
 import {
   SendOutlined,
@@ -12,27 +12,13 @@ import {
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import TextEditor from './chatComponents/TextEditor';
-import Tags from './Tags'; // Assuming TextEditor is in the same directory
+import Tags from './Tags';
+import ImageUploader from './ImageUploader'; // Assuming TextEditor is in the same directory
 
 function Poster() {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [tagsError, setTagsError] = useState(false);
-
-  const props = {
-    action: '//jsonplaceholder.typicode.com/posts/', // TODO: change this to the server url
-    listType: 'picture',
-    previewFile(file) {
-      console.log('Your upload file:', file);
-      // Your process logic. Send the file to server and show the uploading progress bar etc.
-      // return fetch('', {
-      //   method: 'POST',
-      //   body: file,
-      // })
-      //   .then((res) => res.json())
-      //   .then(({ thumbnail }) => thumbnail);
-    },
-  };
 
   const showModal = () => {
     setVisible(true);
@@ -73,7 +59,11 @@ function Poster() {
         cancelButtonProps={{ size: 'large', shape: 'circle' }}
         cancelText={<CloseOutlined style={{ fontSize: '25px' }} />}
       >
-        <h1 style={{ fontSize: '20px', fontWeight: 'bold' }}>Create a post</h1>
+        <Form.Item
+          style={{ marginBottom: '0px', padding: '0px' }}
+        >
+          <h1 style={{ fontSize: '20px', fontWeight: 'bold', padding: '0px' }}>Create post</h1>
+        </Form.Item>
         <Form
           form={form}
           onFinish={handleSubmit}
@@ -96,20 +86,18 @@ function Poster() {
             <TextEditor />
           </Form.Item>
           <Form.Item
-            label="Images"
-            name="images"
-            style={{ marginBottom: '0px' }}
-          >
-            <Upload {...props}>
-              <Button icon={<UploadOutlined />}>Upload</Button>
-            </Upload>
-          </Form.Item>
-          <Form.Item
             label="Tags"
             validateStatus={tagsError ? 'error' : ''}
             help={tagsError ? 'Tag cannot be longer than 10 characters' : null}
+            style={{ marginBottom: '0px' }}
           >
             <Tags trigger={setTagsError} />
+          </Form.Item>
+          <Form.Item
+            name="images"
+            style={{ marginBottom: '0px', paddingTop: '10px' }}
+          >
+            <ImageUploader />
           </Form.Item>
         </Form>
       </Modal>
