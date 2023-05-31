@@ -69,7 +69,7 @@ function LoginForm({ onClose }) {
     setLoginFailed(false);
   };
   return (
-    <div style={{ margin: 20 }}>
+    <div style={{ margin: 20, zIndex: 2 }}>
       <Form
         name="login;ogin"
         className="login-form"

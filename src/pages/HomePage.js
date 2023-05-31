@@ -5,7 +5,6 @@ import {
 } from 'antd';
 import SearchBar from '../components/SearchBar';
 import MyMap from '../components/GeoLocation/MyMap';
-import Navbar from '../components/Navbar';
 
 const { Content } = Layout;
 const map = <MyMap />;
@@ -26,16 +25,15 @@ function HomePage() {
   return (
     <Layout
       style={{
+        height: window.innerHeight,
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <Navbar />
       <Content
         style={{
           padding: '0 50px',
-          height: '100vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',

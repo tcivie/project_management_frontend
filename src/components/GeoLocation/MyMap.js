@@ -93,6 +93,7 @@ function MyMap() {
         // eslint-disable-next-line no-console
         console.error('Error retrieving geolocation:', error);
       },
+      { timeout: 5000 },
     );
   }, []);
 

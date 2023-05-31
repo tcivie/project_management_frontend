@@ -50,59 +50,60 @@ function Navbar() {
   };
 
   return (
-    <div style={{
-      position: 'fixed', zIndex: 1, width: '100%', top: 0,
-    }}
+    <Menu
+      mode="horizontal"
+      triggerSubMenuAction="click"
+      openKeys={openKeys}
+      style={{ position: 'fixed', width: '100%' }}
     >
-      <Menu mode="horizontal" triggerSubMenuAction="click" openKeys={openKeys}>
-        <Menu.Item key="home" style={{ marginRight: 'auto' }}>
-          InterTourist
-        </Menu.Item>
+      <Menu.Item key="home" onClick={() => { navigate('/'); }} style={{ marginRight: 'auto' }}>
+        InterTourist
+      </Menu.Item>
 
-        <Menu.Item
-          key="register"
-          icon={userState.isAuthenticated ? <UserOutlined /> : <FormOutlined />}
-          onClick={!userState.isAuthenticated ? openRegisterModal : closeRegisterModal}
-        >
-          {userState.isAuthenticated ? (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-            <span role="presentation" onClick={profileButtonClick}>Hello {userState.userData}</span>
-          ) : (
-            'Sign Up'
-          )}
-        </Menu.Item>
-
-        {!userState.isAuthenticated && (
-          <Menu.SubMenu
-            key="login"
-            icon={<LoginOutlined />}
-            title="Login"
-            onTitleClick={openLoginForm}
-          >
-            <div style={{ margin: '10px' }}>
-              <LoginForm onClose={closLoginForm} />
-            </div>
-          </Menu.SubMenu>
-        )}
-        {userState.isAuthenticated && (
-          <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={logOut}>
-            Log Out
-          </Menu.Item>
-        )}
-      </Menu>
-
-      <Modal
-        open={isRegisterVisible}
-        onCancel={closeRegisterModal}
-        footer={null}
-        maskClosable={false}
-        destroyOnClose
-        width={500}
-        centered
+      <Menu.Item
+        key="register"
+        icon={userState.isAuthenticated ? <UserOutlined /> : <FormOutlined />}
+        onClick={!userState.isAuthenticated ? openRegisterModal : closeRegisterModal}
       >
-        <RegisterPage onClose={closeRegisterModal} />
-      </Modal>
-    </div>
+        {userState.isAuthenticated ? (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+          <span role="presentation" onClick={profileButtonClick}>Hello {userState.userData}</span>
+        ) : (
+          'Sign Up'
+        )}
+      </Menu.Item>
+
+      {!userState.isAuthenticated && (
+      <Menu.SubMenu
+        key="login"
+        icon={<LoginOutlined />}
+        title="Login"
+        onTitleClick={openLoginForm}
+      >
+        <div>
+          <LoginForm onClose={closLoginForm} />
+        </div>
+      </Menu.SubMenu>
+      )}
+      {userState.isAuthenticated && (
+      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={logOut}>
+        Log Out
+      </Menu.Item>
+      )}
+      <Menu.Item>
+        <Modal
+          open={isRegisterVisible}
+          onCancel={closeRegisterModal}
+          footer={null}
+          maskClosable={false}
+          destroyOnClose
+          width={500}
+          centered
+        >
+          <RegisterPage onClose={closeRegisterModal} />
+        </Modal>
+      </Menu.Item>
+    </Menu>
   );
 }
 

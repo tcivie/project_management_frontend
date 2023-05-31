@@ -23,6 +23,7 @@ function MyDrawer() {
       return {
         key,
         ...item,
+        ...locationInfo,
       };
     });
   }
@@ -46,7 +47,7 @@ function MyDrawer() {
       closable
       onClose={() => dispatch(drawerClose())}
       visible={visible}
-      size="large"
+      width="50%"
     >
       <OGCard wikiId={locationInfo?.wikiDataId} />
       <Divider style={{ margin: '6px' }}> Chat Rooms
