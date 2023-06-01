@@ -8,7 +8,7 @@ export default function PostComments({ messages }) {
       <List itemLayout="vertical">
         <VirtualList
           data={messages}
-          height={window.innerHeight}
+          height="40vh"
           style={{ padding: '5%' }}
         >
           {
