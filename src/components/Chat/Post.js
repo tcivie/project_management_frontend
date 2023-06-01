@@ -7,10 +7,13 @@ import {
 } from '@ant-design/icons';
 import ToggleIcon from './chatComponents/toggleIcon';
 import stringToRGB from '../../utils/colors';
+import PostComment from './chatComponents/comment';
+import PostComments from './chatComponents/postComments';
 
 function Post({
   msgID, username, content, userImageUrl, comments,
 }) {
+  console.log('comments:', comments);
   const usefullButton = (
     <Tooltip
       align={{
@@ -62,7 +65,7 @@ function Post({
     >
       <div style={{ marginTop: 10, width: '50vw' }}>
         <Card
-          bodyStyle={{ display: comments ? 'flex' : 'none' }}
+          bodyStyle={{ display: comments ? 'content' : 'none', backgroundColor: 'lightgrey' }}
           title={(
             <div style={{ display: 'grid' }}>
               <div style={{ gridColumn: 1 }}>
@@ -89,7 +92,9 @@ function Post({
             <SettingFilled key="setting" />,
             <SettingFilled key="edit" />,
             usefullButton, unusefullButton]}
-        />
+        >
+          <PostComments messages={comments} />
+        </Card>
       </div>
     </List.Item>
   );
