@@ -9,7 +9,7 @@ import {
   StockOutlined,
 } from '@ant-design/icons';
 import Statistics from './Statistics';
-import { updateUser } from './api'; // Import the API function
+
 
 const { Item } = Menu;
 const { confirm } = Modal;
