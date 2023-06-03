@@ -21,7 +21,7 @@ function MyGoogleLogin() {
               .then((data) => {
                 if (data) {
                   dispatch(
-                    userLoginSuccess(data.accessToken, data.UserInfo.username),
+                    userLoginSuccess(data.accessToken, data.UserInfo),
                   );
                   window.location.reload();
                 }
