@@ -9,6 +9,7 @@ import {
   StockOutlined,
 } from '@ant-design/icons';
 import Statistics from './Statistics';
+import { updateUser } from './api'; // Import the API function
 
 const { Item } = Menu;
 const { confirm } = Modal;
@@ -51,16 +52,24 @@ function Profile() {
     return () => setSelectedMenuItem(null);
   }, []);
 
-  const handleEditFormSubmit = (formData) => {
-    // Send a request to update user information using formData
-    console.log('Updating user information:', formData);
-    // Handle success or error response accordingly
+  const handleEditFormSubmit = async (formData) => {
+    try {
+      const updatedUser = await updateUser(formData); // Call the API function
+      console.log('User information updated successfully:', updatedUser);
+      setEditFormVisible(false); // Hide the form after successful submission
+    } catch (error) {
+      console.log('Error updating user information:', error);
+    }
   };
 
-  const handleSecurityFormSubmit = (formData) => {
-    // Send a request to update account security using formData
-    console.log('Updating account security:', formData);
-    // Handle success or error response accordingly
+  const handleSecurityFormSubmit = async (formData) => {
+    try {
+      // Send a request to update account security using formData
+      console.log('Updating account security:', formData);
+      // Handle success or error response accordingly
+    } catch (error) {
+      console.log('Error updating account security:', error);
+    }
   };
 
   const showConfirm = () => {
@@ -82,9 +91,11 @@ function Profile() {
           <Space wrap size={64}>
             <Avatar size={256} icon={<UserOutlined />} />
           </Space>
-          <Button type="primary">Follow</Button>
-          <Button type="default">Following</Button>
-          <Button type="default">Followers</Button>
+          <Space>
+            <Button type="primary">Follow</Button>
+            <Button type="default">Following</Button>
+            <Button type="default">Followers</Button>
+          </Space>
           <Menu
             style={{ width: 256 }}
             mode="vertical"
@@ -119,7 +130,6 @@ function Profile() {
           layout="vertical"
           initialValues={editFormData}
           onFinish={handleEditFormSubmit}
-          // Add form fields for username, email, and nickname
         >
           <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please enter your username' }]}>
             <Input />
@@ -149,7 +159,6 @@ function Profile() {
           layout="vertical"
           initialValues={securityFormData}
           onFinish={handleSecurityFormSubmit}
-          // Add form fields for current password, new password, and confirm password
         >
           <Form.Item
             label="Current Password"
