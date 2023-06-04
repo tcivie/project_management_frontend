@@ -19,23 +19,17 @@ function App() {
   const cityId = searchParams.get('cityId');
   const lang = searchParams.get('lang');
   const postState = useSelector((state) => state.post);
-  const messages = null;
-  // const [messages] = useState([Post({
-  //   comments: [
-  //     { username: 'omer', content: lorem },
-  //     { username: 'omer2', content: lorem },
-  //     { username: 'omer', content: lorem },
-  //     { username: 'omer2', content: lorem },
-  //     { username: 'omer', content: lorem },
-  //     { username: 'omer2', content: lorem },
-  //     { username: 'omer', content: lorem },
-  //     { username: 'omer2', content: lorem }],
-  //   username: 'omer',
-  //   isUsefull: true,
-  //   content: lorem,
-  // }),
-  // Post({ username: 'steve', isUsefull: true, content: lorem }),
-  // Post({ username: 'steven', isUsefull: true, content: lorem })]);
+  const [processedPosts, setProcessedPosts] = useState([]);
+
+  useEffect(() => {
+    if (processedPosts?.length === 0) {
+      const processed = postState.posts.map((post) => Post(post));
+      setProcessedPosts(processed);
+    } else {
+      const newPost = Post(postState.posts[postState.posts.length - 1]);
+      setProcessedPosts((prev) => [...prev, newPost]);
+    }
+  }, [postState]);
 
   useEffect(() => {
     // Send request to server to fetch posts
@@ -48,7 +42,13 @@ function App() {
     }
   }, [lang, cityId]);
   return (
-    <Layout>
+    <Layout style={{
+      backgroundColor: 'lightgreen',
+      height: '100vh',
+      overflowY: 'hidden',
+      width: '-webkit-fill-available',
+    }}
+    >
       <Sider style={{ padding: 20, marginTop: 50 }}>
         <Menu
           theme="dark"
@@ -64,31 +64,27 @@ function App() {
           )}
         />
       </Sider>
-      <div style={{
-        backgroundColor: 'lightgreen', height: '100vh', overflowY: 'hidden', width: '-webkit-fill-available',
-      }}
-      >
-        {/* eslint-disable-next-line array-callback-return */}
-        <list>
-          {postState?.posts.map((post) => Post(post))}
-        </list>
-        {/* {!messages */}
-        {/*  ? <Empty style={{ position: 'relative' }} /> */}
-        {/*  : ( */}
-        {/*    <List itemLayout="vertical"> */}
-        {/*      <VirtualList */}
-        {/*        height={window.innerHeight} */}
-        {/*        data={postsState?.posts.map((post) => Post(post))} */}
-        {/*        style={{ padding: '50px' }} */}
-        {/*      > */}
-        {/*        { (item) => ( */}
-        {/*          item */}
-        {/*        )} */}
-        {/*      </VirtualList> */}
-        {/*    </List> */}
-        {/*  )} */}
-        <Poster cityId={cityId} lang={lang} />
-      </div>
+      {/* eslint-disable-next-line array-callback-return */}
+      {!postState?.posts || postState?.posts.length === 0
+        ? <Empty style={{ position: 'relative', top: '50vh' }} />
+        : (
+          <List
+            itemLayout="vertical"
+          >
+            <VirtualList
+              height={window.innerHeight}
+              data={processedPosts}
+              style={{ marginTop: '50px' }}
+            >
+              { (item) => (
+                <div style={{ padding: '10px 100px 10px 100px' }}>
+                  {item}
+                </div>
+              )}
+            </VirtualList>
+          </List>
+        )}
+      <Poster cityId={cityId} lang={lang} />
     </Layout>
   );
 }

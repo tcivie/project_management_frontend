@@ -77,7 +77,7 @@ function Poster(params) {
         onClick={showModal}
       />
       <Modal
-        visible={visible}
+        open={visible}
         centered
         onOk={isUserAuthenticated ? form.submit : null}
         onCancel={handleCancel}
