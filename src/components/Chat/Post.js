@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import DOMPurify from 'dompurify'; // to sanitize html
+import SkeletonAvatar from 'antd/es/skeleton/Avatar';
 import stringToRGB from '../../utils/colors';
 
 const getAvatar = (usrId) => {
@@ -20,21 +21,25 @@ const getAvatar = (usrId) => {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
+      if (data?.username) {
+        return (
+          <Avatar
+            alt={data.username ? data.username[0] : ''}
+            size="large"
+            src={data?.avatar}
+            icon={data?.avatar ? null : <UserOutlined />}
+            style={{
+              backgroundColor: stringToRGB(data.username),
+              marginRight: 10,
+              marginTop: 10,
+            }}
+          >
+            {data.username ? data.username[0] : ''}
+          </Avatar>
+        );
+      }
       return (
-        <Avatar
-          alt={data.username ? data.username[0] : ''}
-          size="large"
-          src={data?.avatar}
-          icon={data?.avatar ? null : <UserOutlined />}
-          style={{
-            backgroundColor: stringToRGB(data.username),
-            marginRight: 10,
-            marginTop: 10,
-          }}
-        >
-          {data.username ? data.username[0] : ''}
-        </Avatar>
+        <SkeletonAvatar />
       );
     });
 };

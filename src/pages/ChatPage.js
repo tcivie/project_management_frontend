@@ -11,17 +11,17 @@ import Poster from '../components/Chat/Poster';
 import { postsFetched } from '../redux/actions/postAction';
 
 const { Sider } = Layout;
-const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit semper facilisis. Etiam in erat et libero ornare ultrices ut vitae ante. Vestibulum ac viverra risus. Nunc ultrices lorem finibus ante pretium, et faucibus ante lacinia. Nullam ut ipsum lectus. Quisque eu eros magna. Donec hendrerit ultricies dictum. Ut gravida sagittis nunc a vestibulum. Donec luctus malesuada mi. Nunc aliquet sed tellus sed consectetur. Suspendisse pellentesque pellentesque tellus a posuere. Nullam lobortis eu libero ut auctor. Nulla facilisi. Morbi sed nisl vitae eros faucibus posuere non vitae odio.';
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const cityId = searchParams.get('cityId');
+  const cityId = searchParams.get('cid');
   const lang = searchParams.get('lang');
   const postState = useSelector((state) => state.post);
   const [processedPosts, setProcessedPosts] = useState([]);
 
   useEffect(() => {
+    console.log('postsFetched action', postState.posts);
     if (processedPosts?.length === 0) {
       const processed = postState.posts.map((post) => Post(post));
       setProcessedPosts(processed);
@@ -29,7 +29,7 @@ function App() {
       const newPost = Post(postState.posts[postState.posts.length - 1]);
       setProcessedPosts((prev) => [...prev, newPost]);
     }
-  }, [postState]);
+  }, [postState.posts]);
 
   useEffect(() => {
     // Send request to server to fetch posts
