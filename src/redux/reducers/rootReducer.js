@@ -5,6 +5,7 @@ import drawerReducer from './drawerReducer';
 import postReducer from './postReducer';
 import tagReducer from './tagReducer';
 import fileReducer from './fileReducer';
+import messageReducer from './messageReducer';
 
 const rootReducer = combineReducers({
   search: searchReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   post: postReducer,
   tag: tagReducer,
   file: fileReducer,
+  message: messageReducer,
 });
 
 export default rootReducer;

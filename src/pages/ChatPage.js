@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import VirtualList from 'rc-virtual-list';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
 import Post from '../components/Chat/Post';
 import Poster from '../components/Chat/Poster';
 import { postsFetched } from '../redux/actions/postAction';
@@ -23,10 +24,10 @@ function App() {
   useEffect(() => {
     console.log('postsFetched action', postState.posts);
     if (processedPosts?.length === 0) {
-      const processed = postState.posts.map((post) => Post(post));
+      const processed = postState.posts.map((post) => <Post data={post} />);
       setProcessedPosts(processed);
     } else {
-      const newPost = Post(postState.posts[postState.posts.length - 1]);
+      const newPost = <Post data={postState.posts[postState.posts.length - 1]} />;
       setProcessedPosts((prev) => [...prev, newPost]);
     }
   }, [postState.posts]);
@@ -34,7 +35,18 @@ function App() {
   useEffect(() => {
     // Send request to server to fetch posts
     try {
-      const response = fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/city/${cityId}/${lang}`)
+      const response = fetch(
+        `${process.env.REACT_APP_API_SERVER}/api/chat/posts/city/${cityId}/${lang}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept-Language': lang,
+            Authorization: `Bearer ${Cookies.get('token')}`,
+          },
+          credentials: 'include',
+        },
+      )
         .then((res) => (res.json()))
         .then((data) => dispatch(postsFetched(data)));
     } catch (e) {

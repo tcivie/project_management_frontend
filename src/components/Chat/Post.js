@@ -1,47 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar, List, Space, Tag, Button, Image, Carousel,
 } from 'antd';
 import {
-  LikeOutlined, MessageOutlined, SaveOutlined, UserOutlined,
+  LikeOutlined, MessageOutlined, SaveFilled, SaveOutlined, UserOutlined,
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import DOMPurify from 'dompurify'; // to sanitize html
 import SkeletonAvatar from 'antd/es/skeleton/Avatar';
 import stringToRGB from '../../utils/colors';
+import ActionButtons from './chatComponents/ActionButtons';
 
-const getAvatar = (usrId) => {
-  fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${usrId}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${Cookies.get('token')}`,
-      ContentType: 'application/json',
-    },
-    credentials: 'include',
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data?.username) {
-        return (
-          <Avatar
-            alt={data.username ? data.username[0] : ''}
-            size="large"
-            src={data?.avatar}
-            icon={data?.avatar ? null : <UserOutlined />}
-            style={{
-              backgroundColor: stringToRGB(data.username),
-              marginRight: 10,
-              marginTop: 10,
-            }}
-          >
-            {data.username ? data.username[0] : ''}
-          </Avatar>
-        );
-      }
-      return (
-        <SkeletonAvatar />
-      );
-    });
+const useUser = (usrId) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${usrId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+        ContentType: 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, [usrId]);
+
+  return user;
 };
 
 const getImages = (postImages) =>
@@ -61,9 +49,10 @@ const getImages = (postImages) =>
       />
     </div>
   ));
-function Post(
-  post,
-) {
+function Post({ data }) {
+  const {
+    setHelpful, owner, post, setSaved,
+  } = data;
   const {
     _id,
     title,
@@ -73,18 +62,20 @@ function Post(
     postImages,
     comments,
     helpful,
+    saves,
     createdAt,
     updatedAt,
   } = post;
   const sanitizedHTML = DOMPurify.sanitize(content);
   const images = getImages(postImages);
-
+  const user = useUser(userId);
+  console.log(post);
   return (
     <List.Item
       key={_id}
       actions={[
-        <Button type="text" icon={<SaveOutlined />}> 150 </Button>,
-        <Button type="text" icon={<LikeOutlined />}> {helpful} </Button>,
+        <ActionButtons type="save" postId={_id} setSaved={setSaved} value={saves.length} />,
+        <ActionButtons type="helpful" postId={_id} setHelpful={setHelpful} value={helpful.length} />,
         <Button type="text" icon={<MessageOutlined />}> {comments} </Button>,
         // eslint-disable-next-line max-len
         <p>Created at: {new Date(createdAt).toLocaleDateString()} | Updated at: {new Date(updatedAt).toLocaleDateString()}</p>,
@@ -106,7 +97,25 @@ function Post(
       }}
     >
       <List.Item.Meta
-        avatar={getAvatar(userId)}
+        avatar={
+              user ? (
+                <Avatar
+                  alt={user.username ? user.username[0] : ''}
+                  size="large"
+                  src={user?.avatar}
+                  icon={user?.avatar ? null : <UserOutlined />}
+                  style={{
+                    backgroundColor: stringToRGB(user.username),
+                    marginRight: 10,
+                    marginTop: 10,
+                  }}
+                >
+                  {user.username ? user.username[0] : ''}
+                </Avatar>
+              ) : (
+                <SkeletonAvatar />
+              )
+          }
         title={<h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>{title}</h2>}
         description={(
           <div>
