@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Space, Button, Avatar, Menu, Form, Input, Modal } from 'antd';
+import React, { useState } from 'react';
+import { Space, Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu } from 'antd';
 import {
   UserOutlined,
   DeleteOutlined,
@@ -8,196 +8,155 @@ import {
   ProfileOutlined,
   StockOutlined,
 } from '@ant-design/icons';
-import Statistics from './Statistics';
 
-
-const { Item } = Menu;
-const { confirm } = Modal;
-
-function getItem(label, key, icon, children, type) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
-}
-
-const items = [
-  getItem('Edit post', 'sub1', <EditOutlined />, []),
-  getItem('Delete post', 'sub2', <DeleteOutlined />, []),
-  getItem('Saved content', 'sub4', <SaveOutlined />, []),
-  getItem('Edit Profile', 'sub5', <ProfileOutlined />, []),
-  getItem('Statistics', 'sub6', <StockOutlined />, [], 'statistics'),
-];
+const { SubMenu } = Menu;
 
 function Profile() {
-  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-  const [editFormVisible, setEditFormVisible] = useState(false);
-  const [editFormData, setEditFormData] = useState({
-    username: '',
-    email: '',
-    nickname: '',
-  });
-  const [securityFormVisible, setSecurityFormVisible] = useState(false);
-  const [securityFormData, setSecurityFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  });
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [followStatus, setFollowStatus] = useState(false);
+  const [followersVisible, setFollowersVisible] = useState(false);
+  const [followingVisible, setFollowingVisible] = useState(false);
 
-  useEffect(() => {
-    // Reset selected menu item when component unmounts
-    return () => setSelectedMenuItem(null);
-  }, []);
+  const handleProfilePictureUpload = (file) => {
+    setProfilePicture(file);
+    message.success(`Profile picture uploaded: ${file.name}`);
+  };
 
-  const handleEditFormSubmit = async (formData) => {
-    try {
-      const updatedUser = await updateUser(formData); // Call the API function
-      console.log('User information updated successfully:', updatedUser);
-      setEditFormVisible(false); // Hide the form after successful submission
-    } catch (error) {
-      console.log('Error updating user information:', error);
+  const handleUploadChange = (info) => {
+    const { status, originFileObj } = info.file;
+    if (status === 'done') {
+      handleProfilePictureUpload(originFileObj);
+    } else if (status === 'error') {
+      message.error('Profile picture upload failed.');
     }
   };
 
-  const handleSecurityFormSubmit = async (formData) => {
-    try {
-      // Send a request to update account security using formData
-      console.log('Updating account security:', formData);
-      // Handle success or error response accordingly
-    } catch (error) {
-      console.log('Error updating account security:', error);
-    }
+  const handleDeletePicture = () => {
+    setProfilePicture(null);
+    setDeleteModalVisible(false);
+    message.success('Profile picture deleted.');
   };
 
-  const showConfirm = () => {
-    confirm({
-      title: 'Are you sure you want to delete your account?',
-      okText: 'Yes',
-      cancelText: 'No',
-      onOk() {
-        // Send a request to delete the user account
-        console.log('Deleting user account...');
-      },
-    });
+  const showDeleteModal = () => {
+    setDeleteModalVisible(true);
   };
+
+  const hideDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
+  const handleFollowToggle = () => {
+    setFollowStatus((prevStatus) => !prevStatus);
+  };
+
+  const handleFollowersClick = () => {
+    setFollowersVisible(true);
+  };
+
+  const handleFollowingClick = () => {
+    setFollowingVisible(true);
+  };
+
+  const handleFollowersClose = () => {
+    setFollowersVisible(false);
+  };
+
+  const handleFollowingClose = () => {
+    setFollowingVisible(false);
+  };
+
+  const followersData = [];
+  const followingData = [];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div>
-        <Space direction="vertical" size={16}>
-          <Space wrap size={64}>
-            <Avatar size={256} icon={<UserOutlined />} />
-          </Space>
-          <Space>
-            <Button type="primary">Follow</Button>
-            <Button type="default">Following</Button>
-            <Button type="default">Followers</Button>
-          </Space>
-          <Menu
-            style={{ width: 256 }}
-            mode="vertical"
-            items={items}
-            onSelect={(item) => {
-              if (item.type === 'statistics') {
-                setSelectedMenuItem('statistics');
-              }
-            }}
-          />
-          {selectedMenuItem === 'statistics' && <Statistics />}
-          <Button type="default" onClick={() => setEditFormVisible(true)}>
-            Edit Personal Information
-          </Button>
-          <Button type="default" onClick={() => setSecurityFormVisible(true)}>
-            Manage Account Security
-          </Button>
-          <Button type="danger" onClick={showConfirm}>
-            Delete Account
-          </Button>
-        </Space>
+    <div style={{ display: 'flex' }}>
+      <Menu
+        style={{ width: 256, marginRight: 20, marginTop: 100 }}
+        defaultSelectedKeys={['1']}
+        mode="vertical"
+      >
+        <Menu.Item key="1" icon={<EditOutlined />}>
+          Edit post
+        </Menu.Item>
+        <Menu.Item key="2" icon={<DeleteOutlined />}>
+          Delete post
+        </Menu.Item>
+        <Menu.Item key="3" icon={<SaveOutlined />}>
+          Saved content
+        </Menu.Item>
+        <Menu.Item key="4" icon={<ProfileOutlined />}>
+          Edit Profile
+        </Menu.Item>
+        <Menu.Item key="5" icon={<StockOutlined />}>
+          Statistics
+        </Menu.Item>
+      </Menu>
+      <div style={{ flex: 1 }}>
+        <div style={{ textAlign: 'center' }}>
+          <Avatar size={200} icon={profilePicture ? null : <UserOutlined />} src={profilePicture && URL.createObjectURL(profilePicture)} />
+          <div style={{ marginTop: 10 }}>
+            <Button type={followStatus ? 'default' : 'primary'} onClick={handleFollowToggle}>
+              {followStatus ? 'Unfollow' : 'Follow'}
+            </Button>
+            <Button type="default" onClick={handleFollowingClick}>
+              Following
+            </Button>
+            <Button type="default" onClick={handleFollowersClick}>
+              Followers
+            </Button>
+            <Upload
+              name="profilePicture"
+              showUploadList={false}
+              beforeUpload={() => false}
+              onChange={handleUploadChange}
+            >
+              <Button>
+                {profilePicture ? 'Change Picture' : 'Upload Picture'}
+              </Button>
+            </Upload>
+            {profilePicture && (
+              <Button type="link" onClick={showDeleteModal}>
+                Delete Picture
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <div style={{ marginTop: 40 }}>
+          <Skeleton active paragraph={{ rows: 20 }} />
+        </div>
+
+        <Modal visible={deleteModalVisible} onOk={handleDeletePicture} onCancel={hideDeleteModal} centered>
+          <p>Are you sure you want to delete your profile picture?</p>
+        </Modal>
+
+        <Modal visible={followersVisible} onCancel={handleFollowersClose} centered footer={null}>
+          {followersData.length > 0 ? (
+            <List
+              dataSource={followersData}
+              renderItem={(item) => (
+                <List.Item>{item}</List.Item>
+              )}
+            />
+          ) : (
+            <Empty description="No followers." />
+          )}
+        </Modal>
+
+        <Modal visible={followingVisible} onCancel={handleFollowingClose} centered footer={null}>
+          {followingData.length > 0 ? (
+            <List
+              dataSource={followingData}
+              renderItem={(item) => (
+                <List.Item>{item}</List.Item>
+              )}
+            />
+          ) : (
+            <Empty description="Not following anyone." />
+          )}
+        </Modal>
       </div>
-
-      {/* Edit Personal Information Form */}
-      <Modal
-        title="Edit Personal Information"
-        visible={editFormVisible}
-        onCancel={() => setEditFormVisible(false)}
-        footer={null}
-      >
-        <Form
-          layout="vertical"
-          initialValues={editFormData}
-          onFinish={handleEditFormSubmit}
-        >
-          <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please enter your username' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter your email' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Nickname" name="nickname" rules={[{ required: true, message: 'Please enter your nickname' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Save Changes
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* Manage Account Security Form */}
-      <Modal
-        title="Manage Account Security"
-        visible={securityFormVisible}
-        onCancel={() => setSecurityFormVisible(false)}
-        footer={null}
-      >
-        <Form
-          layout="vertical"
-          initialValues={securityFormData}
-          onFinish={handleSecurityFormSubmit}
-        >
-          <Form.Item
-            label="Current Password"
-            name="currentPassword"
-            rules={[{ required: true, message: 'Please enter your current password' }]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item
-            label="New Password"
-            name="newPassword"
-            rules={[{ required: true, message: 'Please enter your new password' }]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item
-            label="Confirm Password"
-            name="confirmPassword"
-            rules={[
-              { required: true, message: 'Please confirm your new password' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('newPassword') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error('The two passwords do not match'));
-                },
-              }),
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Save Changes
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 }
