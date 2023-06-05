@@ -14,3 +14,5 @@ export async function fetchOpenGraphData(wikiId) {
       throw new Error('Network response was not ok.');
     });
 }
+
+
