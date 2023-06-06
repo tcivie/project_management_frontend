@@ -10,6 +10,7 @@ import DOMPurify from 'dompurify'; // to sanitize html
 import SkeletonAvatar from 'antd/es/skeleton/Avatar';
 import stringToRGB from '../../utils/colors';
 import ActionButtons from './chatComponents/ActionButtons';
+import InnerPostChat from './chatComponents/InnerPostChat';
 
 const useUser = (usrId) => {
   const [user, setUser] = useState(null);
@@ -66,6 +67,21 @@ function Post({ data }) {
     createdAt,
     updatedAt,
   } = post;
+  const [showRepliesModal, setRepliesModalVisbility] = useState(false);
+  const handleCommentsClick = () => {
+    setRepliesModalVisbility(true);
+  };
+  const closeComments = () => {
+    setRepliesModalVisbility(false);
+  };
+  const repliesModal = (
+    <InnerPostChat
+      title={title}
+      postid={_id}
+      onClose={closeComments}
+      isOpen={showRepliesModal}
+    />
+  );
   const sanitizedHTML = DOMPurify.sanitize(content);
   const images = getImages(postImages);
   const user = useUser(userId);
@@ -76,7 +92,7 @@ function Post({ data }) {
       actions={[
         <ActionButtons type="save" postId={_id} setSaved={setSaved} value={saves.length} />,
         <ActionButtons type="helpful" postId={_id} setHelpful={setHelpful} value={helpful.length} />,
-        <Button type="text" icon={<MessageOutlined />}> {comments} </Button>,
+        <Button type="text" onClick={handleCommentsClick} icon={<MessageOutlined />}> {comments} </Button>,
         // eslint-disable-next-line max-len
         <p>Created at: {new Date(createdAt).toLocaleDateString()} | Updated at: {new Date(updatedAt).toLocaleDateString()}</p>,
       ]}
@@ -96,6 +112,7 @@ function Post({ data }) {
         paddingRight: '20px',
       }}
     >
+      {repliesModal}
       <List.Item.Meta
         avatar={
               user ? (
