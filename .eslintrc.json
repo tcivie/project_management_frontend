@@ -31,6 +31,8 @@
     "default-param-last": [
       "off"
     ],
+    "linebreak-style": ["error", "unix"],
+
     "no-unused-vars": [
       "warn",
       {
