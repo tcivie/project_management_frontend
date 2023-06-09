@@ -2,19 +2,58 @@ import { SendOutlined } from '@ant-design/icons';
 import {
   Button, Input, List, Modal,
 } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
 
 export default function InnerPostChat({
-  postid, title, isOpen, onClose,
+  postId, title, isOpen, onClose,
 }) {
-  const textRef = useRef(null);
-  const send = () => {
-    console.log(textRef.current);
+  const [sendValue, SetSendValue] = useState('');
+  const userSelector = useSelector((state) => state.user);
+  const [socket, setSocket] = useState(null);
+  const [messages, setMesssages] = useState([]);
+  const send = (e) => {
+    if (!socket) return;
+    socket.emit('newMessage', { postId, sendValue });
+    SetSendValue('');
+    e.preventDefault();
   };
-
+  const handleOnChange = (e) => {
+    console.log(e);
+    // if (e.key === 'Enter' && !e.shiftKey) send(e);
+    SetSendValue(e.target.value);
+  };
+  // Replace with your Socket.IO server's address
+  const handleModalOpenClose = (open) => {
+    if (open) {
+      setSocket((io('http://localhost:4005', {
+        reconnectionDelayMax: 10000,
+        auth: {
+          token: userSelector.token,
+        },
+        query: {
+          postId,
+        },
+      })));
+    }
+  };
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit('join', postId);
+    socket.emit('newMessage', 'hi');
+    socket.on('messageReceived', (message) => {
+      console.log(message);
+      setMesssages([...messages, <List.Item>{message}</List.Item>]);
+    });
+  }, [socket]);
+  const handleCancel = () => {
+    if (socket) { socket.emit('disconnet', postId); }
+    if (onClose) onClose();
+  };
   const textAndButton = (
     <div style={{ position: 'relative' }}>
-      <Input.TextArea ref={textRef} autoSize={{ minRows: 1, maxRows: 3 }} onPressEnter={send} style={{ padding: '10px', paddingRight: '5%' }} />
+      <Input.TextArea placeholder="Send a comment..." onChange={handleOnChange} value={sendValue} autoSize={{ minRows: 1, maxRows: 3 }} onPressEnter={send} style={{ padding: '10px', paddingRight: '5%' }} />
       <Button
         type="primary"
         icon={<SendOutlined />}
@@ -26,17 +65,20 @@ export default function InnerPostChat({
       />
     </div>
   );
+
   return (
     <Modal
       title={`${title} - Chat`}
       width="90%"
       bodyStyle={{ height: '60vh' }}
       open={isOpen}
-      onCancel={onClose}
-      destroyOnClose
+      onCancel={handleCancel}
+      afterOpenChange={handleModalOpenClose}
       footer={textAndButton}
     >
-      <List />
+      <List>
+        {messages}
+      </List>
 
     </Modal>
   );

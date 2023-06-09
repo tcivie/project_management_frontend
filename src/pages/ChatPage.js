@@ -22,9 +22,12 @@ function App() {
   const [processedPosts, setProcessedPosts] = useState([]);
 
   useEffect(() => {
-    const processed = postState.posts.map((post) => <Post data={post} />);
-    setProcessedPosts(processed);
-  }, [postState.posts]);
+    console.log('posts refereshing');
+    if (!processedPosts || postState.posts?.length !== processedPosts?.length) {
+      const processed = postState.posts.map((post) => <Post data={post} />);
+      setProcessedPosts(processed);
+    }
+  }, [postState]);
 
   useEffect(() => {
     // Send request to server to fetch posts

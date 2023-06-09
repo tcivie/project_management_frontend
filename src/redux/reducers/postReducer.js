@@ -21,7 +21,7 @@ export default function postReducer(state = initialState, action) {
     case 'POST_CREATED':
       return {
         ...state,
-        posts: [...state.posts, action.payload],
+        posts: [action.payload, ...state.posts],
       };
     case 'USER_JOINED':
       return {
