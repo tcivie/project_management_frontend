@@ -22,14 +22,8 @@ function App() {
   const [processedPosts, setProcessedPosts] = useState([]);
 
   useEffect(() => {
-    console.log('postsFetched action', postState.posts);
-    if (processedPosts?.length === 0) {
-      const processed = postState.posts.map((post) => <Post data={post} />);
-      setProcessedPosts(processed);
-    } else {
-      const newPost = <Post data={postState.posts[postState.posts.length - 1]} />;
-      setProcessedPosts((prev) => [...prev, newPost]);
-    }
+    const processed = postState.posts.map((post) => <Post data={post} />);
+    setProcessedPosts(processed);
   }, [postState.posts]);
 
   useEffect(() => {
