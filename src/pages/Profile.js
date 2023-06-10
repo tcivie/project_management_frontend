@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form } from 'antd';
+import {
+  Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form,
+} from 'antd';
 import {
   UserOutlined,
   UploadOutlined,
-  DeleteOutlined,
   SaveOutlined,
   EditOutlined,
   ProfileOutlined,
@@ -12,16 +13,12 @@ import {
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 
-const { SubMenu } = Menu;
-const { TextArea } = Input;
-
 function EditProfileForm({ formData, onCancel, onSave }) {
   const [form] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue(formData);
   }, [formData, form]);
-
 
   const handleSubmit = async (values) => {
     const isVerified = values.nickname && values.newPassword && values.confirmPassword;
@@ -91,7 +88,6 @@ function Profile() {
   const [searchHistory, setSearchHistory] = useState([]);
   const [uploadHistory, setUploadHistory] = useState([]);
   const [savedContents, setSavedContents] = useState([]);
-  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const fetchSearchHistory = async () => {
@@ -172,8 +168,7 @@ function Profile() {
           credentials: 'include',
         });
         if (response.ok) {
-          const data = await response.json();
-          setPosts(data);
+          // const data = await response.json();
         } else {
           message.error('Failed to fetch posts.');
         }
@@ -242,12 +237,10 @@ function Profile() {
   };
 
   const handleSearchHistoryClick = () => {
-    console.log('Search History clicked');
+    // You can perform further logic to display the search history in the UI
   };
 
   const handlePostsClick = () => {
-    console.log('Posts clicked');
-    console.log(posts);
     // You can perform further logic to display the posts in the UI
   };
 
@@ -312,7 +305,12 @@ function Profile() {
           <Skeleton active paragraph={{ rows: 20 }} />
         </div>
 
-        <Modal visible={deleteModalVisible} onOk={handleDeletePicture} onCancel={hideDeleteModal} centered>
+        <Modal
+          visible={deleteModalVisible}
+          onOk={handleDeletePicture}
+          onCancel={hideDeleteModal}
+          centered
+        >
           <p>Are you sure you want to delete your profile picture?</p>
         </Modal>
 

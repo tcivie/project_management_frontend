@@ -1,12 +1,13 @@
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Upload } from 'antd';
+import { useState } from 'react';
 import { setFileList } from '../../redux/actions/fileActions';
 
-function ImageUploader() {
+function ImageUploader({ existingImages }) {
   const dispatch = useDispatch();
   const { fileList } = useSelector((state) => state.file);
+  const [images, setImages] = useState(existingImages || fileList);
 
   const customRequest = ({ file, onProgress, onSuccess }) => {
     setTimeout(() => {
@@ -17,13 +18,16 @@ function ImageUploader() {
 
   const handleChange = (info) => {
     const updatedFileList = info.fileList.map((file) => {
-      const newFile = { ...file };
-      if (file.response) {
-        newFile.url = file.response.url;
+      if (file.status !== 'removed') {
+        const newFile = { ...file };
+        if (file.response) {
+          newFile.url = file.response.url;
+        }
+        return newFile;
       }
-      return newFile;
+      return null;
     });
-
+    setImages(updatedFileList);
     dispatch(setFileList(updatedFileList));
   };
 
@@ -33,8 +37,9 @@ function ImageUploader() {
       name="postImage"
       listType="picture"
       maxCount={3}
-      fileList={fileList}
+      fileList={images}
       onChange={handleChange}
+      defaultFileList={images}
     >
       <Button icon={<UploadOutlined />}>Upload</Button>
     </Upload>

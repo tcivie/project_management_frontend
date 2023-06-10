@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import VirtualList from 'rc-virtual-list';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import Post from '../components/Chat/Post';
@@ -22,7 +22,6 @@ function App() {
   const [processedPosts, setProcessedPosts] = useState([]);
 
   useEffect(() => {
-    console.log('posts refereshing');
     if (!processedPosts || postState.posts?.length !== processedPosts?.length) {
       const processed = postState.posts.map((post) => <Post data={post} />);
       setProcessedPosts(processed);
@@ -32,7 +31,7 @@ function App() {
   useEffect(() => {
     // Send request to server to fetch posts
     try {
-      const response = fetch(
+      fetch(
         `${process.env.REACT_APP_API_SERVER}/api/chat/posts/city/${cityId}/${lang}`,
         {
           method: 'GET',
@@ -47,6 +46,7 @@ function App() {
         .then((res) => (res.json()))
         .then((data) => dispatch(postsFetched(data)));
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
     }
   }, [lang, cityId]);

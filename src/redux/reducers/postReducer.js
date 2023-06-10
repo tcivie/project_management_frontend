@@ -53,6 +53,16 @@ export default function postReducer(state = initialState, action) {
         ...state,
         helpful: state.helpful.filter((helpful) => helpful.id !== action.payload.id),
       };
+    case 'POST_UPDATED':
+      return {
+        ...state,
+        posts: state.posts.map((post) => {
+          if (post.id === action.payload.id) {
+            return action.payload;
+          }
+          return post;
+        }),
+      };
     default:
       return state;
   }

@@ -1,5 +1,5 @@
 import {
-  Button, FloatButton, Form, Input, Modal,
+  FloatButton, Form, Input, Modal,
 } from 'antd';
 import {
   PlusCircleTwoTone, UpOutlined, CloseOutlined,
@@ -10,9 +10,9 @@ import Cookies from 'js-cookie';
 import TextEditor from './chatComponents/TextEditor';
 import Tags from './Tags';
 import ImageUploader from './ImageUploader';
-import * as postsActions from '../../redux/actions/postAction';
 import { postCreated } from '../../redux/actions/postAction';
 import LoginForm from '../Login';
+import { setMessage } from '../../redux/actions/messageActions';
 
 function Poster(params) {
   const [visible, setVisible] = useState(false);
@@ -24,6 +24,7 @@ function Poster(params) {
   const isUserAuthenticated = userSelector.isAuthenticated;
   const dispatch = useDispatch();
   const fileSelector = useSelector((state) => state.file);
+  const [content, setContent] = useState('');
   const { fileList } = fileSelector;
   const { cityId, lang } = params;
 
@@ -38,7 +39,7 @@ function Poster(params) {
     formData.append('city', cityId);
     formData.append('userId', userId);
     formData.append('title', form.getFieldValue('title'));
-    formData.append('content', form.getFieldValue('body'));
+    formData.append('content', content);
     tagsSelector.tags.forEach((tag, i) => formData.append(`tags[${i}]`, tag));
     fileList.forEach((image) => formData.append('images', image.originFileObj, image.name));
     fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts`, {
@@ -52,11 +53,12 @@ function Poster(params) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        // dispatch an action to update the state
+        dispatch(setMessage('success', 'Post created!'));
         dispatch(postCreated(data));
       })
       .catch((error) => {
+        dispatch(setMessage('error', 'Something went wrong 😟'));
+        // eslint-disable-next-line no-console
         console.error('Error:', error);
       });
 
@@ -124,7 +126,7 @@ function Poster(params) {
                 ]}
                 style={{ marginBottom: '20px', height: '200px' }}
               >
-                <TextEditor />
+                <TextEditor content={content} onChange={setContent} />
               </Form.Item>
               <Form.Item
                 name="tags"
