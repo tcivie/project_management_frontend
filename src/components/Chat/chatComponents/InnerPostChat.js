@@ -57,7 +57,6 @@ export default function InnerPostChat({
   };
 
   const appendData = () => {
-    console.log('loading page:', currentPage);
     fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/comments/${postId}/${currentPage}/15 `, {
       method: 'GET',
       headers: {
@@ -69,7 +68,6 @@ export default function InnerPostChat({
       .then((res) => res.json())
       .then((data) => {
         if (data.length) {
-          console.log(data);
           setMesssages((oldList) => data.map((msg) => <PostComment message={msg} />)
             .concat(oldList));
           setLoadedPage(currentPage);
