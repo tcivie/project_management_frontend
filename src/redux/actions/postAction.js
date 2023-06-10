@@ -30,3 +30,7 @@ export function postsFetched(posts) {
   console.log('postsFetched', posts);
   return { type: 'POSTS_FETCHED', payload: posts };
 }
+
+export function postUpdated(post) {
+  return { type: 'POST_UPDATED', payload: post };
+}

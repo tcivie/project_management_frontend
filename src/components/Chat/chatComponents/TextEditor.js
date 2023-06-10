@@ -31,18 +31,19 @@ const formats = [
   'code',
 ];
 
-function TextEditor({ value, onChange, placeholder }) {
+function TextEditor({ content, onChange, placeholder }) {
+  console.log('TextEditor', content, onChange, placeholder);
   return (
     <ReactQuill
       style={{
         backgroundColor: 'white', height: '150px', width: '100%', marginBottom: '20px', border: 'none',
       }}
       theme="snow"
-      value={value || ''}
+      value={content || ''}
       modules={modules}
       formats={formats}
       onChange={onChange}
-      placeholder={placeholder}
+      placeholder={placeholder || 'Write something...'}
     />
   );
 }

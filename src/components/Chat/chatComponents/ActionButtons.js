@@ -1,4 +1,5 @@
 import {
+  EditOutlined,
   LikeFilled, LikeOutlined, SaveFilled, SaveOutlined,
 } from '@ant-design/icons';
 import { Button } from 'antd';
@@ -9,6 +10,8 @@ import addMessage, { setMessage } from '../../../redux/actions/messageActions';
 import {
   userLiked, userSaved, userUnLiked, userUnSaved,
 } from '../../../redux/actions/postAction';
+import PostEditor from './PostEditor';
+// import Poster from '../Poster';
 
 function ActionButtons({
   type, postId, setHelpful = false, owner = false, setSaved = false, value = 0,
@@ -18,6 +21,7 @@ function ActionButtons({
   const dispatch = useDispatch();
   const userSelector = useSelector((state) => state.user);
   const [contentValue, setContentValue] = useState(value);
+  const [isEditing, setIsEditing] = useState(false);
   const userId = userSelector.userData.id;
   switch (type) {
     case 'save':
@@ -88,9 +92,23 @@ function ActionButtons({
           {contentValue}
         </Button>
       );
-    case 'comment':
-
-      break;
+    case 'edit': // TODO: Add edit button
+      return owner ? (
+        <>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Edit
+          </Button>
+          {isEditing && <PostEditor postId={postId} onClose={() => setIsEditing(false)} />}
+        </>
+      ) : (
+        null
+      );
     default:
       break;
   }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form } from 'antd';
+import {
+  Space, Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form,
+} from 'antd';
 import {
   UserOutlined,
   UploadOutlined,
@@ -21,7 +23,6 @@ function EditProfileForm({ formData, onCancel, onSave }) {
   useEffect(() => {
     form.setFieldsValue(formData);
   }, [formData, form]);
-
 
   const handleSubmit = async (values) => {
     const isVerified = values.nickname && values.newPassword && values.confirmPassword;
@@ -312,7 +313,12 @@ function Profile() {
           <Skeleton active paragraph={{ rows: 20 }} />
         </div>
 
-        <Modal visible={deleteModalVisible} onOk={handleDeletePicture} onCancel={hideDeleteModal} centered>
+        <Modal
+          visible={deleteModalVisible}
+          onOk={handleDeletePicture}
+          onCancel={hideDeleteModal}
+          centered
+        >
           <p>Are you sure you want to delete your profile picture?</p>
         </Modal>
 

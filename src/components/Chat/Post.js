@@ -85,7 +85,6 @@ function Post({ data }) {
   const sanitizedHTML = DOMPurify.sanitize(content);
   const images = getImages(postImages);
   const user = useUser(userId);
-  console.log(post);
   return (
     <List.Item
       key={_id}
@@ -93,6 +92,7 @@ function Post({ data }) {
         <ActionButtons type="save" postId={_id} setSaved={setSaved} value={saves.length} />,
         <ActionButtons type="helpful" postId={_id} setHelpful={setHelpful} value={helpful.length} />,
         <Button type="text" onClick={handleCommentsClick} icon={<MessageOutlined />}> {comments} </Button>,
+        <ActionButtons type="edit" postId={_id} owner={owner} />,
         // eslint-disable-next-line max-len
         <p>Created at: {new Date(createdAt).toLocaleDateString()} | Updated at: {new Date(updatedAt).toLocaleDateString()}</p>,
       ]}
