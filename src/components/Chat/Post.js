@@ -77,7 +77,7 @@ function Post({ data }) {
   const repliesModal = (
     <InnerPostChat
       title={title}
-      postid={_id}
+      postId={_id}
       onClose={closeComments}
       isOpen={showRepliesModal}
     />
@@ -85,7 +85,6 @@ function Post({ data }) {
   const sanitizedHTML = DOMPurify.sanitize(content);
   const images = getImages(postImages);
   const user = useUser(userId);
-  console.log(post);
   return (
     <List.Item
       key={_id}

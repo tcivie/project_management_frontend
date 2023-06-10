@@ -1,6 +1,7 @@
 /* eslint-disable no-bitwise */
-export default function stringToRGB(str) {
+export default function stringToRGB(sample) {
   // Calculate the hash code of the string
+  const str = sample || 'default';
   let hash = 0;
   for (let i = 0; i < str.length; i += 1) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
