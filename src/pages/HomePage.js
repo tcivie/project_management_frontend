@@ -33,7 +33,7 @@ function HomePage() {
     >
       <Content
         style={{
-          padding: '0 50px',
+          marginTop: '3%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',

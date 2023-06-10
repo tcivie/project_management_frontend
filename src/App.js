@@ -4,11 +4,13 @@ import HomePage from './pages/HomePage';
 import Profile from './pages/Profile';
 import ChatPage from './pages/ChatPage';
 import Navbar from './components/Navbar';
+import Message from './components/Message';
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <Message />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<Profile />} />

@@ -47,9 +47,8 @@ function LoginForm({ onClose }) {
         // login successful
         const data = await response.json();
         dispatch(
-          userLoginSuccess(data.accessToken, data.UserInfo.username),
+          userLoginSuccess(data.accessToken, data.UserInfo),
         );
-
         onClose(); // Close the modal
       } else {
         // login failed failed

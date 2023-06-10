@@ -1,96 +1,155 @@
+import React, { useEffect, useState } from 'react';
 import {
-  Tooltip, Card, Avatar, List,
+  Avatar, List, Tag, Button, Image,
 } from 'antd';
 import {
-  DislikeFilled, DislikeOutlined,
-  LikeFilled, LikeOutlined, SettingFilled, UserOutlined,
+  MessageOutlined, UserOutlined,
 } from '@ant-design/icons';
-import ToggleIcon from './chatComponents/toggleIcon';
+import Cookies from 'js-cookie';
+import DOMPurify from 'dompurify'; // to sanitize html
+import SkeletonAvatar from 'antd/es/skeleton/Avatar';
 import stringToRGB from '../../utils/colors';
+import ActionButtons from './chatComponents/ActionButtons';
+import InnerPostChat from './chatComponents/InnerPostChat';
 
-function Post({
-  msgID, username, content, userImageUrl, comments,
-}) {
-  const usefullButton = (
-    <Tooltip
-      align={{
-        offset: [0, -1],
-      }}
-      placement="bottom"
-      title="I found this usefull"
-    >
-      <ToggleIcon
-        baseIcon={<LikeOutlined style={{ fontSize: '20px', marginRight: 2 }} />}
-        toggledIcon={<LikeFilled style={{ color: '#1677ff', fontSize: '20px', marginRight: 2 }} />}
-        text="30"
-        buttonStyle={{
-          fontWeight: 'bold',
-          width: '100%',
-          fontSize: '13px',
-          border: 'none',
+const useUser = (usrId) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${usrId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+        ContentType: 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, [usrId]);
+
+  return user;
+};
+
+const getImages = (postImages) =>
+// eslint-disable-next-line array-callback-return,implicit-arrow-linebreak
+  postImages.map((image) => (
+    <div>
+      <Image
+        src={`${process.env.REACT_APP_API_SERVER}/api/images/postImage/${encodeURIComponent(image)}`}
+        alt={image}
+        style={{
+          width: '500px',
+          height: 'auto',
+          maxHeight: '500px',
+          objectFit: 'contain',
+          marginBottom: '10px',
         }}
       />
-    </Tooltip>
-
+    </div>
+  ));
+function Post({ data }) {
+  const {
+    setHelpful, owner, post, setSaved,
+  } = data;
+  const {
+    _id,
+    title,
+    content,
+    userId,
+    tags,
+    postImages,
+    comments,
+    helpful,
+    saves,
+    createdAt,
+    updatedAt,
+  } = post;
+  const [showRepliesModal, setRepliesModalVisbility] = useState(false);
+  const handleCommentsClick = () => {
+    setRepliesModalVisbility(true);
+  };
+  const closeComments = () => {
+    setRepliesModalVisbility(false);
+  };
+  const repliesModal = (
+    <InnerPostChat
+      title={title}
+      postId={_id}
+      onClose={closeComments}
+      isOpen={showRepliesModal}
+    />
   );
-  const unusefullButton = (
-    <Tooltip
-      align={{
-        offset: [0, -1],
-      }}
-      placement="bottom"
-      title="I didn't find this usefull"
-    >
-      <ToggleIcon
-        baseIcon={<DislikeOutlined style={{ fontSize: '20px', marginRight: 2 }} />}
-        toggledIcon={<DislikeFilled style={{ color: '#1677ff', fontSize: '20px', marginRight: 2 }} />}
-        text="30"
-        buttonStyle={{
-          fontWeight: 'bold',
-          width: '100%',
-          fontSize: '13px',
-          border: 'none',
-        }}
-      />
-    </Tooltip>
-
-  );
+  const sanitizedHTML = DOMPurify.sanitize(content);
+  const images = getImages(postImages);
+  const user = useUser(userId);
   return (
     <List.Item
-      key={msgID}
-
+      key={_id}
+      actions={[
+        <ActionButtons type="save" postId={_id} setSaved={setSaved} value={saves.length} />,
+        <ActionButtons type="helpful" postId={_id} setHelpful={setHelpful} value={helpful.length} />,
+        <Button type="text" onClick={handleCommentsClick} icon={<MessageOutlined />}> {comments} </Button>,
+        <ActionButtons type="edit" postId={_id} owner={owner} />,
+        // eslint-disable-next-line max-len
+        <p>Created at: {new Date(createdAt).toLocaleDateString()} | Updated at: {new Date(updatedAt).toLocaleDateString()}</p>,
+      ]}
+      extra={(
+        <Image.PreviewGroup>
+          {images}
+        </Image.PreviewGroup>
+        )}
+      style={{
+        border: '1px solid #e8e8e8',
+        borderRadius: '5px',
+        marginBottom: '20px',
+        padding: '20px',
+        maxHeight: '500px',
+        overflowY: 'scroll',
+        backgroundColor: '#f0f2f5',
+        paddingRight: '20px',
+      }}
     >
-      <div style={{ marginTop: 10, width: '50vw' }}>
-        <Card
-          bodyStyle={{ display: comments ? 'flex' : 'none' }}
-          title={(
-            <div style={{ display: 'grid' }}>
-              <div style={{ gridColumn: 1 }}>
-                {username}
-              </div>
-              <div style={{ gridColumn: 1 }}>
+      {repliesModal}
+      <List.Item.Meta
+        avatar={
+              user ? (
                 <Avatar
-                  alt={username ? username[0] : ''}
+                  alt={user.username ? user.username[0] : ''}
                   size="large"
-                  src={userImageUrl}
-                  icon={userImageUrl ? null : <UserOutlined />}
-                  style={{ backgroundColor: stringToRGB(username), marginRight: 10, marginTop: 10 }}
-                />
-              </div>
-              <div style={{
-                gridColumn: 2, margin: 5, overflowWrap: 'break-word', whiteSpace: 'normal',
-              }}
-              >
-                {content}
-              </div>
-            </div>
+                  src={user?.avatar}
+                  icon={user?.avatar ? null : <UserOutlined />}
+                  style={{
+                    backgroundColor: stringToRGB(user.username),
+                    marginRight: 10,
+                    marginTop: 10,
+                  }}
+                >
+                  {user.username ? user.username[0] : ''}
+                </Avatar>
+              ) : (
+                <SkeletonAvatar />
+              )
+          }
+        title={<h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>{title}</h2>}
+        description={(
+          <div>
+            <div
+              style={{ fontSize: '15px', fontWeight: 'normal', marginBottom: '20px' }}
+              /* eslint-disable-next-line react/no-danger */
+              dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+            />
+            {tags.map((tag) => (
+              <Tag key={tag} color="blue">
+                {tag}
+              </Tag>
+            ))}
+          </div>
 )}
-          actions={[
-            <SettingFilled key="setting" />,
-            <SettingFilled key="edit" />,
-            usefullButton, unusefullButton]}
-        />
-      </div>
+      />
+      {/* <PostComments messages={comments} /> */}
     </List.Item>
   );
 }

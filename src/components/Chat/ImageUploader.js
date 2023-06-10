@@ -1,45 +1,49 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Upload } from 'antd';
+import { useState } from 'react';
+import { setFileList } from '../../redux/actions/fileActions';
 
-const fileList = [
-  {
-    uid: '0',
-    name: 'xxx.png',
-    status: 'uploading',
-    percent: 33,
-  },
-  {
-    uid: '-1',
-    name: 'yyy.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-2',
-    name: 'zzz.png',
-    status: 'error',
-  },
-];
-function ImageUploader() {
+function ImageUploader({ existingImages }) {
+  const dispatch = useDispatch();
+  const { fileList } = useSelector((state) => state.file);
+  const [images, setImages] = useState(existingImages || fileList);
+
+  const customRequest = ({ file, onProgress, onSuccess }) => {
+    setTimeout(() => {
+      onProgress({ percent: 100 }, file);
+      onSuccess('ok', file);
+    }, 0);
+  };
+
+  const handleChange = (info) => {
+    const updatedFileList = info.fileList.map((file) => {
+      if (file.status !== 'removed') {
+        const newFile = { ...file };
+        if (file.response) {
+          newFile.url = file.response.url;
+        }
+        return newFile;
+      }
+      return null;
+    });
+    setImages(updatedFileList);
+    dispatch(setFileList(updatedFileList));
+  };
+
   return (
     <Upload
-      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+      customRequest={customRequest}
+      name="postImage"
       listType="picture"
-      defaultFileList={[...fileList]}
+      maxCount={3}
+      fileList={images}
+      onChange={handleChange}
+      defaultFileList={images}
     >
       <Button icon={<UploadOutlined />}>Upload</Button>
     </Upload>
   );
 }
+
 export default ImageUploader;
-// /* tile uploaded pictures */
-// .upload-list-inline .ant-upload-list-item {
-//     float: left;
-//     width: 200px;
-//     margin-inline-end: 8px;
-// }
-//
-// .ant-upload-rtl.upload-list-inline .ant-upload-list-item {
-//     float: right;
-// }

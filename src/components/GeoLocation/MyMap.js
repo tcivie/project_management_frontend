@@ -115,7 +115,7 @@ function MyMap() {
       <Map
         dprs={[1, 2]}
         provider={maptilerProvider}
-        height={500}
+        height={window.innerHeight * 0.7}
         defaultCenter={[50.879, 4.6997]}
         defaultZoom={11}
         zoom={mapZoom}
