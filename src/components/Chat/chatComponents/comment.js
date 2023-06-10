@@ -12,6 +12,7 @@ export default function PostComment({ message }) {
       <div>
         <Input.TextArea
           autoSize
+          readOnly
           style={{
             backgroundColor: 'lightgray',
             resize: 'none',

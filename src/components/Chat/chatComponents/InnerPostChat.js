@@ -44,7 +44,7 @@ export default function InnerPostChat({
   const handleModalOpenClose = (open) => {
     if (open) {
       if (currentPage < 0) setCurrentPage(1);
-      setSocket((io('http://localhost:4005', {
+      setSocket((io(process.env.REACT_APP_SOCKET_SERVER, {
         reconnectionDelayMax: 10000,
         auth: {
           token: userSelector.token,
