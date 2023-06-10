@@ -15,7 +15,6 @@ import { setTags } from '../../../redux/actions/tagActions';
 function EditPost({ postId }) {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-  const { TextArea } = Input;
   const [content, setContent] = useState('');
   const [images, setImages] = useState([]);
   const dispatch = useDispatch();
@@ -25,6 +24,7 @@ function EditPost({ postId }) {
   const { confirm } = Modal;
 
   useEffect(() => {
+    // eslint-disable-next-line no-use-before-define
     fetchPost();
   }, [postId]);
 
@@ -55,6 +55,7 @@ function EditPost({ postId }) {
         setVisible(true);
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Error:', err);
     }
   };
@@ -96,6 +97,7 @@ function EditPost({ postId }) {
       });
     } catch (err) {
       dispatch(setMessage('error', 'Error updating post.'));
+      // eslint-disable-next-line no-console
       console.error('Error:', err);
     }
   };
@@ -113,7 +115,7 @@ function EditPost({ postId }) {
       cancelText: 'No',
       onOk() {
         try {
-          const response = fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/delete/${postId}`, {
+          fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/delete/${postId}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -132,6 +134,7 @@ function EditPost({ postId }) {
         } catch (err) {
           setVisible(false);
           dispatch(setMessage('error', 'Error deleting post.'));
+          // eslint-disable-next-line no-console
           console.error('Error:', err);
         }
       },

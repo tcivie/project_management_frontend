@@ -6,7 +6,7 @@ import { useState } from 'react';
 import stringToRGB from '../../../utils/colors';
 
 export default function PostComment({
-  content, ref, username, userImageUrl,
+  content, username, userImageUrl,
 }) {
   const [editMode, SetEditMode] = useState(false);
   const ToggleEdit = () => {

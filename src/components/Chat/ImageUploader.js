@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Upload } from 'antd';

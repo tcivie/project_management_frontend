@@ -6,7 +6,7 @@ import { Button } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
-import addMessage, { setMessage } from '../../../redux/actions/messageActions';
+import { setMessage } from '../../../redux/actions/messageActions';
 import {
   userLiked, userSaved, userUnLiked, userUnSaved,
 } from '../../../redux/actions/postAction';

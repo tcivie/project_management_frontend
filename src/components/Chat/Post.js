@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Avatar, List, Space, Tag, Button, Image, Carousel,
+  Avatar, List, Tag, Button, Image,
 } from 'antd';
 import {
-  LikeOutlined, MessageOutlined, SaveFilled, SaveOutlined, UserOutlined,
+  MessageOutlined, UserOutlined,
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import DOMPurify from 'dompurify'; // to sanitize html
@@ -138,6 +138,7 @@ function Post({ data }) {
           <div>
             <div
               style={{ fontSize: '15px', fontWeight: 'normal', marginBottom: '20px' }}
+              /* eslint-disable-next-line react/no-danger */
               dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
             />
             {tags.map((tag) => (

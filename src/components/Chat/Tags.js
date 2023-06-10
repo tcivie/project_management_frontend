@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import {
   Input, Space, Tag, theme,
 } from 'antd';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setTags,

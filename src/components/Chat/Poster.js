@@ -1,5 +1,5 @@
 import {
-  Button, FloatButton, Form, Input, Modal,
+  FloatButton, Form, Input, Modal,
 } from 'antd';
 import {
   PlusCircleTwoTone, UpOutlined, CloseOutlined,
@@ -10,7 +10,6 @@ import Cookies from 'js-cookie';
 import TextEditor from './chatComponents/TextEditor';
 import Tags from './Tags';
 import ImageUploader from './ImageUploader';
-import * as postsActions from '../../redux/actions/postAction';
 import { postCreated } from '../../redux/actions/postAction';
 import LoginForm from '../Login';
 import { setMessage } from '../../redux/actions/messageActions';
@@ -59,6 +58,7 @@ function Poster(params) {
       })
       .catch((error) => {
         dispatch(setMessage('error', 'Something went wrong 😟'));
+        // eslint-disable-next-line no-console
         console.error('Error:', error);
       });
 

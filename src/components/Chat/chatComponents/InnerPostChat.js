@@ -2,7 +2,7 @@ import { SendOutlined } from '@ant-design/icons';
 import {
   Button, Input, List, Modal,
 } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 
@@ -20,8 +20,6 @@ export default function InnerPostChat({
     e.preventDefault();
   };
   const handleOnChange = (e) => {
-    console.log(e);
-    // if (e.key === 'Enter' && !e.shiftKey) send(e);
     SetSendValue(e.target.value);
   };
   // Replace with your Socket.IO server's address
