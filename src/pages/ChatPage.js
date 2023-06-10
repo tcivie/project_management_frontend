@@ -22,7 +22,6 @@ function App() {
   const [processedPosts, setProcessedPosts] = useState([]);
 
   useEffect(() => {
-    console.log('posts refereshing');
     if (!processedPosts || postState.posts?.length !== processedPosts?.length) {
       const processed = postState.posts.map((post) => <Post data={post} />);
       setProcessedPosts(processed);

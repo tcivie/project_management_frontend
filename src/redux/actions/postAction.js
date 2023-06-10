@@ -27,7 +27,6 @@ export function postCreated(post) {
 }
 
 export function postsFetched(posts) {
-  console.log('postsFetched', posts);
   return { type: 'POSTS_FETCHED', payload: posts };
 }
 

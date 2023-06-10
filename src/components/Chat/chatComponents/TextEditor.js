@@ -32,7 +32,6 @@ const formats = [
 ];
 
 function TextEditor({ content, onChange, placeholder }) {
-  console.log('TextEditor', content, onChange, placeholder);
   return (
     <ReactQuill
       style={{

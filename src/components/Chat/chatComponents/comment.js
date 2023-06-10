@@ -12,7 +12,6 @@ export default function PostComment({
   const ToggleEdit = () => {
     SetEditMode((oldVal) => !oldVal);
   };
-  console.log('post comment:', content);
   return (
     <List.Item>
       <div style={{ display: 'flex', alignItems: 'baseline' }}>

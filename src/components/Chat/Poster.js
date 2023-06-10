@@ -54,7 +54,6 @@ function Poster(params) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         dispatch(setMessage('success', 'Post created!'));
         dispatch(postCreated(data));
       })

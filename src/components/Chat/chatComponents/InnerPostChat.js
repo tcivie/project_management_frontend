@@ -43,7 +43,6 @@ export default function InnerPostChat({
     socket.emit('join', postId);
     socket.emit('newMessage', 'hi');
     socket.on('messageReceived', (message) => {
-      console.log(message);
       setMesssages([...messages, <List.Item>{message}</List.Item>]);
     });
   }, [socket]);

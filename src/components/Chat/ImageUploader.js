@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { setFileList } from '../../redux/actions/fileActions';
 
 function ImageUploader({ existingImages }) {
-  console.log('ImageUploader', existingImages);
   const dispatch = useDispatch();
   const { fileList } = useSelector((state) => state.file);
   const [images, setImages] = useState(existingImages || fileList);
@@ -19,7 +18,6 @@ function ImageUploader({ existingImages }) {
   };
 
   const handleChange = (info) => {
-    console.log('handleChange', info);
     const updatedFileList = info.fileList.map((file) => {
       if (file.status !== 'removed') {
         const newFile = { ...file };
@@ -30,7 +28,6 @@ function ImageUploader({ existingImages }) {
       }
       return null;
     });
-    console.log('updatedFileList', updatedFileList);
     setImages(updatedFileList);
     dispatch(setFileList(updatedFileList));
   };

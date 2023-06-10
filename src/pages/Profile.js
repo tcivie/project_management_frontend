@@ -247,8 +247,6 @@ function Profile() {
   };
 
   const handlePostsClick = () => {
-    console.log('Posts clicked');
-    console.log(posts);
     // You can perform further logic to display the posts in the UI
   };
 

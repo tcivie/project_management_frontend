@@ -22,7 +22,6 @@ function EditPost({ postId }) {
   const tagsSelector = useSelector((state) => state.tag);
   const { fileList } = useSelector((state) => state.file);
   const isTagsError = tagsSelector.isError;
-  console.log('postId', postId);
   const { confirm } = Modal;
 
   useEffect(() => {
@@ -42,7 +41,6 @@ function EditPost({ postId }) {
 
       if (res.ok) {
         const data = await res.json();
-        console.log('data', data);
         form.setFieldValue('title', data.post.title);
         setContent(data.post.content);
         dispatch(setTags(data.post.tags));
@@ -68,7 +66,6 @@ function EditPost({ postId }) {
       formData.append('content', content);
       tagsSelector.tags.forEach((tag, i) => formData.append(`tags[${i}]`, tag));
       // append existing images
-      console.log('fileList', fileList);
       const existingImages = fileList
         .filter((image) => !image.originFileObj)
         .map((image) => image.path);
