@@ -3,7 +3,7 @@ import VirtualList from 'rc-virtual-list';
 import {
   Button, Input, List, Modal,
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import Cookies from 'js-cookie';
