@@ -1,57 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input } from 'antd';
+import {
+  Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form,
+} from 'antd';
 import {
   UserOutlined,
   UploadOutlined,
-  DeleteOutlined,
   SaveOutlined,
   EditOutlined,
   ProfileOutlined,
   StockOutlined,
   HistoryOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 
-const { SubMenu } = Menu;
-const { TextArea } = Input;
+const EditProfileForm = ({ formData, onCancel, onSave }) => {
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
-function EditProfileForm({ formData, onCancel, onSave }) {
-  const [editData, setEditData] = useState(formData);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  useEffect(() => {
+    form.setFieldsValue(formData);
+  }, [formData, form]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
-  const handlePasswordChange = (e) => {
-    setNewPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      message.error('Passwords do not match.');
-      return;
-    }
+  const handleSubmit = async (values) => {
     try {
-      const response = await fetch('/api/users', {
+      const formValues = await form.validateFields();
+      console.log(formValues);
+
+      // Extract the nickname, password, and passwordConfirmation from the form values
+      const { nickname, password, passwordConfirmation } = formValues;
+
+      // Validate password and passwordConfirmation locally
+      if (password !== passwordConfirmation) {
+        // Return or show an error message indicating password verification failed
+        return;
+      }
+
+      // Retrieve the email and username from the Redux state
+      const { email, username } = userSelector.userData;
+
+      // Construct the updated data object
+      const updatedData = {
+        email,
+        username,
+        nickname,
+        password,
+      };
+
+      // Send the updated data to the backend
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify({ ...editData, password: newPassword }),
-        credentials: 'include',
+        body: JSON.stringify(updatedData),
       });
+
       if (response.ok) {
         const data = await response.json();
         onSave(data);
@@ -65,19 +72,27 @@ function EditProfileForm({ formData, onCancel, onSave }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="nickname">Nickname:</label>
-        <Input name="nickname" value={editData.nickname} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label htmlFor="newPassword">New Password:</label>
-        <Input.Password name="newPassword" value={newPassword} onChange={handlePasswordChange} />
-      </div>
-      <div>
-        <label htmlFor="confirmPassword">Confirm Password:</label>
-        <Input.Password name="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} />
-      </div>
+    <Form form={form} onFinish={handleSubmit}>
+      <Form.Item name="nickname" label="Nickname">
+        <Input />
+      </Form.Item>
+      <Form.Item name="email" style={{ display: 'none' }}>
+        <Input type="hidden" />
+      </Form.Item>
+      <Form.Item name="username" style={{ display: 'none' }}>
+        <Input type="hidden" />
+      </Form.Item>
+      <Form.Item name="avatar" label="Avatar">
+        <Upload>
+          <Button icon={<UploadOutlined />}>Upload</Button>
+        </Upload>
+      </Form.Item>
+      <Form.Item name="password" label="Password">
+        <Input.Password />
+      </Form.Item>
+      <Form.Item name="passwordConfirmation" label="Confirm Password">
+        <Input.Password />
+      </Form.Item>
       <div style={{ marginTop: 10 }}>
         <Button type="primary" htmlType="submit">
           Save
@@ -86,9 +101,10 @@ function EditProfileForm({ formData, onCancel, onSave }) {
           Cancel
         </Button>
       </div>
-    </form>
+    </Form>
   );
-}
+};
+
 
 function Profile() {
   const [profilePicture, setProfilePicture] = useState(null);
@@ -102,85 +118,115 @@ function Profile() {
     email: '',
     nickname: '',
   });
-  const [searchHistory, setSearchHistory] = useState([]); // State for storing search history
-  const [uploadHistory, setUploadHistory] = useState([]); // State for storing upload history
-  const [savedContents, setSavedContents] = useState([]); // State for storing saved contents
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [uploadHistory, setUploadHistory] = useState([]);
+  const [savedContents, setSavedContents] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
+  const userSelector = useSelector((state) => state.user);
+  const userId = userSelector.userData.id;
 
-  useEffect(() => {
-    // Fetch and set the search history
-    const fetchSearchHistory = async () => {
-      try {
-        const response = await fetch('/api/search-history', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Cookies.get('token')}`,
-          },
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setSearchHistory(data);
-        } else {
-          message.error('Failed to fetch search history.');
-        }
-      } catch (error) {
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/city/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+      } else {
+        message.error('Failed to fetch posts.');
+      }
+    } catch (error) {
+      message.error('Failed to fetch posts.');
+    }
+  };
+
+  const fetchSearchHistory = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSearchHistory(data);
+      } else {
         message.error('Failed to fetch search history.');
       }
-    };
+    } catch (error) {
+      message.error('Failed to fetch search history.');
+    }
+  };
 
-    // Fetch and set the upload history
-    const fetchUploadHistory = async () => {
-      try {
-        const response = await fetch('/api/upload-history', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Cookies.get('token')}`,
-          },
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUploadHistory(data);
-        } else {
-          message.error('Failed to fetch upload history.');
-        }
-      } catch (error) {
+  const fetchUploadHistory = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUploadHistory(data);
+      } else {
         message.error('Failed to fetch upload history.');
       }
-    };
+    } catch (error) {
+      message.error('Failed to fetch upload history.');
+    }
+  };
 
-    // Fetch and set the saved contents
-    const fetchSavedContents = async () => {
-      try {
-        const response = await fetch('/api/saved-contents', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Cookies.get('token')}`,
-          },
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setSavedContents(data);
-        } else {
-          message.error('Failed to fetch saved contents.');
-        }
-      } catch (error) {
+  const fetchSavedContents = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSavedContents(data);
+      } else {
         message.error('Failed to fetch saved contents.');
       }
-    };
+    } catch (error) {
+      message.error('Failed to fetch saved contents.');
+    }
+  };
 
-    fetchSearchHistory();
-    fetchUploadHistory();
-    fetchSavedContents();
-  }, []);
-
-  const handleProfilePictureUpload = (file) => {
-    setProfilePicture(file);
-    message.success(`Profile picture uploaded: ${file.name}`);
+  const fetchFollowingList = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}/following`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setFollowingList(data);
+      } else {
+        message.error('Failed to fetch following list.');
+      }
+    } catch (error) {
+      message.error('Failed to fetch following list.');
+    }
   };
 
   const handleUploadChange = (info) => {
@@ -191,10 +237,56 @@ function Profile() {
       message.error('Profile picture upload failed.');
     }
   };
+  
+  const handleProfilePictureUpload = async (file) => {
+    try {
+      // Upload the file to the server or cloud storage
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+  
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}/profile-picture`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: formData,
+      });
+  
+      if (response.ok) {
+        setProfilePicture(file);
+        message.success(`Profile picture uploaded: ${file.name}`);
+      } else {
+        message.error('Failed to upload profile picture.');
+      }
+    } catch (error) {
+      message.error('Failed to upload profile picture.');
+    }
+  };
+  
+  const handleDeletePicture = async () => {
+    try {
+      // Send a request to the server to delete the profile picture
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}/profile-picture`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        setProfilePicture(null);
+        setDeleteModalVisible(false);
+        message.success('Profile picture deleted.');
+      } else {
+        message.error('Failed to delete profile picture.');
+      }
+    } catch (error) {
+      message.error('Failed to delete profile picture.');
+    }
+  };
 
-  const handleDeletePicture = () => {
+  const handleDeleteProfilePicture = () => {
     setProfilePicture(null);
-    setDeleteModalVisible(false);
     message.success('Profile picture deleted.');
   };
 
@@ -234,33 +326,70 @@ function Profile() {
     }));
   };
 
-  const handleSearchHistoryClick = () => {
-    console.log('Search History clicked');
+  const handlePostsClick = () => {
+    fetchPosts();
   };
 
-  const followersData = []; // Dummy data for followers
-  const followingData = []; // Dummy data for following
+  const handleSearchHistoryClick = () => {
+    fetchSearchHistory();
+  };
+
+  const handleUploadHistoryClick = () => {
+    fetchUploadHistory();
+  };
+
+  const handleSavedContentsClick = () => {
+    fetchSavedContents();
+  };
+
+  const handleDeleteProfileClick = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        // Profile successfully deleted
+        // You may perform any additional actions after deleting the profile
+        // For example, redirecting the user to a different page
+        message.success('Profile deleted successfully.');
+      } else {
+        // Failed to delete profile
+        message.error('Failed to delete profile.');
+      }
+    } catch (error) {
+      // Error occurred while deleting profile
+      message.error('Failed to delete profile.');
+    }
+  };
+
+  const followersData = [];
+  const followingData = [];
 
   return (
     <div style={{ display: 'flex' }}>
       <Menu style={{ width: 256, marginRight: 20, marginTop: 100 }} defaultSelectedKeys={['1']} mode="vertical">
-        <Menu.Item key="1" icon={<EditOutlined />}>
-          Edit post
+        <Menu.Item key="1" icon={<EditOutlined />} onClick={() => handlePostsClick()}>
+          Posts
         </Menu.Item>
-        <Menu.Item key="2" icon={<DeleteOutlined />}>
-          Delete post
-        </Menu.Item>
-        <Menu.Item key="3" icon={<SaveOutlined />}>
+        <Menu.Item key="2" icon={<SaveOutlined />} onClick={() => handleSavedContentsClick()}>
           Saved content
         </Menu.Item>
-        <Menu.Item key="4" icon={<ProfileOutlined />} onClick={() => setEditFormVisible(true)}>
+        <Menu.Item key="3" icon={<ProfileOutlined />} onClick={() => setEditFormVisible(true)}>
           Edit Profile
         </Menu.Item>
-        <Menu.Item key="5" icon={<StockOutlined />}>
+        <Menu.Item key="4" icon={<StockOutlined />}>
           Statistics
         </Menu.Item>
-        <Menu.Item key="6" icon={<HistoryOutlined />} onClick={handleSearchHistoryClick}>
+        <Menu.Item key="5" icon={<HistoryOutlined />} onClick={() => handleSearchHistoryClick()}>
           Search History
+        </Menu.Item>
+        <Menu.Item key="6" icon={<DeleteOutlined />} onClick={handleDeleteProfileClick}>
+          Delete Profile
         </Menu.Item>
       </Menu>
       <div style={{ flex: 1 }}>
@@ -291,7 +420,7 @@ function Profile() {
               </Button>
             </Upload>
             {profilePicture && (
-              <Button type="link" onClick={showDeleteModal}>
+              <Button type="link" onClick={handleDeleteProfilePicture}>
                 Delete Picture
               </Button>
             )}
@@ -302,7 +431,12 @@ function Profile() {
           <Skeleton active paragraph={{ rows: 20 }} />
         </div>
 
-        <Modal visible={deleteModalVisible} onOk={handleDeletePicture} onCancel={hideDeleteModal} centered>
+        <Modal
+          visible={deleteModalVisible}
+          onOk={handleDeletePicture}
+          onCancel={hideDeleteModal}
+          centered
+        >
           <p>Are you sure you want to delete your profile picture?</p>
         </Modal>
 
@@ -329,33 +463,6 @@ function Profile() {
             onSave={handleEditProfileSave}
           />
         </Modal>
-
-        {/* Display the list of saved contents */}
-        <div style={{ marginTop: 40 }}>
-          {savedContents.length > 0 ? (
-            <List dataSource={savedContents} renderItem={(item) => <List.Item>{item}</List.Item>} />
-          ) : (
-            <Empty description="No saved contents." />
-          )}
-        </div>
-
-        {/* Display the search history */}
-        <div style={{ marginTop: 40 }}>
-          {searchHistory.length > 0 ? (
-            <List dataSource={searchHistory} renderItem={(item) => <List.Item>{item}</List.Item>} />
-          ) : (
-            <Empty description="No search history." />
-          )}
-        </div>
-
-        {/* Display the upload history */}
-        <div style={{ marginTop: 40 }}>
-          {uploadHistory.length > 0 ? (
-            <List dataSource={uploadHistory} renderItem={(item) => <List.Item>{item}</List.Item>} />
-          ) : (
-            <Empty description="No upload history." />
-          )}
-        </div>
       </div>
     </div>
   );
