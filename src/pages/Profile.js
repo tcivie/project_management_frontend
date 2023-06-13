@@ -39,7 +39,7 @@ function EditProfileForm({ formData, onCancel, onSave }) {
         onSave(data);
         message.success('Profile updated successfully.');
       } else {
-        message.error('Failed to update profile.');
+        message.error('Failed to update profile ');
       }
     } catch (error) {
       message.error('Failed to update profile.');
