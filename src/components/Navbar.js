@@ -67,7 +67,7 @@ function Navbar() {
       >
         {userState.isAuthenticated ? (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-          <span role="presentation" onClick={profileButtonClick}>Hello {userState.userData.username}</span>
+          <span role="presentation" onClick={profileButtonClick}>Hello {userState.userData.nickname}</span>
         ) : (
           'Sign Up'
         )}

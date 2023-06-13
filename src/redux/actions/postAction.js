@@ -1,11 +1,3 @@
-export function userJoined(user) {
-  return { type: 'USER_JOINED', payload: user };
-}
-
-export function userLeft(user) {
-  return { type: 'USER_LEFT', payload: user };
-}
-
 export function userSaved(user) {
   return { type: 'USER_SAVED', payload: user };
 }

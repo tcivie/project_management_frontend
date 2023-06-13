@@ -106,6 +106,9 @@
     ],
     "import/no-extraneous-dependencies": [
       "off"
+    ],
+    "no-underscore-dangle": [
+      "off"
     ]
   },
   // dont check build folder and node_modules
