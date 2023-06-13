@@ -1,6 +1,5 @@
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import {
-  Empty, Layout, List, Menu,
+  Empty, Layout, List,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import VirtualList from 'rc-virtual-list';
@@ -11,7 +10,6 @@ import Post from '../components/Chat/Post';
 import Poster from '../components/Chat/Poster';
 import { postsFetched } from '../redux/actions/postAction';
 
-const { Sider } = Layout;
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -23,8 +21,10 @@ function App() {
 
   useEffect(() => {
     if (!processedPosts || postState.posts?.length !== processedPosts?.length) {
-      const processed = postState.posts.map((post) => <Post data={post} />);
-      setProcessedPosts(processed);
+      if (postState.posts.length > 0) {
+        const processed = postState.posts.map((post) => <Post data={post} />);
+        setProcessedPosts(processed);
+      } else setProcessedPosts([]);
     }
   }, [postState]);
 
@@ -58,21 +58,6 @@ function App() {
       width: '-webkit-fill-available',
     }}
     >
-      <Sider style={{ padding: 20, marginTop: 50 }}>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['4']}
-          items={[UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
-            (icon, index) => ({
-              key: String(index + 1),
-              icon: React.createElement(icon),
-              label: `nav ${index + 1}`,
-              style: { backgroundColor: 'darkorange' },
-            }),
-          )}
-        />
-      </Sider>
       {/* eslint-disable-next-line array-callback-return */}
       {!postState?.posts || postState?.posts.length === 0
         ? <Empty style={{ position: 'relative', top: '50vh' }} />
@@ -86,7 +71,7 @@ function App() {
               style={{ marginTop: '50px' }}
             >
               { (item) => (
-                <div style={{ padding: '10px 100px 10px 100px' }}>
+                <div style={{ padding: '10px 250px 10px 250px' }}>
                   {item}
                 </div>
               )}

@@ -2,9 +2,9 @@ import {
   LoadingOutlined, LockOutlined, LoginOutlined, UserOutlined,
 } from '@ant-design/icons';
 import {
-  Button, Checkbox, Divider, Form, Input, message,
+  Button, Checkbox, Form, Input, message,
 } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MyGoogleLogin from '../utils/gooleSSOlogin';
@@ -14,7 +14,6 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [loginFailed, setLoginFailed] = useState(false);
   const userState = useSelector((state) => state.user);
   const onFinish = async (values) => {
     const isVerified = values.usermail && values.password;
@@ -48,7 +47,6 @@ function App() {
         navigate(from);
       } else {
         // login failed failed
-        setLoginFailed(true);
         message.warning('Could not login, check the input.');
         const responseData = await response.json();
         const msg = responseData?.message;
