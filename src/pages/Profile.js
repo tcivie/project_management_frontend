@@ -108,7 +108,6 @@ function Profile() {
         },
         credentials: 'include',
       });
-  
       if (response.ok) {
         const data = await response.json();
         setPosts(data);
@@ -120,7 +119,6 @@ function Profile() {
       console.error('Failed to fetch posts.', error);
     }
   };
-  
   const fetchSearchHistory = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/${userId}`, {
@@ -212,7 +210,7 @@ function Profile() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify({ id: userIdToFollow }), // Replace userIdToFollow with the appropriate user ID
+        body: JSON.stringify({ }), 
         credentials: 'include',
       });
 
@@ -234,7 +232,7 @@ function Profile() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify({ id: userIdToUnfollow }), // Replace userIdToUnfollow with the appropriate user ID
+        body: JSON.stringify({}), 
         credentials: 'include',
       });
 
@@ -261,7 +259,6 @@ function Profile() {
 
       if (response.ok) {
         const data = await response.json();
-        setFollowersData(data);
         setFollowersVisible(true);
       } else {
         message.error('Failed to fetch followers.');
@@ -284,7 +281,6 @@ function Profile() {
 
       if (response.ok) {
         const data = await response.json();
-        setFollowingData(data);
         setFollowingVisible(true);
       } else {
         message.error('Failed to fetch following list.');
@@ -450,7 +446,7 @@ function Profile() {
             <Menu.Item key="3" icon={<StockOutlined />} onClick={handleStatisticsClick}>
               Statistics
             </Menu.Item>
-            <Menu.Item key="4" icon={<HistoryOutlined />} onClick={() => handleSearchHistoryClick()}>
+            <Menu.Item key="4" icon={<HistoryOutlined />} onClick={handleSearchHistoryClick()}>
               Search History
             </Menu.Item>
             <Menu.Item key="5" icon={<ProfileOutlined />} onClick={handleDeleteProfileClick}>
@@ -459,11 +455,11 @@ function Profile() {
           </Menu>
         </Sider>
         <Content>
-      <div style={{ padding: 30, background: '#fff', minHeight: 360 }}>
+     <div style={{ padding: 30, background: '#fff', minHeight: 360 }}>
         {posts.length > 0 ? (
           <List
             dataSource={posts}
-            renderItem={(item) => (
+              renderItem={(item) => (
               <List.Item
                 actions={[
                   <Button type="link" onClick={() => handleEditPost(item.postId)}>Edit</Button>,
@@ -524,4 +520,3 @@ function Profile() {
 }
 
 export default Profile;
-
