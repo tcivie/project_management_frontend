@@ -209,7 +209,7 @@ function Profile() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify({ }), 
+        body: JSON.stringify({ }),
         credentials: 'include',
       });
 
@@ -231,7 +231,7 @@ function Profile() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify({}), 
+        body: JSON.stringify({}),
         credentials: 'include',
       });
 
@@ -442,13 +442,13 @@ function Profile() {
             <Menu.Item key="2" icon={<ProfileOutlined />} onClick={() => setEditFormVisible(true)}>
               Edit Profile
             </Menu.Item>
-            <Menu.Item key="3" icon={<StockOutlined />} onClick={handleStatisticsClick}>
+            <Menu.Item key="3" icon={<StockOutlined />} onClick={handleStatisticsClick()}>
               Statistics
             </Menu.Item>
             <Menu.Item key="4" icon={<HistoryOutlined />} onClick={handleSearchHistoryClick()}>
               Search History
             </Menu.Item>
-            <Menu.Item key="5" icon={<ProfileOutlined />} onClick={handleDeleteProfileClick}>
+            <Menu.Item key="5" icon={<ProfileOutlined />} onClick={handleDeleteProfileClick()}>
               Delete Profile
             </Menu.Item>
           </Menu>
@@ -518,4 +518,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Profile;
