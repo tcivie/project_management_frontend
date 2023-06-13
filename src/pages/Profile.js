@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form,
+  Button, Avatar, Upload, message, Modal, Skeleton, List, Empty, Menu, Input, Form, Col, Row, Statistic, Layout,
 } from 'antd';
 import {
   UserOutlined,
@@ -10,53 +10,28 @@ import {
   ProfileOutlined,
   StockOutlined,
   HistoryOutlined,
-  DeleteOutlined,
+  LikeOutlined,
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 
-const EditProfileForm = ({ formData, onCancel, onSave }) => {
-  const dispatch = useDispatch();
+function EditProfileForm({ formData, onCancel, onSave }) {
   const [form] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue(formData);
   }, [formData, form]);
 
-
-  const handleSubmit = async (values) => {
+  const handleSubmit = async () => {
     try {
       const formValues = await form.validateFields();
-      console.log(formValues);
-
-      // Extract the nickname, password, and passwordConfirmation from the form values
-      const { nickname, password, passwordConfirmation } = formValues;
-
-      // Validate password and passwordConfirmation locally
-      if (password !== passwordConfirmation) {
-        // Return or show an error message indicating password verification failed
-        return;
-      }
-
-      // Retrieve the email and username from the Redux state
-      const { email, username } = userSelector.userData;
-
-      // Construct the updated data object
-      const updatedData = {
-        email,
-        username,
-        nickname,
-        password,
-      };
-
-      // Send the updated data to the backend
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(formValues),
       });
 
       if (response.ok) {
@@ -76,16 +51,11 @@ const EditProfileForm = ({ formData, onCancel, onSave }) => {
       <Form.Item name="nickname" label="Nickname">
         <Input />
       </Form.Item>
-      <Form.Item name="email" style={{ display: 'none' }}>
-        <Input type="hidden" />
+      <Form.Item name="email" label="Email">
+        <Input />
       </Form.Item>
-      <Form.Item name="username" style={{ display: 'none' }}>
-        <Input type="hidden" />
-      </Form.Item>
-      <Form.Item name="avatar" label="Avatar">
-        <Upload>
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
+      <Form.Item name="username" label="Username">
+        <Input />
       </Form.Item>
       <Form.Item name="password" label="Password">
         <Input.Password />
@@ -103,8 +73,7 @@ const EditProfileForm = ({ formData, onCancel, onSave }) => {
       </div>
     </Form>
   );
-};
-
+}
 
 function Profile() {
   const [profilePicture, setProfilePicture] = useState(null);
@@ -121,13 +90,17 @@ function Profile() {
   const [searchHistory, setSearchHistory] = useState([]);
   const [uploadHistory, setUploadHistory] = useState([]);
   const [savedContents, setSavedContents] = useState([]);
-  const [followingList, setFollowingList] = useState([]);
+  const [statisticsVisible, setStatisticsVisible] = useState(false);
+  const [displayContent, setDisplayContent] = useState(false);
+  const [posts, setPosts] = useState([]);
   const userSelector = useSelector((state) => state.user);
   const userId = userSelector.userData.id;
+  const name = userSelector.userData.username;
+  const { Header, Content, Sider } = Layout;
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/city/${userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/city/57438`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -135,16 +108,19 @@ function Profile() {
         },
         credentials: 'include',
       });
+  
       if (response.ok) {
         const data = await response.json();
+        setPosts(data);
+        setDisplayContent(true); // Set displayContent state to true
       } else {
-        message.error('Failed to fetch posts.');
+        console.error('Failed to fetch posts.');
       }
     } catch (error) {
-      message.error('Failed to fetch posts.');
+      console.error('Failed to fetch posts.', error);
     }
   };
-
+  
   const fetchSearchHistory = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/${userId}`, {
@@ -166,94 +142,21 @@ function Profile() {
     }
   };
 
-  const fetchUploadHistory = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('token')}`,
-        },
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUploadHistory(data);
-      } else {
-        message.error('Failed to fetch upload history.');
-      }
-    } catch (error) {
-      message.error('Failed to fetch upload history.');
-    }
-  };
-
-  const fetchSavedContents = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('token')}`,
-        },
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSavedContents(data);
-      } else {
-        message.error('Failed to fetch saved contents.');
-      }
-    } catch (error) {
-      message.error('Failed to fetch saved contents.');
-    }
-  };
-
-  const fetchFollowingList = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}/following`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('token')}`,
-        },
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setFollowingList(data);
-      } else {
-        message.error('Failed to fetch following list.');
-      }
-    } catch (error) {
-      message.error('Failed to fetch following list.');
-    }
-  };
-
-  const handleUploadChange = (info) => {
-    const { status, originFileObj } = info.file;
-    if (status === 'done') {
-      handleProfilePictureUpload(originFileObj);
-    } else if (status === 'error') {
-      message.error('Profile picture upload failed.');
-    }
-  };
-  
   const handleProfilePictureUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
     try {
-      // Upload the file to the server or cloud storage
-      const formData = new FormData();
-      formData.append('profilePicture', file);
-  
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}/profile-picture`, {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/images/userAvatar`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
         body: formData,
+        credentials: 'include',
       });
-  
+
       if (response.ok) {
-        setProfilePicture(file);
         message.success(`Profile picture uploaded: ${file.name}`);
       } else {
         message.error('Failed to upload profile picture.');
@@ -262,31 +165,34 @@ function Profile() {
       message.error('Failed to upload profile picture.');
     }
   };
-  
-  const handleDeletePicture = async () => {
-    try {
-      // Send a request to the server to delete the profile picture
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}/profile-picture`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${Cookies.get('token')}`,
-        },
-      });
-  
-      if (response.ok) {
-        setProfilePicture(null);
-        setDeleteModalVisible(false);
-        message.success('Profile picture deleted.');
-      } else {
-        message.error('Failed to delete profile picture.');
+
+  const handleUploadChange = async (info) => {
+    const { status, originFileObj } = info.file;
+    if (status === 'done') {
+      try {
+        const response = await handleProfilePictureUpload(originFileObj);
+        if (response.ok) {
+          // Assuming the response contains the new image URL
+          const newImageUrl = await response.json();
+
+          // Update the profilePicture state with the new image URL
+          setProfilePicture(newImageUrl);
+
+          message.success('Profile picture uploaded successfully.');
+        } else {
+          message.error('Failed to upload profile picture.');
+        }
+      } catch (error) {
+        message.error('Failed to upload profile picture.');
       }
-    } catch (error) {
-      message.error('Failed to delete profile picture.');
+    } else if (status === 'error') {
+      message.error('Profile picture upload failed.');
     }
   };
 
-  const handleDeleteProfilePicture = () => {
+  const handleDeletePicture = () => {
     setProfilePicture(null);
+    setDeleteModalVisible(false);
     message.success('Profile picture deleted.');
   };
 
@@ -298,16 +204,94 @@ function Profile() {
     setDeleteModalVisible(false);
   };
 
-  const handleFollowToggle = () => {
-    setFollowStatus((prevStatus) => !prevStatus);
+  const handleFollowToggle = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/follow`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify({ id: userIdToFollow }), // Replace userIdToFollow with the appropriate user ID
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        message.success('User followed successfully.');
+      } else {
+        message.error('Failed to follow user.');
+      }
+    } catch (error) {
+      message.error('Failed to follow user.');
+    }
   };
 
-  const handleFollowersClick = () => {
-    setFollowersVisible(true);
+  const handleUnfollowToggle = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/unfollow`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify({ id: userIdToUnfollow }), // Replace userIdToUnfollow with the appropriate user ID
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        message.success('User unfollowed successfully.');
+      } else {
+        message.error('Failed to unfollow user.');
+      }
+    } catch (error) {
+      message.error('Failed to unfollow user.');
+    }
   };
 
-  const handleFollowingClick = () => {
-    setFollowingVisible(true);
+  const handleFollowersClick = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/followers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFollowersData(data);
+        setFollowersVisible(true);
+      } else {
+        message.error('Failed to fetch followers.');
+      }
+    } catch (error) {
+      message.error('Failed to fetch followers.');
+    }
+  };
+
+  const handleFollowingClick = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/following`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFollowingData(data);
+        setFollowingVisible(true);
+      } else {
+        message.error('Failed to fetch following list.');
+      }
+    } catch (error) {
+      message.error('Failed to fetch following list.');
+    }
   };
 
   const handleFollowersClose = () => {
@@ -326,6 +310,59 @@ function Profile() {
     }));
   };
 
+  const handleEditPost = async (postId) => {
+    // Implement your code to handle the edit post functionality
+    // Send a request to the server to update the post with the given postId
+    // You can use the `fetch` function or a library like Axios to make the request
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/update/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify({
+          // Provide the updated post data here
+          // Example: title, content, etc.
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Handle the successful update of the post
+        message.success('Post updated successfully.');
+      } else {
+        // Handle the error case when the post update fails
+        message.error('Failed to update post.');
+      }
+    } catch (error) {
+      // Handle any network or server errors
+      message.error('Failed to update post.');
+    }
+  };
+
+  const handleDeleteProfileClick = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userSelector.userData.userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+          'X-User-Roles': 'admin',
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        message.success('Profile deleted successfully.');
+      } else {
+        message.error('Failed to delete profile.');
+      }
+    } catch (error) {
+      message.error('Failed to delete profile.');
+    }
+  };
+
   const handlePostsClick = () => {
     fetchPosts();
   };
@@ -334,138 +371,156 @@ function Profile() {
     fetchSearchHistory();
   };
 
-  const handleUploadHistoryClick = () => {
-    fetchUploadHistory();
-  };
+  function handleStatisticsClick() {
+    setStatisticsVisible(true);
+  }
 
-  const handleSavedContentsClick = () => {
-    fetchSavedContents();
-  };
-
-  const handleDeleteProfileClick = async () => {
+  const handleDeletePost = async (postId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/users/${userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/api/chat/posts/delete/${postId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
+        credentials: 'include',
       });
-  
+
       if (response.ok) {
-        // Profile successfully deleted
-        // You may perform any additional actions after deleting the profile
-        // For example, redirecting the user to a different page
-        message.success('Profile deleted successfully.');
+        // Remove the deleted post from the posts array
+        setPosts((prevPosts) => prevPosts.filter((post) => post.postId !== postId));
+        message.success('Post deleted successfully.');
       } else {
-        // Failed to delete profile
-        message.error('Failed to delete profile.');
+        message.error('Failed to delete post.');
       }
     } catch (error) {
-      // Error occurred while deleting profile
-      message.error('Failed to delete profile.');
+      message.error('Failed to delete post.');
     }
   };
-
   const followersData = [];
   const followingData = [];
 
   return (
-    <div style={{ display: 'flex' }}>
-      <Menu style={{ width: 256, marginRight: 20, marginTop: 100 }} defaultSelectedKeys={['1']} mode="vertical">
-        <Menu.Item key="1" icon={<EditOutlined />} onClick={() => handlePostsClick()}>
-          Posts
-        </Menu.Item>
-        <Menu.Item key="2" icon={<SaveOutlined />} onClick={() => handleSavedContentsClick()}>
-          Saved content
-        </Menu.Item>
-        <Menu.Item key="3" icon={<ProfileOutlined />} onClick={() => setEditFormVisible(true)}>
-          Edit Profile
-        </Menu.Item>
-        <Menu.Item key="4" icon={<StockOutlined />}>
-          Statistics
-        </Menu.Item>
-        <Menu.Item key="5" icon={<HistoryOutlined />} onClick={() => handleSearchHistoryClick()}>
-          Search History
-        </Menu.Item>
-        <Menu.Item key="6" icon={<DeleteOutlined />} onClick={handleDeleteProfileClick}>
-          Delete Profile
-        </Menu.Item>
-      </Menu>
-      <div style={{ flex: 1 }}>
-        <div style={{ textAlign: 'center' }}>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header
+        style={{
+          background: '#fff',
+          padding: '24px',
+          flex: '0 0 25%',
+          marginTop: '8px',
+          marginBottom: '32px',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Avatar
-            size={200}
+            size={150}
             icon={profilePicture ? null : <UserOutlined />}
-            src={profilePicture && URL.createObjectURL(profilePicture)}
+            src={profilePicture && typeof profilePicture === 'string' ? profilePicture : undefined}
+            onClick={() => document.getElementById('profilePictureUpload').click()}
           />
-          <div style={{ marginTop: 10 }}>
-            <Button type={followStatus ? 'default' : 'primary'} onClick={handleFollowToggle}>
+          <h2 style={{ fontSize: 24, fontWeight: 'bold', marginBottom: '8px' }}>{name}</h2>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+            <Button type={followStatus ? 'default' : 'primary'} onClick={handleFollowToggle} size="large" style={{ marginRight: '8px' }}>
               {followStatus ? 'Unfollow' : 'Follow'}
             </Button>
-            <Button type="default" onClick={handleFollowingClick}>
+            <Button type="default" onClick={handleFollowingClick} size="large" style={{ marginRight: '8px' }}>
               Following
             </Button>
-            <Button type="default" onClick={handleFollowersClick}>
+            <Button type="default" onClick={handleFollowersClick} size="large">
               Followers
             </Button>
-            <Upload
-              name="profilePicture"
-              showUploadList={false}
-              beforeUpload={() => false}
-              onChange={handleUploadChange}
-            >
-              <Button icon={<UploadOutlined />}>
-                {profilePicture ? 'Change Picture' : 'Upload Picture'}
-              </Button>
-            </Upload>
-            {profilePicture && (
-              <Button type="link" onClick={handleDeleteProfilePicture}>
-                Delete Picture
-              </Button>
-            )}
           </div>
-        </div>
-
-        <div style={{ marginTop: 40 }}>
-          <Skeleton active paragraph={{ rows: 20 }} />
-        </div>
-
-        <Modal
-          visible={deleteModalVisible}
-          onOk={handleDeletePicture}
-          onCancel={hideDeleteModal}
-          centered
-        >
-          <p>Are you sure you want to delete your profile picture?</p>
-        </Modal>
-
-        <Modal visible={followersVisible} onCancel={handleFollowersClose} centered footer={null}>
-          {followersData.length > 0 ? (
-            <List dataSource={followersData} renderItem={(item) => <List.Item>{item}</List.Item>} />
-          ) : (
-            <Empty description="No followers." />
+          <input id="profilePictureUpload" type="file" style={{ display: 'none' }} onChange={(e) => handleUploadChange(e.target.files[0])} />
+          {profilePicture && (
+            <Button type="link" onClick={showDeleteModal}>
+              Delete Picture
+            </Button>
           )}
-        </Modal>
-
-        <Modal visible={followingVisible} onCancel={handleFollowingClose} centered footer={null}>
-          {followingData.length > 0 ? (
-            <List dataSource={followingData} renderItem={(item) => <List.Item>{item}</List.Item>} />
-          ) : (
-            <Empty description="Not following anyone." />
-          )}
-        </Modal>
-
-        <Modal visible={editFormVisible} onCancel={() => setEditFormVisible(false)} footer={null}>
-          <EditProfileForm
-            formData={editFormData}
-            onCancel={() => setEditFormVisible(false)}
-            onSave={handleEditProfileSave}
+        </div>
+      </Header>
+      <Layout>
+        <Sider width={256} style={{ background: '#fff' }}>
+          <Menu defaultSelectedKeys={['1']} mode="vertical">
+            <Menu.Item key="1" icon={<EditOutlined />} onClick={() => handlePostsClick()}>
+              User Posts
+            </Menu.Item>
+            <Menu.Item key="2" icon={<ProfileOutlined />} onClick={() => setEditFormVisible(true)}>
+              Edit Profile
+            </Menu.Item>
+            <Menu.Item key="3" icon={<StockOutlined />} onClick={handleStatisticsClick}>
+              Statistics
+            </Menu.Item>
+            <Menu.Item key="4" icon={<HistoryOutlined />} onClick={() => handleSearchHistoryClick()}>
+              Search History
+            </Menu.Item>
+            <Menu.Item key="5" icon={<ProfileOutlined />} onClick={handleDeleteProfileClick}>
+              Delete Profile
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        <Content>
+      <div style={{ padding: 30, background: '#fff', minHeight: 360 }}>
+        {posts.length > 0 ? (
+          <List
+            dataSource={posts}
+            renderItem={(item) => (
+              <List.Item
+                actions={[
+                  <Button type="link" onClick={() => handleEditPost(item.postId)}>Edit</Button>,
+                  <Button type="link" onClick={() => handleDeletePost(item.postId)}>Delete</Button>,
+                ]}
+              >
+                <div>
+                  <h3>{item.post.title}</h3>
+                  {item.post.content}
+                </div>
+              </List.Item>
+            )}
           />
-        </Modal>
+        ) : (
+          <Empty description="No posts found." />
+        )}
       </div>
-    </div>
+
+          <Skeleton active paragraph={{ rows: 20 }} />
+        </Content>
+      </Layout>
+      <Modal visible={deleteModalVisible} onOk={handleDeletePicture} onCancel={hideDeleteModal} centered>
+        <p>Are you sure you want to delete your profile picture?</p>
+      </Modal>
+      <Modal visible={followersVisible} onCancel={handleFollowersClose} centered footer={null}>
+        {followersData.length > 0 ? (
+          <List dataSource={followersData} renderItem={(item) => <List.Item>{item}</List.Item>} />
+        ) : (
+          <Empty description="No followers." />
+        )}
+      </Modal>
+      <Modal visible={followingVisible} onCancel={handleFollowingClose} centered footer={null}>
+        {followingData.length > 0 ? (
+          <List dataSource={followingData} renderItem={(item) => <List.Item>{item}</List.Item>} />
+        ) : (
+          <Empty description="Not following anyone." />
+        )}
+      </Modal>
+      <Modal visible={editFormVisible} onCancel={() => setEditFormVisible(false)} footer={null}>
+        <EditProfileForm
+          formData={editFormData}
+          onCancel={() => setEditFormVisible(false)}
+          onSave={handleEditProfileSave}
+        />
+      </Modal>
+      <Modal visible={statisticsVisible} onCancel={() => setStatisticsVisible(false)} centered footer={null}>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Statistic title="Feedback" value={1500} prefix={<LikeOutlined />} />
+          </Col>
+          <Col span={12}>
+            <Statistic title="Unmerged" value={93} suffix="/ 100" />
+          </Col>
+        </Row>
+      </Modal>
+    </Layout>
   );
 }
 
-export default Profile;
+export default Profile;
