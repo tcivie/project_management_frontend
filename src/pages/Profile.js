@@ -170,7 +170,6 @@ function Profile() {
       try {
         const response = await handleProfilePictureUpload(originFileObj);
         if (response.ok) {
-          // Assuming the response contains the new image URL
           const newImageUrl = await response.json();
 
           // Update the profilePicture state with the new image URL
